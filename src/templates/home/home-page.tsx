@@ -14,7 +14,7 @@ interface StartArea {
 
 const startAreas: StartArea[] = [
   { ...start.areas.cite, href: CITATION_STYLE_FINDER_PATH },
-  start.areas.write,
+  { ...start.areas.write, href: `${TOOLS_INDEX_PATH}#writing` },
   start.areas.analyse,
   { ...start.areas.learn, href: GUIDES_INDEX_PATH },
 ];

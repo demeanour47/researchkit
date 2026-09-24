@@ -5,6 +5,7 @@
  */
 
 import { getGuide, guidePath } from "@/domains/publishing";
+import { TOOL_ID as WORD_COUNTER_ID } from "@/tools/word-counter/path";
 import { availableFirst, comingSoon as catalogueComingSoon, type CatalogueItem } from "./item";
 
 /** The guides index address. Provisional until the URL strategy (ADR-0005) is accepted. */
@@ -40,7 +41,11 @@ export const GUIDE_CATEGORIES = [
 
 export type GuideCategoryId = (typeof GUIDE_CATEGORIES)[number]["id"];
 
-export type GuideEntry = CatalogueItem & { category: GuideCategoryId };
+export type GuideEntry = CatalogueItem & {
+  category: GuideCategoryId;
+  /** For planned guides: tools the guide will support. Published guides declare this in their content. */
+  relatedToolIds?: readonly string[];
+};
 
 /** A published guide's listing, read from the registry. Fails the build if the guide is missing. */
 function published(slug: string, category: GuideCategoryId): GuideEntry {
@@ -56,8 +61,13 @@ function published(slug: string, category: GuideCategoryId): GuideEntry {
   };
 }
 
-const comingSoon = (id: string, name: string, description: string, category: GuideCategoryId): GuideEntry =>
-  catalogueComingSoon(id, name, description, { category });
+const comingSoon = (
+  id: string,
+  name: string,
+  description: string,
+  category: GuideCategoryId,
+  relatedToolIds: readonly string[] = [],
+): GuideEntry => catalogueComingSoon(id, name, description, { category, relatedToolIds });
 
 export const GUIDE_LISTINGS: readonly GuideEntry[] = [
   published("how-to-choose-a-citation-style", "citation"),
@@ -72,6 +82,13 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
   comingSoon("how-to-structure-an-academic-essay", "How to structure an academic essay", "How introductions, arguments and conclusions fit together.", "writing"),
   comingSoon("how-to-write-an-abstract", "How to write an abstract", "What an abstract must include, and how to fit it within a word limit.", "writing"),
   comingSoon("how-to-paraphrase", "How to paraphrase correctly", "How to restate a source in your own words while crediting it.", "writing"),
+  comingSoon(
+    "how-to-meet-a-word-limit",
+    "How to meet a word limit",
+    "What usually counts towards a word limit, and how to cut words without losing substance.",
+    "writing",
+    [WORD_COUNTER_ID],
+  ),
 
   comingSoon("how-to-choose-a-statistical-test", "How to choose a statistical test", "How your data and research question point to the right test.", "statistics"),
   comingSoon("what-a-p-value-tells-you", "What a p-value tells you", "What a p-value means, and the common ways it is misread.", "statistics"),
@@ -83,12 +100,17 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
 ];
 
 /**
- * Published guides that name this tool as related. The relationship is declared
- * once, on the guide, so a tool and its guides always link to each other.
+ * Guides related to this tool, published ones first. The relationship is declared
+ * once, on the guide (in its content once published), so a tool and its guides
+ * always point to each other.
  */
 export function guidesForTool(toolId: string): GuideEntry[] {
-  return GUIDE_LISTINGS.filter(
-    (entry) => entry.status === "available" && getGuide(entry.id)?.relatedToolIds.includes(toolId),
+  return availableFirst(
+    GUIDE_LISTINGS.filter((entry) =>
+      entry.status === "available"
+        ? getGuide(entry.id)?.relatedToolIds.includes(toolId)
+        : entry.relatedToolIds?.includes(toolId),
+    ),
   );
 }
 

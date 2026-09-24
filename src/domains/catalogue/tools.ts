@@ -9,6 +9,10 @@ import {
   TOOL_ID as CITATION_STYLE_FINDER_ID,
   TOOL_PATH as CITATION_STYLE_FINDER_PATH,
 } from "@/tools/citation-style-finder/path";
+import { page as readingTime } from "@/tools/reading-time/copy";
+import { TOOL_ID as READING_TIME_ID, TOOL_PATH as READING_TIME_PATH } from "@/tools/reading-time/path";
+import { page as wordCounter } from "@/tools/word-counter/copy";
+import { TOOL_ID as WORD_COUNTER_ID, TOOL_PATH as WORD_COUNTER_PATH } from "@/tools/word-counter/path";
 import { availableFirst, comingSoon as catalogueComingSoon, type CatalogueItem } from "./item";
 
 /** The tools index address. Provisional until the URL strategy (ADR-0005) is accepted. */
@@ -61,9 +65,23 @@ export const TOOLS: readonly ToolEntry[] = [
   comingSoon("harvard-citation-generator", "Harvard Citation Generator", "Formats author–date references in Harvard style.", "citation"),
   comingSoon("reference-checker", "Reference Checker", "Checks a reference list for missing details and common formatting errors.", "citation"),
 
-  comingSoon("word-counter", "Word Counter", "Counts the words in your text against an assignment's word limit.", "writing"),
+  {
+    id: WORD_COUNTER_ID,
+    name: wordCounter.title,
+    description: wordCounter.summary,
+    category: "writing",
+    status: "available",
+    href: WORD_COUNTER_PATH,
+  },
   comingSoon("character-counter", "Character Counter", "Counts characters, with and without spaces.", "writing"),
-  comingSoon("reading-time-calculator", "Reading Time Calculator", "Estimates how long a text takes to read, or to present aloud.", "writing"),
+  {
+    id: READING_TIME_ID,
+    name: readingTime.title,
+    description: readingTime.summary,
+    category: "writing",
+    status: "available",
+    href: READING_TIME_PATH,
+  },
   comingSoon("paragraph-counter", "Paragraph Counter", "Counts the paragraphs in your text.", "writing"),
   comingSoon("sentence-counter", "Sentence Counter", "Counts sentences and shows their average length.", "writing"),
   comingSoon("readability-checker", "Readability Checker", "Scores how easy your text is to read, using established readability formulas.", "writing"),
