@@ -33,6 +33,8 @@ export const page = {
     "This guidance has not yet been checked by a named reviewer.",
   relatedGuide: "Related guide",
   relatedGuides: "Related guides",
+  relatedTool: "Related tool",
+  relatedTools: "Related tools",
 } as const;
 
 export const questions = {

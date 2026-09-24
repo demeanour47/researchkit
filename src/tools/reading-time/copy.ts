@@ -21,9 +21,6 @@ export const page = {
   methodHeading: "How reading time is estimated",
   limitsHeading: "Limitations",
   privacyHeading: "Privacy",
-  relatedHeading: "Related tool",
-  breadcrumbHome: "Home",
-  breadcrumbTools: "Tools",
 } as const;
 
 /** The results shown, and the ones announced when typing pauses. */
@@ -48,6 +45,3 @@ export const limits: readonly string[] = [
   "Speaking time doesn't include pauses for slides, questions or emphasis. For a timed presentation, rehearse aloud with a timer.",
   "Only the words in your text are counted. Figures, tables and references are included only if their words are part of what you paste.",
 ];
-
-export const privacy =
-  "Your text is analysed entirely in your browser. It is never sent to ResearchKit or anyone else, and it isn't stored: closing or reloading the page clears it.";

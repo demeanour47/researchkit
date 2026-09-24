@@ -26,7 +26,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
   const contents = [
     ...guide.sections.map(({ id, heading }) => ({ id, heading })),
     ...(guide.faq.length > 0 ? [{ id: FAQ_ID, heading: guideLabels.faq }] : []),
-    ...(relatedTools.length > 0 ? [{ id: RELATED_ID, heading: guideLabels.relatedTools }] : []),
+    ...(relatedTools.length > 0 ? [{ id: RELATED_ID, heading: relatedTools.length === 1 ? guideLabels.relatedTool : guideLabels.relatedTools }] : []),
   ];
 
   return (
@@ -79,7 +79,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
         {relatedTools.length > 0 && (
           <section id={RELATED_ID} aria-labelledby={`${RELATED_ID}-title`} className="grid gap-4">
             <h2 id={`${RELATED_ID}-title`} className="text-heading font-semibold">
-              {guideLabels.relatedTools}
+              {relatedTools.length === 1 ? guideLabels.relatedTool : guideLabels.relatedTools}
             </h2>
             <CatalogueList items={relatedTools} layout="stack" />
           </section>

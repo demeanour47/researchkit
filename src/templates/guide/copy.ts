@@ -2,7 +2,8 @@
 export const guideLabels = {
   contents: "On this page",
   faq: "Frequently asked questions",
-  relatedTools: "Related tool",
+  relatedTool: "Related tool",
+  relatedTools: "Related tools",
   updated: "Updated",
   reviewedBy: "Reviewed by",
   notReviewed: "Not yet checked by a named reviewer",

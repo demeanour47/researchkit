@@ -20,7 +20,21 @@ export const statLabels = {
   paragraphs: "Paragraphs",
   readingTime: "Reading time",
   speakingTime: "Speaking time",
+  averageWordsPerSentence: "Average words per sentence",
+  averageCharactersPerWord: "Average characters per word",
+  averageSentencesPerParagraph: "Average sentences per paragraph",
+  longestSentenceWords: "Longest sentence (words)",
+  longestParagraphWords: "Longest paragraph (words)",
+  estimatedPagesSingleSpaced: "Estimated pages, single spaced",
+  estimatedPagesDoubleSpaced: "Estimated pages, double spaced",
 } as const satisfies Record<StatKey, string>;
+
+/** The privacy statement shared by every text-analysis tool. True because analysis runs only in the browser. */
+export const PRIVACY_NOTICE =
+  "Your text is analysed entirely in your browser. It is never sent to ResearchKit or anyone else, and it isn't stored: closing or reloading the page clears it.";
+
+/** Shown where a result has no value, such as an average of no sentences. */
+export const NO_VALUE = "None";
 
 /** Result fields with their standard labels, in the order given. */
 export const statFields = (keys: readonly StatKey[]): StatField[] =>
@@ -43,6 +57,7 @@ export function formatDuration(duration: Duration): string {
 
 export function formatStat(stats: TextStatistics, key: StatKey): string {
   const value = stats[key];
+  if (value === null) return NO_VALUE;
   return typeof value === "number" ? formatCount(value) : formatDuration(value);
 }
 

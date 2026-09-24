@@ -16,6 +16,11 @@
  *   followed by a space or the end of a paragraph; a paragraph's final text counts
  *   even without end punctuation. A sentence must contain a letter or number.
  *
+ * - Characters per word: letters and numbers only, so attached punctuation does not
+ *   lengthen a word.
+ * - Averages are rounded to one decimal place, and have no value (null) when there
+ *   is nothing to average over. Page estimates assume a fixed number of words per page.
+ *
  * Known limits
  * - Languages written without spaces between words (such as Chinese, Japanese or
  *   Thai) are counted as one word per unbroken run of text.
@@ -36,8 +41,40 @@ const graphemes = new Intl.Segmenter("en", { granularity: "grapheme" });
 
 const hasLetterOrNumber = (text: string) => LETTER_OR_NUMBER.test(text);
 
+/** The words in a text, by the word rule above. Every word count derives from this. */
+function wordsOf(text: string): string[] {
+  return text.split(WHITESPACE_RUN).filter(hasLetterOrNumber);
+}
+
 export function countWords(text: string): number {
-  return text.split(WHITESPACE_RUN).filter(hasLetterOrNumber).length;
+  return wordsOf(text).length;
+}
+
+const ASCII_ONLY = /^[\x00-\x7f]*$/;
+const ASCII_LETTERS_AND_NUMBERS = /[A-Za-z0-9]/g;
+const LETTERS_AND_NUMBERS = /[\p{L}\p{N}]/gu;
+
+/**
+ * Characters that can join a neighbour into one visible character: combining marks,
+ * joiners, the few "prepend" and spacing characters defined by Unicode, conjoining
+ * Hangul jamo, and anything outside the Basic Multilingual Plane (emoji, flags).
+ * A word without any of them has exactly one visible character per code point.
+ */
+const MAY_COMBINE =
+  /[\p{M}‌‍؀-؅۝܏࢐࢑࣢ൎำຳᄀ-ᇿꥠ-꥿ힰ-퟿ﾞﾟ\u{10000}-\u{10ffff}]/u;
+
+/**
+ * The letters and numbers in a word, counted as a reader sees them, so attached
+ * punctuation ("sources!", "don't") does not lengthen the word.
+ */
+function lettersIn(word: string): number {
+  if (ASCII_ONLY.test(word)) return word.match(ASCII_LETTERS_AND_NUMBERS)?.length ?? 0;
+  if (!MAY_COMBINE.test(word)) return word.match(LETTERS_AND_NUMBERS)?.length ?? 0;
+  let count = 0;
+  for (const { segment } of graphemes.segment(word)) {
+    if (hasLetterOrNumber(segment)) count += 1;
+  }
+  return count;
 }
 
 export interface CharacterCounts {
@@ -101,20 +138,23 @@ export function countParagraphs(text: string): number {
   return paragraphsOf(text).length;
 }
 
-function sentencesInParagraph(paragraph: string): number {
-  let count = 0;
+/** The sentences in a paragraph, by the sentence rule above. Every sentence count derives from this. */
+function sentencesOf(paragraph: string): string[] {
+  const sentences: string[] = [];
   let start = 0;
   for (const match of paragraph.matchAll(SENTENCE_END)) {
     const end = match.index + match[0].length;
-    if (hasLetterOrNumber(paragraph.slice(start, end))) count += 1;
+    const sentence = paragraph.slice(start, end);
+    if (hasLetterOrNumber(sentence)) sentences.push(sentence);
     start = end;
   }
-  if (hasLetterOrNumber(paragraph.slice(start))) count += 1;
-  return count;
+  const rest = paragraph.slice(start);
+  if (hasLetterOrNumber(rest)) sentences.push(rest);
+  return sentences;
 }
 
 export function countSentences(text: string): number {
-  return paragraphsOf(text).reduce((total, paragraph) => total + sentencesInParagraph(paragraph), 0);
+  return paragraphsOf(text).reduce((total, paragraph) => total + sentencesOf(paragraph).length, 0);
 }
 
 /** An estimated duration: nothing to read, under a minute, or a whole number of minutes. */
@@ -139,6 +179,17 @@ export function estimateDuration(words: number, wordsPerMinute: number): Duratio
   return { kind: "minutes", minutes: Math.round(words / wordsPerMinute) };
 }
 
+export const WORDS_PER_PAGE_SINGLE_SPACED = 500;
+export const WORDS_PER_PAGE_DOUBLE_SPACED = 250;
+
+/** Rounds to one decimal place, the precision used for averages and page estimates. */
+const toOneDecimal = (value: number) => Math.round(value * 10) / 10;
+
+/** An average rounded to one decimal place, or null when there is nothing to average over. */
+const average = (total: number, count: number): number | null => (count === 0 ? null : toOneDecimal(total / count));
+
+const longest = (values: readonly number[]) => values.reduce((max, value) => Math.max(max, value), 0);
+
 export interface TextStatistics {
   words: number;
   charactersWithSpaces: number;
@@ -147,18 +198,46 @@ export interface TextStatistics {
   paragraphs: number;
   readingTime: Duration;
   speakingTime: Duration;
+  /** Words divided by sentences, to one decimal place; null without sentences. */
+  averageWordsPerSentence: number | null;
+  /** Letters and numbers per word, to one decimal place; null without words. */
+  averageCharactersPerWord: number | null;
+  /** Sentences divided by paragraphs, to one decimal place; null without paragraphs. */
+  averageSentencesPerParagraph: number | null;
+  longestSentenceWords: number;
+  longestParagraphWords: number;
+  /** Pages at the stated words per page, to one decimal place. */
+  estimatedPagesSingleSpaced: number;
+  estimatedPagesDoubleSpaced: number;
 }
 
+/**
+ * Every statistic, from a single pass over the text's words, paragraphs and
+ * sentences. Derived measures reuse those same parts, so they always agree with
+ * the counts they are derived from.
+ */
 export function analyseText(text: string): TextStatistics {
-  const words = countWords(text);
+  const words = wordsOf(text);
+  const paragraphs = paragraphsOf(text);
+  const sentences = paragraphs.flatMap(sentencesOf);
   const characters = countCharacters(text);
+  const wordCount = words.length;
+  const letters = words.reduce((total, word) => total + lettersIn(word), 0);
+
   return {
-    words,
+    words: wordCount,
     charactersWithSpaces: characters.withSpaces,
     charactersWithoutSpaces: characters.withoutSpaces,
-    sentences: countSentences(text),
-    paragraphs: countParagraphs(text),
-    readingTime: estimateDuration(words, READING_WORDS_PER_MINUTE),
-    speakingTime: estimateDuration(words, SPEAKING_WORDS_PER_MINUTE),
+    sentences: sentences.length,
+    paragraphs: paragraphs.length,
+    readingTime: estimateDuration(wordCount, READING_WORDS_PER_MINUTE),
+    speakingTime: estimateDuration(wordCount, SPEAKING_WORDS_PER_MINUTE),
+    averageWordsPerSentence: average(wordCount, sentences.length),
+    averageCharactersPerWord: average(letters, wordCount),
+    averageSentencesPerParagraph: average(sentences.length, paragraphs.length),
+    longestSentenceWords: longest(sentences.map(countWords)),
+    longestParagraphWords: longest(paragraphs.map(countWords)),
+    estimatedPagesSingleSpaced: toOneDecimal(wordCount / WORDS_PER_PAGE_SINGLE_SPACED),
+    estimatedPagesDoubleSpaced: toOneDecimal(wordCount / WORDS_PER_PAGE_DOUBLE_SPACED),
   };
 }

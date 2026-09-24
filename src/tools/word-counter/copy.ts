@@ -20,11 +20,7 @@ export const page = {
   noScript: "The word counter counts as you type, which needs JavaScript. Turn on JavaScript to use it.",
   rulesHeading: "How we count",
   limitsHeading: "What the counter can't know",
-  relatedHeading: "Related guide",
-  relatedToolHeading: "Related tool",
   browseGuides: { lead: "Looking for help with academic writing?", label: "Browse Research Guides" },
-  breadcrumbHome: "Home",
-  breadcrumbTools: "Tools",
 } as const;
 
 /** The results shown, and the ones announced when typing pauses. */

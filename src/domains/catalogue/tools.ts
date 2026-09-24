@@ -4,12 +4,18 @@
  * reads from here. The wording will move to the content layer when it exists.
  */
 
+import { page as apaGenerator } from "@/tools/apa-citation-generator/copy";
+import { TOOL_ID as APA_GENERATOR_ID, TOOL_PATH as APA_GENERATOR_PATH } from "@/tools/apa-citation-generator/path";
 import { page as citationStyleFinder } from "@/tools/citation-style-finder/copy";
 import {
   TOOL_ID as CITATION_STYLE_FINDER_ID,
   TOOL_PATH as CITATION_STYLE_FINDER_PATH,
 } from "@/tools/citation-style-finder/path";
 import { page as readingTime } from "@/tools/reading-time/copy";
+import { page as researchOnion } from "@/tools/research-onion/copy";
+import { TOOL_ID as RESEARCH_ONION_ID, TOOL_PATH as RESEARCH_ONION_PATH } from "@/tools/research-onion/path";
+import { page as textStatistics } from "@/tools/text-statistics/copy";
+import { TOOL_ID as TEXT_STATISTICS_ID, TOOL_PATH as TEXT_STATISTICS_PATH } from "@/tools/text-statistics/path";
 import { TOOL_ID as READING_TIME_ID, TOOL_PATH as READING_TIME_PATH } from "@/tools/reading-time/path";
 import { page as wordCounter } from "@/tools/word-counter/copy";
 import { TOOL_ID as WORD_COUNTER_ID, TOOL_PATH as WORD_COUNTER_PATH } from "@/tools/word-counter/path";
@@ -44,7 +50,13 @@ export const TOOL_CATEGORIES = [
 export type ToolCategory = (typeof TOOL_CATEGORIES)[number];
 export type ToolCategoryId = ToolCategory["id"];
 
-export type ToolEntry = CatalogueItem & { category: ToolCategoryId };
+/** Tools that work on the same material and point to one another. */
+export type ToolFamily = "citation" | "text-analysis";
+
+export type ToolEntry = CatalogueItem & {
+  category: ToolCategoryId;
+  family?: ToolFamily;
+};
 
 const comingSoon = (id: string, name: string, description: string, category: ToolCategoryId): ToolEntry =>
   catalogueComingSoon(id, name, description, { category });
@@ -55,10 +67,19 @@ export const TOOLS: readonly ToolEntry[] = [
     name: citationStyleFinder.title,
     description: citationStyleFinder.description,
     category: "citation",
+    family: "citation",
     status: "available",
     href: CITATION_STYLE_FINDER_PATH,
   },
-  comingSoon("apa-citation-generator", "APA Citation Generator", "Formats references and in-text citations in APA Style, 7th edition.", "citation"),
+  {
+    id: APA_GENERATOR_ID,
+    name: apaGenerator.title,
+    description: apaGenerator.summary,
+    category: "citation",
+    family: "citation",
+    status: "available",
+    href: APA_GENERATOR_PATH,
+  },
   comingSoon("mla-citation-generator", "MLA Citation Generator", "Formats works-cited entries and in-text citations in MLA Style, 9th edition.", "citation"),
   comingSoon("chicago-citation-generator", "Chicago Citation Generator", "Formats notes, bibliographies and author–date citations in Chicago Style, 18th edition.", "citation"),
   comingSoon("ieee-citation-generator", "IEEE Citation Generator", "Formats numbered references in IEEE Style.", "citation"),
@@ -70,6 +91,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: wordCounter.title,
     description: wordCounter.summary,
     category: "writing",
+    family: "text-analysis",
     status: "available",
     href: WORD_COUNTER_PATH,
   },
@@ -79,8 +101,18 @@ export const TOOLS: readonly ToolEntry[] = [
     name: readingTime.title,
     description: readingTime.summary,
     category: "writing",
+    family: "text-analysis",
     status: "available",
     href: READING_TIME_PATH,
+  },
+  {
+    id: TEXT_STATISTICS_ID,
+    name: textStatistics.title,
+    description: textStatistics.summary,
+    category: "writing",
+    family: "text-analysis",
+    status: "available",
+    href: TEXT_STATISTICS_PATH,
   },
   comingSoon("paragraph-counter", "Paragraph Counter", "Counts the paragraphs in your text.", "writing"),
   comingSoon("sentence-counter", "Sentence Counter", "Counts sentences and shows their average length.", "writing"),
@@ -92,12 +124,27 @@ export const TOOLS: readonly ToolEntry[] = [
   comingSoon("power-analysis", "Power Analysis", "Estimates a study's statistical power, or the sample size needed to reach it.", "statistics"),
   comingSoon("confidence-interval-calculator", "Confidence Interval Calculator", "Calculates confidence intervals for means and proportions.", "statistics"),
 
+  {
+    id: RESEARCH_ONION_ID,
+    name: researchOnion.title,
+    description: researchOnion.summary,
+    category: "research",
+    status: "available",
+    href: RESEARCH_ONION_PATH,
+  },
   comingSoon("research-question-builder", "Research Question Builder", "Helps you shape a focused, answerable research question.", "research"),
   comingSoon("research-objectives-generator", "Research Objectives Generator", "Helps you turn a research question into clear, measurable objectives.", "research"),
   comingSoon("hypothesis-builder", "Hypothesis Builder", "Helps you state testable null and alternative hypotheses.", "research"),
   comingSoon("research-title-generator", "Research Title Generator", "Suggests title structures for your topic and method, for you to refine.", "research"),
   comingSoon("research-design-guide", "Research Design Guide", "Explains research designs and helps you choose one that fits your question.", "research"),
 ];
+
+/** The other tools in a tool's family, available ones first. Empty for a tool without a family. */
+export function relatedTools(toolId: string): ToolEntry[] {
+  const family = TOOLS.find((tool) => tool.id === toolId)?.family;
+  if (!family) return [];
+  return availableFirst(TOOLS.filter((tool) => tool.family === family && tool.id !== toolId));
+}
 
 /** A category's tools, available ones first, in catalogue order otherwise. */
 export function toolsInCategory(category: ToolCategoryId): ToolEntry[] {

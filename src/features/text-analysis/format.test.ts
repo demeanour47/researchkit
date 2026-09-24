@@ -12,6 +12,13 @@ const stats: TextStatistics = {
   paragraphs: 9,
   readingTime: { kind: "minutes", minutes: 6 },
   speakingTime: { kind: "minutes", minutes: 1 },
+  averageWordsPerSentence: 20.5,
+  averageCharactersPerWord: null,
+  averageSentencesPerParagraph: 6.8,
+  longestSentenceWords: 42,
+  longestParagraphWords: 310,
+  estimatedPagesSingleSpaced: 2.5,
+  estimatedPagesDoubleSpaced: 5,
 };
 
 describe("formatCount", () => {
@@ -38,6 +45,15 @@ describe("formatStat", () => {
     assert.equal(formatStat(stats, "words"), "1,250");
     assert.equal(formatStat(stats, "readingTime"), "6 minutes");
     assert.equal(formatStat(stats, "speakingTime"), "1 minute");
+  });
+
+  it("shows decimals only where a result has them", () => {
+    assert.equal(formatStat(stats, "averageWordsPerSentence"), "20.5");
+    assert.equal(formatStat(stats, "estimatedPagesDoubleSpaced"), "5");
+  });
+
+  it("says when a result has no value, instead of showing zero", () => {
+    assert.equal(formatStat(stats, "averageCharactersPerWord"), "None");
   });
 });
 
