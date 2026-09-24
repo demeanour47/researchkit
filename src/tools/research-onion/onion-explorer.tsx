@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, RadioGroup, VisuallyHidden } from "@/ui";
 import {
+  EVIDENCE_LABELS,
+  FIT_LABELS,
   LAYERS,
   findOption,
   judgementsFor,
@@ -10,7 +12,8 @@ import {
   summarise,
   type OnionSelection,
 } from "@/knowledge/research";
-import { announcements, explorer, fitLabels } from "./copy";
+import { announcements, explorer } from "./copy";
+import { OnionDiagram } from "./onion-diagram";
 import { OnionProgress } from "./onion-progress";
 import { OnionSummaryView } from "./onion-summary";
 import { OptionDetails } from "./option-details";
@@ -50,7 +53,13 @@ export function OnionExplorer() {
     const next = { ...selection, [layer.id]: id };
     setSelection(next);
     const fits = judgementsFor(next, layer.id)
-      .map((judgement) => announcements.fitWith(fitLabels[judgement.fit], findOption(judgement.earlier)?.name ?? ""))
+      .map((judgement) =>
+        announcements.fitWith(
+          FIT_LABELS[judgement.fit],
+          findOption(judgement.earlier)?.name ?? "",
+          EVIDENCE_LABELS[judgement.evidence.level],
+        ),
+      )
       .join(" ");
     setAnnouncement(announcements.chosen(findOption(id)?.name ?? "", fits));
   };
@@ -67,7 +76,10 @@ export function OnionExplorer() {
 
   return (
     <div className="grid gap-8">
-      <OnionProgress selection={selection} current={step} reached={reached} onJump={goTo} />
+      <div className="grid items-center gap-6 md:grid-cols-[auto_1fr]">
+        <OnionDiagram selection={selection} current={step} />
+        <OnionProgress selection={selection} current={step} reached={reached} onJump={goTo} />
+      </div>
 
       {layer && (
         <section aria-labelledby="onion-step-title" className="grid gap-6">
@@ -114,6 +126,7 @@ export function OnionExplorer() {
           headingRef={heading}
           onEdit={() => goTo(SUMMARY_STEP - 1)}
           onStartAgain={startAgain}
+          onExported={(label) => setAnnouncement(announcements.downloaded(label))}
         />
       )}
 

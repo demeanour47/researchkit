@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { COMPARED_LAYERS, LAYERS, OPTIONS, findOption, getLayer, optionsFor } from "./research-onion";
+import { getReference } from "./references";
 import { LAYER_ORDER, type LayerId } from "./types";
 
 describe("LAYERS", () => {
@@ -70,7 +71,10 @@ describe("OPTIONS", () => {
       assert.ok(option.strengths.length >= 2, `${option.id} strengths`);
       assert.ok(option.limitations.length >= 2, `${option.id} limitations`);
       assert.ok(option.examples.length >= 2, `${option.id} examples`);
-      assert.ok(Array.isArray(option.references), `${option.id} references`);
+      assert.ok(option.mistakes.length >= 2, `${option.id} mistakes`);
+      assert.ok(option.references.length >= 1, `${option.id} references`);
+      assert.equal(new Set(option.references).size, option.references.length, `${option.id} repeats a reference`);
+      for (const id of option.references) assert.doesNotThrow(() => getReference(id), `${option.id}: ${id}`);
     }
   });
 

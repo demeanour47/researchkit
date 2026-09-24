@@ -23,6 +23,38 @@ export interface OnionLayer {
  */
 export type Fit = "strong" | "possible" | "careful";
 
+/**
+ * How firmly the methodology literature supports a fit judgement.
+ * - textbook: major methods textbooks consistently present the combination this way.
+ * - guidance: methods texts commonly advise it, though with more variation.
+ * - interpretive: ResearchKit's reasoning from general principles, not a position stated directly in the sources.
+ */
+export type EvidenceLevel = "textbook" | "guidance" | "interpretive";
+
+export interface Evidence {
+  level: EvidenceLevel;
+  /** Ids of the references that support the judgement. Empty for an interpretive judgement. */
+  sources: readonly string[];
+}
+
+/** A view that differs from the judgement, presented without taking a side. */
+export interface AlternativeView {
+  text: string;
+  sources: readonly string[];
+}
+
+/** A published academic work, formatted in APA 7th edition style. */
+export interface Reference {
+  id: string;
+  /** The parenthetical in-text form without brackets, such as "Saunders et al., 2019". */
+  cite: string;
+  year: number;
+  /** The APA reference without its DOI. The italic part is wrapped in asterisks. */
+  apa: string;
+  /** The DOI, without "https://doi.org/", where one exists. */
+  doi?: string;
+}
+
 /** Earlier choices that an option typically suits strongly, or can work with. Anything unlisted needs careful justification. */
 export interface FitRule {
   strong?: readonly string[];
@@ -43,7 +75,9 @@ export interface OnionOption {
   strengths: readonly string[];
   limitations: readonly string[];
   examples: readonly string[];
-  /** Academic references. Empty until added at editorial review. */
+  /** Mistakes students commonly make with this option. */
+  mistakes: readonly string[];
+  /** Ids of references for further reading. */
   references: readonly string[];
   /** How this option fits with choices in earlier layers, for each layer it is compared with. */
   fits: Partial<Record<LayerId, FitRule>>;
@@ -62,4 +96,7 @@ export interface Judgement {
   reason: string;
   /** What the researcher should justify, for any fit other than strong. */
   justify: string | null;
+  evidence: Evidence;
+  /** A differing view held by some researchers, where there is one. */
+  alternativeView: AlternativeView | null;
 }

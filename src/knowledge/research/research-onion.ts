@@ -5,8 +5,9 @@
  *
  * Fit rules describe what methodology textbooks commonly treat as typical
  * combinations. They are guidance, not rules: an unlisted combination "needs careful
- * justification", and no combination is ever forbidden. Content awaits review by a
- * named methodology reviewer before launch.
+ * justification", and no combination is ever forbidden. Further reading lists
+ * genuine works (see references.ts). Content awaits review by a named methodology
+ * reviewer before launch.
  */
 
 import type { LayerId, OnionLayer, OnionOption } from "./types";
@@ -87,7 +88,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Testing whether class size predicts exam results across many schools.",
       "Measuring the effect of a training programme on productivity.",
     ],
-    references: [],
+    mistakes: ["Claiming complete objectivity without discussing how your own decisions shape the study.", "Choosing positivism because it sounds scientific, when your question is about meanings or experiences."],
+    references: ["crotty-1998", "bryman-2016", "saunders-2019"],
     fits: {},
   },
   {
@@ -108,7 +110,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Exploring how first-generation students experience their first year at university.",
       "Understanding how nurses make sense of end-of-life care decisions.",
     ],
-    references: [],
+    mistakes: ["Treating interpretivism as permission to skip systematic analysis.", "Claiming that findings from a few participants apply to a whole population."],
+    references: ["crotty-1998", "lincoln-guba-1985", "saunders-2019"],
     fits: {},
   },
   {
@@ -129,7 +132,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Evaluating a new policy using both usage statistics and staff interviews.",
       "Designing and testing a change to reduce patient waiting times.",
     ],
-    references: [],
+    mistakes: ["Using pragmatism to avoid explaining your assumptions, rather than to guide your choices.", "Combining methods without saying how the different findings will be brought together."],
+    references: ["morgan-2007", "johnson-onwuegbuzie-2004", "saunders-2019"],
     fits: {},
   },
   {
@@ -150,7 +154,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Explaining why the same management practice succeeds in some organisations but not others.",
       "Investigating the social structures behind unequal access to healthcare.",
     ],
-    references: [],
+    mistakes: ["Naming realism without explaining which form you mean, such as critical realism.", "Describing observed patterns without going on to explain the mechanisms behind them."],
+    references: ["sayer-2000", "saunders-2019"],
     fits: {},
   },
 
@@ -169,7 +174,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Testing whether a theory of motivation predicts employee turnover.",
       "Checking whether a well-known model of technology acceptance applies to older adults.",
     ],
-    references: [],
+    mistakes: ["Writing hypotheses that the data you plan to collect can't actually test.", "Changing hypotheses after seeing the results and presenting them as if they were planned."],
+    references: ["popper-1959", "saunders-2019", "bryman-2016"],
     fits: { philosophy: { strong: ["positivism"], possible: ["realism", "pragmatism"] } },
   },
   {
@@ -186,7 +192,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Can be time-consuming, with no guarantee that a clear theory emerges.",
     ],
     examples: ["Exploring how small businesses adapted to a sudden crisis.", "Identifying themes in students' accounts of online learning."],
-    references: [],
+    mistakes: ["Claiming to start with no assumptions at all, when prior reading always shapes what you notice.", "Listing themes without developing them into an explanation."],
+    references: ["glaser-strauss-1967", "saunders-2019", "bryman-2016"],
     fits: { philosophy: { strong: ["interpretivism"], possible: ["realism", "pragmatism"] } },
   },
   {
@@ -204,7 +211,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Explaining why a successful product failed in one market.",
       "Revising a theory of customer loyalty after unexpected survey results.",
     ],
-    references: [],
+    mistakes: ["Describing the process as abductive without showing how you moved between data and theory.", "Using the term as a label for an unplanned mixture of approaches."],
+    references: ["timmermans-tavory-2012", "saunders-2019"],
     fits: { philosophy: { strong: ["pragmatism", "realism"], possible: ["interpretivism"] } },
   },
 
@@ -220,7 +228,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Allows statistical testing and generalisation.", "Efficient for large numbers of participants."],
     limitations: ["Can miss the reasons behind the numbers.", "Depends on valid and reliable measures."],
     examples: ["A questionnaire measuring job satisfaction among 400 employees.", "Comparing test scores between two teaching methods."],
-    references: [],
+    mistakes: ["Collecting numbers without checking that the measures are valid and reliable.", "Treating a statistically significant result as proof of cause and effect."],
+    references: ["creswell-creswell-2018", "bryman-2016"],
     fits: {
       philosophy: { strong: ["positivism"], possible: ["realism", "pragmatism"] },
       approach: { strong: ["deductive"], possible: ["abductive"] },
@@ -238,7 +247,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Rich, detailed understanding.", "Flexible enough to follow unexpected leads."],
     limitations: ["Small samples limit statistical generalisation.", "Analysis is time-consuming and interpretive."],
     examples: ["In-depth interviews with 15 teachers about curriculum change.", "Observing team meetings to understand how decisions are made."],
-    references: [],
+    mistakes: ["Describing a small sample as representative of a population.", "Presenting quotations without explaining how they were analysed."],
+    references: ["creswell-creswell-2018", "maxwell-2013", "denzin-lincoln-2018"],
     fits: {
       philosophy: { strong: ["interpretivism"], possible: ["realism", "pragmatism"] },
       approach: { strong: ["inductive"], possible: ["abductive"] },
@@ -258,7 +268,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "A survey followed by interviews to explain its results.",
       "Interviews used to design a questionnaire that is then used at scale.",
     ],
-    references: [],
+    mistakes: ["Reporting the quantitative and qualitative results separately without integrating them.", "Adding a few interviews to a survey without explaining why they are needed."],
+    references: ["creswell-plano-clark-2018", "johnson-onwuegbuzie-2004"],
     fits: {
       philosophy: { strong: ["pragmatism"], possible: ["realism"] },
       approach: { strong: ["abductive"], possible: ["deductive", "inductive"] },
@@ -276,7 +287,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Allows findings to be compared across techniques.", "Stays within one set of analysis methods."],
     limitations: ["Doesn't gain the benefits of combining numbers and words.", "Involves more data collection and analysis than a single technique."],
     examples: ["Interviews and focus groups in one qualitative study.", "A questionnaire combined with analysis of existing statistics."],
-    references: [],
+    mistakes: ["Calling a study mixed methods when all its techniques come from one tradition.", "Adding techniques that answer the same question in the same way, without explaining what each adds."],
+    references: ["brewer-hunter-2006", "saunders-2019"],
     fits: {
       philosophy: { strong: ["pragmatism"], possible: ["positivism", "interpretivism", "realism"] },
       approach: { possible: ["deductive", "inductive", "abductive"] },
@@ -299,7 +311,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Randomly assigning students to two revision methods and comparing test scores.",
       "Testing whether the wording of a message changes willingness to donate.",
     ],
-    references: [],
+    mistakes: ["Claiming random assignment when groups were formed some other way.", "Overlooking factors other than the intervention that could explain the result."],
+    references: ["shadish-2002", "bryman-2016"],
     fits: {
       philosophy: { strong: ["positivism"], possible: ["realism", "pragmatism"] },
       approach: { strong: ["deductive"], possible: ["abductive"] },
@@ -318,7 +331,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Reaches many people efficiently.", "Standardised data can be compared and analysed statistically."],
     limitations: ["Answers are limited to the questions asked.", "Relies on what people report, which may differ from what they do."],
     examples: ["A national survey of student wellbeing.", "Measuring customer satisfaction across a bank's branches."],
-    references: [],
+    mistakes: ["Confusing a survey, which is a strategy, with a questionnaire, which is a technique.", "Generalising from a convenience sample as if it were a random sample."],
+    references: ["fowler-2014", "bryman-2016"],
     fits: {
       philosophy: { strong: ["positivism"], possible: ["realism", "pragmatism"] },
       approach: { strong: ["deductive"], possible: ["inductive", "abductive"] },
@@ -337,7 +351,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Rich understanding of how things work in practice.", "Can combine several kinds of evidence."],
     limitations: ["Findings from a few cases can't be generalised statistically.", "Defining the boundaries of the case can be difficult."],
     examples: ["How one hospital introduced electronic patient records.", "A study of three start-ups' growth strategies."],
-    references: [],
+    mistakes: ["Not defining what the case is and where its boundaries lie.", "Treating findings from one case as if they applied to all similar cases."],
+    references: ["yin-2018", "stake-1995"],
     fits: {
       philosophy: { strong: ["interpretivism", "realism"], possible: ["positivism", "pragmatism"] },
       approach: { strong: ["inductive", "abductive"], possible: ["deductive"] },
@@ -359,7 +374,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Spending a year with a community sports club to understand belonging.",
       "Studying the working culture of an emergency department.",
     ],
-    references: [],
+    mistakes: ["Calling a few short visits ethnography when there was no extended immersion.", "Not reflecting on how your presence may have changed what you observed."],
+    references: ["hammersley-atkinson-2019", "bryman-2016"],
     fits: {
       philosophy: { strong: ["interpretivism"], possible: ["realism", "pragmatism"] },
       approach: { strong: ["inductive"], possible: ["abductive"] },
@@ -384,7 +400,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Developing a theory of how families cope with long-term illness.",
       "Explaining how new managers learn their role.",
     ],
-    references: [],
+    mistakes: ["Using “grounded theory” to describe any thematic analysis.", "Not saying which version of grounded theory you follow."],
+    references: ["glaser-strauss-1967", "charmaz-2014"],
     fits: {
       philosophy: { strong: ["interpretivism"], possible: ["pragmatism", "realism"] },
       approach: { strong: ["inductive"], possible: ["abductive"] },
@@ -406,7 +423,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Teachers working together to improve feedback practices over a school year.",
       "A hospital team redesigning how patients are handed over between shifts.",
     ],
-    references: [],
+    mistakes: ["Presenting a single intervention as action research without cycles of reflection.", "Not discussing your dual role as researcher and participant."],
+    references: ["reason-bradbury-2008", "saunders-2019"],
     fits: {
       philosophy: { strong: ["pragmatism"], possible: ["interpretivism", "realism"] },
       approach: { strong: ["abductive"], possible: ["inductive", "deductive"] },
@@ -425,7 +443,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Keeps the richness and order of personal experience.", "Gives participants a voice."],
     limitations: ["Usually involves few participants.", "Stories are shaped by memory and by the way they are told."],
     examples: ["Refugees' accounts of settling in a new country.", "The career stories of women in engineering."],
-    references: [],
+    mistakes: ["Summarising stories as themes and losing their order and context.", "Treating stories as simple records of fact rather than accounts shaped in the telling."],
+    references: ["clandinin-connelly-2000"],
     fits: {
       philosophy: { strong: ["interpretivism"], possible: ["pragmatism", "realism"] },
       approach: { strong: ["inductive"], possible: ["abductive"] },
@@ -444,7 +463,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Detailed insight into lived experience.", "Centres participants' own perspectives."],
     limitations: ["Relies on small, carefully chosen samples.", "Requires careful handling of the researcher's own assumptions."],
     examples: ["The experience of returning to study after a long break.", "What living with chronic pain is like for young adults."],
-    references: [],
+    mistakes: ["Calling any interview study phenomenology without engaging with its philosophy.", "Not explaining how you handled your own assumptions about the experience."],
+    references: ["smith-2009", "van-manen-1990"],
     fits: {
       philosophy: { strong: ["interpretivism"], possible: ["pragmatism"] },
       approach: { strong: ["inductive"], possible: ["abductive"] },
@@ -466,7 +486,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Analysing 20 years of annual reports for changes in sustainability reporting.",
       "Using parliamentary records to trace a policy debate.",
     ],
-    references: [],
+    mistakes: ["Using records without considering why and by whom they were created.", "Assuming that the records are complete."],
+    references: ["scott-1990", "saunders-2019"],
     fits: {
       philosophy: { possible: ["positivism", "interpretivism", "pragmatism", "realism"] },
       approach: { possible: ["deductive", "inductive", "abductive"] },
@@ -486,7 +507,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Quicker and cheaper than following people over time.", "Useful for comparing groups at one moment."],
     limitations: ["Can't show change over time.", "Makes cause and effect harder to establish."],
     examples: ["A survey of student stress levels in one semester.", "Interviews with managers about current remote-working policies."],
-    references: [],
+    mistakes: ["Drawing conclusions about change over time from data collected at one moment.", "Claiming cause and effect from associations measured at the same time."],
+    references: ["bryman-2016", "saunders-2019"],
     fits: {
       strategy: {
         strong: ["survey", "case-study", "phenomenology"],
@@ -505,7 +527,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Shows how things change over time.", "Gives stronger evidence about the order in which things happen."],
     limitations: ["Time-consuming and costly.", "Participants may drop out over time."],
     examples: ["Following graduates' careers over five years.", "Tracking a company's culture before and after a merger."],
-    references: [],
+    mistakes: ["Planning more data collection points than the time available allows.", "Not planning for participants dropping out between rounds."],
+    references: ["menard-2002", "saunders-2019"],
     fits: {
       strategy: {
         strong: ["ethnography", "action-research", "archival-research"],
@@ -526,7 +549,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Efficient for large samples.", "Standardised answers are easy to compare."],
     limitations: ["Little chance to probe or clarify answers.", "Response rates can be low."],
     examples: ["An online questionnaire on study habits sent to all first-year students.", "A customer satisfaction form with rating scales."],
-    references: [],
+    mistakes: ["Asking leading or double-barrelled questions.", "Not piloting the questionnaire before using it."],
+    references: ["dillman-2014", "fowler-2014"],
     fits: {
       choice: { strong: ["quantitative"], possible: ["mixed-methods", "multi-method"] },
       strategy: { strong: ["survey"], possible: ["experiment", "case-study", "action-research"] },
@@ -547,7 +571,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Answers can be shaped by the interviewer, or by what seems acceptable to say.",
     ],
     examples: ["Semi-structured interviews with 12 HR managers.", "Life-history interviews with retired teachers."],
-    references: [],
+    mistakes: ["Asking leading questions that suggest the answer you expect.", "Not explaining how interviews were recorded, transcribed and analysed."],
+    references: ["kvale-brinkmann-2009", "bryman-2016"],
     fits: {
       choice: { strong: ["qualitative", "mixed-methods"], possible: ["multi-method", "quantitative"] },
       strategy: {
@@ -567,7 +592,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Captures real behaviour in context.", "Can reveal things participants take for granted."],
     limitations: ["People may behave differently when observed.", "Observations need careful recording to limit bias."],
     examples: ["Observing interactions in a primary school classroom.", "Recording how customers move through a shop."],
-    references: [],
+    mistakes: ["Recording interpretations instead of what was actually observed.", "Not explaining whether you took part or observed from outside."],
+    references: ["spradley-1980", "hammersley-atkinson-2019"],
     fits: {
       choice: { strong: ["qualitative"], possible: ["quantitative", "mixed-methods", "multi-method"] },
       strategy: { strong: ["ethnography"], possible: ["experiment", "case-study", "action-research", "grounded-theory"] },
@@ -584,7 +610,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Group interaction can bring out ideas individuals might not raise.", "Collects several views at once."],
     limitations: ["Some voices can dominate the discussion.", "Less suitable for sensitive or personal topics."],
     examples: ["Discussing campus facilities with groups of students.", "Testing reactions to a new product idea."],
-    references: [],
+    mistakes: ["Analysing a group discussion as if it were several individual interviews.", "Using focus groups for sensitive topics that people may not discuss in front of others."],
+    references: ["krueger-casey-2015", "morgan-1997"],
     fits: {
       choice: { strong: ["qualitative"], possible: ["mixed-methods", "multi-method"] },
       strategy: { strong: ["action-research"], possible: ["case-study", "grounded-theory", "ethnography"] },
@@ -608,7 +635,8 @@ export const OPTIONS: readonly OnionOption[] = [
       "Analysing university strategy documents for how they describe employability.",
       "Studying newspaper coverage of climate protests.",
     ],
-    references: [],
+    mistakes: ["Choosing documents without explaining how they were selected.", "Treating documents as neutral when they were written for a purpose."],
+    references: ["bowen-2009", "scott-1990"],
     fits: {
       choice: { strong: ["qualitative"], possible: ["quantitative", "mixed-methods", "multi-method"] },
       strategy: {
@@ -629,7 +657,8 @@ export const OPTIONS: readonly OnionOption[] = [
     strengths: ["Saves time and cost.", "Can provide large, high-quality datasets."],
     limitations: ["The data may not measure exactly what you need.", "You have no control over how it was collected."],
     examples: ["Using national census data to study housing and health.", "Reanalysing a large existing education survey."],
-    references: [],
+    mistakes: ["Not checking how the original data were collected and what they measure.", "Using a dataset for a question its variables can't really answer."],
+    references: ["heaton-2004", "bryman-2016"],
     fits: {
       choice: { strong: ["quantitative"], possible: ["qualitative", "mixed-methods", "multi-method"] },
       strategy: { strong: ["archival-research", "survey"], possible: ["case-study", "experiment", "grounded-theory"] },

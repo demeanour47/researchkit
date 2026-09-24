@@ -106,6 +106,22 @@ describe("summarise", () => {
     assert.deepEqual(summary.toJustify, [GENERAL_JUSTIFICATION]);
   });
 
+  it("collects further reading for the chosen options, each work once, in order of first appearance", () => {
+    const summary = summarise({ philosophy: "realism", approach: "deductive" });
+    assert.deepEqual(
+      summary.furtherReading.map((reference) => reference.id),
+      ["sayer-2000", "saunders-2019", "popper-1959", "bryman-2016"],
+    );
+    assert.deepEqual(summarise({}).furtherReading, []);
+  });
+
+  it("carries evidence and alternative views on every judgement", () => {
+    const summary = summarise({ philosophy: "positivism", choice: "qualitative" });
+    assert.equal(summary.judgements.length, 1);
+    assert.equal(summary.judgements[0].evidence.level, "textbook");
+    assert.ok(summary.judgements[0].alternativeView);
+  });
+
   it("does not change the selection it is given", () => {
     const selection: OnionSelection = { philosophy: "pragmatism", approach: "deductive" };
     const copy = { ...selection };

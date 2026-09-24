@@ -1,0 +1,98 @@
+/** All wording for the Hypothesis Builder. Academic content lives in the knowledge layer. */
+
+export const page = {
+  title: "Hypothesis Builder",
+  /** One sentence, for listings such as the tools index. */
+  summary: "Turns your research question, objectives and variables into null and alternative hypothesis drafts, with every check explained.",
+  metaDescription:
+    "Draft null and alternative hypotheses from your own research question, objectives and variables. Choose difference, relationship or prediction hypotheses, directional or not, and see explained checks.",
+  intro:
+    "Start from your research question, objectives and variables, choose the kind of hypothesis you need, and get null and alternative drafts built only from your own details. You can edit every draft, and every check explains itself.",
+  noScript:
+    "The Hypothesis Builder drafts and checks hypotheses as you type, which needs JavaScript. Turn on JavaScript to use it. The explanation of each hypothesis type and the guidance below work without it.",
+  howHeading: "How the builder works",
+  limitsHeading: "What this tool can't do",
+  reviewHeading: "Awaiting academic review",
+  privacyHeading: "Privacy",
+  privacy: "Everything you enter stays in your browser. Nothing is sent anywhere or saved, and it is cleared when you leave the page.",
+} as const;
+
+export const how: readonly string[] = [
+  "The builder reads your project draft: research question, aim, objectives, variables, population, context and methodology. Enter them in the first steps; later versions will bring them across from the other research tools.",
+  "Hypotheses are drafted only from what you entered. No variable, direction or relationship is inferred: you choose the form and direction, and every relationship is one you listed. Anything missing stays in square brackets.",
+  "Each draft pair carries its relationship as structured data (independent, dependent, moderator, mediator and control variables), so later tools can use it directly.",
+  "The builder writes only the hypotheses section of your project draft. Everything else stays exactly as you entered it.",
+];
+
+export const steps = {
+  question: "Research question",
+  questionLabel: "Your research question",
+  questionHint: "Paste the question from the Research Question Builder, or write it here.",
+  aimLabel: "Research aim",
+  aimHint: "What the project sets out to do.",
+  objectives: "Objectives",
+  objectivesLabel: "Research objectives",
+  objectivesHint: "One objective per line.",
+  variables: "Variables",
+  variablesIntro: "List each variable exactly as you will name it. Enter one per line. Only the variables you list are used.",
+  independent: "Independent variables",
+  independentHint: "What may influence the outcome, or defines the groups you compare.",
+  dependent: "Dependent variables",
+  dependentHint: "The outcomes you will measure.",
+  moderator: "Moderator variables (optional)",
+  moderatorHint: "Variables that may change the strength or direction of a relationship.",
+  mediator: "Mediator variables (optional)",
+  mediatorHint: "Variables through which one variable may affect another.",
+  control: "Control variables (optional)",
+  controlHint: "Variables you will hold constant or adjust for.",
+  scopeHeading: "Population and context",
+  population: "Population",
+  populationHint: "Who the hypotheses are about, such as “first-year university students”.",
+  location: "Location (optional)",
+  locationHint: "Such as “Nepal”.",
+  timeContext: "Time frame (optional)",
+  timeContextHint: "Such as “2025”.",
+  methodologyHeading: "Methodology (optional)",
+  methodologyHint: "Use the same choices as in the Research Onion Explorer, if you used it.",
+  methodology: "Methodology",
+  philosophy: "Research philosophy",
+  approach: "Research approach",
+  notChosen: "Not chosen",
+  type: "Hypothesis type",
+  typeIntro: "Every hypothesis has a role (null or alternative), a form and a direction. The builder always drafts a null and an alternative together. Read about each type, then choose the form and direction.",
+  formLegend: "What will your hypotheses state?",
+  forms: { difference: "A difference between groups", relationship: "A relationship between variables", prediction: "A prediction of an outcome" },
+  directionLegend: "Will the alternative hypothesis state a direction?",
+  directionHint: "Choose a direction only if theory or previous evidence gives you a reason to expect it.",
+  drafts: "Generated drafts",
+  draftsIntro: "Edit any draft in your own words. The checks below use your edited wording.",
+  pairHeading: (index: number, label: string) => `Pair ${index}: ${label}`,
+  relationshipHeading: "Relationship",
+  nullLabel: "Null hypothesis (H₀)",
+  alternativeLabel: "Alternative hypothesis (H₁)",
+  reset: "Restore the generated drafts",
+  copyAll: "all hypotheses",
+  /** The visible label and hidden subject together read "Copy all hypotheses". */
+  copyAllLabel: "Copy all",
+  copiedAllLabel: "Copied all",
+  copyAllSubject: "hypotheses",
+  copyNull: "null hypothesis",
+  copyAlternative: "alternative hypothesis",
+  evaluation: "Evaluation",
+  evaluationIntro: "Checks describe how your hypotheses fit your project. They never score or rank.",
+  methodologyFit: "Fit with your methodology",
+  why: "Why:",
+  project: "Your project draft",
+  projectIntro: "This tool writes only the Hypotheses section. Everything else is shown as you entered it.",
+} as const;
+
+export const typeGuide = {
+  heading: "The seven hypothesis types",
+  describes: { role: "Role", direction: "Direction", form: "Form" },
+  whenAppropriate: "When it is appropriate",
+  strengths: "Strengths",
+  limitations: "Limitations",
+  examples: "Examples",
+  references: "References",
+  learnMore: (name: string) => `Learn more about the ${name.toLowerCase()}`,
+} as const;

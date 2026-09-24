@@ -11,9 +11,32 @@ import {
   TOOL_ID as CITATION_STYLE_FINDER_ID,
   TOOL_PATH as CITATION_STYLE_FINDER_PATH,
 } from "@/tools/citation-style-finder/path";
+import { page as conceptualFrameworkBuilder } from "@/tools/conceptual-framework-builder/copy";
+import {
+  TOOL_ID as CONCEPTUAL_FRAMEWORK_BUILDER_ID,
+  TOOL_PATH as CONCEPTUAL_FRAMEWORK_BUILDER_PATH,
+} from "@/tools/conceptual-framework-builder/path";
+import { page as hypothesisBuilder } from "@/tools/hypothesis-builder/copy";
+import { page as sampleSizeCalculator } from "@/tools/sample-size-calculator/copy";
+import { TOOL_ID as SAMPLE_SIZE_CALCULATOR_ID, TOOL_PATH as SAMPLE_SIZE_CALCULATOR_PATH } from "@/tools/sample-size-calculator/path";
+import { page as samplingBuilder } from "@/tools/sampling-builder/copy";
+import { TOOL_ID as SAMPLING_BUILDER_ID, TOOL_PATH as SAMPLING_BUILDER_PATH } from "@/tools/sampling-builder/path";
+import { page as researchDesignBuilder } from "@/tools/research-design-builder/copy";
+import {
+  TOOL_ID as RESEARCH_DESIGN_BUILDER_ID,
+  TOOL_PATH as RESEARCH_DESIGN_BUILDER_PATH,
+} from "@/tools/research-design-builder/path";
+import { page as variablesBuilder } from "@/tools/variables-builder/copy";
+import { TOOL_ID as VARIABLES_BUILDER_ID, TOOL_PATH as VARIABLES_BUILDER_PATH } from "@/tools/variables-builder/path";
+import { TOOL_ID as HYPOTHESIS_BUILDER_ID, TOOL_PATH as HYPOTHESIS_BUILDER_PATH } from "@/tools/hypothesis-builder/path";
 import { page as readingTime } from "@/tools/reading-time/copy";
 import { page as researchOnion } from "@/tools/research-onion/copy";
 import { TOOL_ID as RESEARCH_ONION_ID, TOOL_PATH as RESEARCH_ONION_PATH } from "@/tools/research-onion/path";
+import { page as researchQuestionBuilder } from "@/tools/research-question-builder/copy";
+import {
+  TOOL_ID as RESEARCH_QUESTION_BUILDER_ID,
+  TOOL_PATH as RESEARCH_QUESTION_BUILDER_PATH,
+} from "@/tools/research-question-builder/path";
 import { page as textStatistics } from "@/tools/text-statistics/copy";
 import { TOOL_ID as TEXT_STATISTICS_ID, TOOL_PATH as TEXT_STATISTICS_PATH } from "@/tools/text-statistics/path";
 import { TOOL_ID as READING_TIME_ID, TOOL_PATH as READING_TIME_PATH } from "@/tools/reading-time/path";
@@ -51,7 +74,7 @@ export type ToolCategory = (typeof TOOL_CATEGORIES)[number];
 export type ToolCategoryId = ToolCategory["id"];
 
 /** Tools that work on the same material and point to one another. */
-export type ToolFamily = "citation" | "text-analysis";
+export type ToolFamily = "citation" | "text-analysis" | "research";
 
 export type ToolEntry = CatalogueItem & {
   category: ToolCategoryId;
@@ -118,7 +141,15 @@ export const TOOLS: readonly ToolEntry[] = [
   comingSoon("sentence-counter", "Sentence Counter", "Counts sentences and shows their average length.", "writing"),
   comingSoon("readability-checker", "Readability Checker", "Scores how easy your text is to read, using established readability formulas.", "writing"),
 
-  comingSoon("sample-size-calculator", "Sample Size Calculator", "Works out how many participants your study needs.", "statistics"),
+  {
+    id: SAMPLE_SIZE_CALCULATOR_ID,
+    name: sampleSizeCalculator.title,
+    description: sampleSizeCalculator.summary,
+    category: "statistics",
+    family: "research",
+    status: "available",
+    href: SAMPLE_SIZE_CALCULATOR_PATH,
+  },
   comingSoon("statistical-test-finder", "Statistical Test Finder", "Suggests a suitable statistical test for your data and research question.", "statistics"),
   comingSoon("effect-size-calculator", "Effect Size Calculator", "Calculates common effect sizes, such as Cohen's d, from your results.", "statistics"),
   comingSoon("power-analysis", "Power Analysis", "Estimates a study's statistical power, or the sample size needed to reach it.", "statistics"),
@@ -129,14 +160,66 @@ export const TOOLS: readonly ToolEntry[] = [
     name: researchOnion.title,
     description: researchOnion.summary,
     category: "research",
+    family: "research",
     status: "available",
     href: RESEARCH_ONION_PATH,
   },
-  comingSoon("research-question-builder", "Research Question Builder", "Helps you shape a focused, answerable research question.", "research"),
+  {
+    id: RESEARCH_QUESTION_BUILDER_ID,
+    name: researchQuestionBuilder.title,
+    description: researchQuestionBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: RESEARCH_QUESTION_BUILDER_PATH,
+  },
   comingSoon("research-objectives-generator", "Research Objectives Generator", "Helps you turn a research question into clear, measurable objectives.", "research"),
-  comingSoon("hypothesis-builder", "Hypothesis Builder", "Helps you state testable null and alternative hypotheses.", "research"),
+  {
+    id: HYPOTHESIS_BUILDER_ID,
+    name: hypothesisBuilder.title,
+    description: hypothesisBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: HYPOTHESIS_BUILDER_PATH,
+  },
+  {
+    id: VARIABLES_BUILDER_ID,
+    name: variablesBuilder.title,
+    description: variablesBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: VARIABLES_BUILDER_PATH,
+  },
+  {
+    id: CONCEPTUAL_FRAMEWORK_BUILDER_ID,
+    name: conceptualFrameworkBuilder.title,
+    description: conceptualFrameworkBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: CONCEPTUAL_FRAMEWORK_BUILDER_PATH,
+  },
   comingSoon("research-title-generator", "Research Title Generator", "Suggests title structures for your topic and method, for you to refine.", "research"),
-  comingSoon("research-design-guide", "Research Design Guide", "Explains research designs and helps you choose one that fits your question.", "research"),
+  {
+    id: RESEARCH_DESIGN_BUILDER_ID,
+    name: researchDesignBuilder.title,
+    description: researchDesignBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: RESEARCH_DESIGN_BUILDER_PATH,
+  },
+  {
+    id: SAMPLING_BUILDER_ID,
+    name: samplingBuilder.title,
+    description: samplingBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: SAMPLING_BUILDER_PATH,
+  },
 ];
 
 /** The other tools in a tool's family, available ones first. Empty for a tool without a family. */

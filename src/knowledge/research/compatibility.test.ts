@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { allJudgements, areCompared, judge, judgementsFor, validateSelection } from "./compatibility";
+import { ALTERNATIVE_VIEWS } from "./evidence";
 import { COMPARED_LAYERS, OPTIONS, optionsFor } from "./research-onion";
 import { LAYER_ORDER, type Fit, type OnionSelection } from "./types";
 
@@ -13,6 +14,8 @@ describe("judge", () => {
       reason: "Grounded Theory usually develops theory inductively, while Positivism generally begins from objective measurement.",
       justify:
         "Explain why Grounded Theory is appropriate alongside Positivism, and how you will address the tension between them.",
+      evidence: { level: "interpretive", sources: [] },
+      alternativeView: ALTERNATIVE_VIEWS["positivism/grounded-theory"],
     });
   });
 
@@ -24,6 +27,8 @@ describe("judge", () => {
       reason:
         "A deductive approach usually tests an existing theory against data. This fits well with Positivism, which generally begins from objective measurement.",
       justify: null,
+      evidence: { level: "textbook", sources: ["saunders-2019", "bryman-2016"] },
+      alternativeView: null,
     });
   });
 
@@ -35,6 +40,8 @@ describe("judge", () => {
       reason:
         "An interview usually explores views in depth through conversation. It can also work with a quantitative design, which generally collects numerical data for statistical analysis, if your design shows how the two connect.",
       justify: "Explain how an interview will work alongside a quantitative design in your study.",
+      evidence: { level: "interpretive", sources: [] },
+      alternativeView: null,
     });
   });
 

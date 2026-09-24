@@ -1,9 +1,10 @@
 import type { Ref } from "react";
 import { Button } from "@/ui";
-import type { OnionSummary } from "@/knowledge/research";
-import { LAYER_ORDER, getLayer } from "@/knowledge/research";
-import { explorer, summary as copy, summaryLabels } from "./copy";
+import { LAYER_ORDER, SUMMARY_LABELS, SUMMARY_TEXT, getLayer, type OnionSummary } from "@/knowledge/research";
+import { summary as copy } from "./copy";
+import { ExportActions } from "./export-actions";
 import { FitList } from "./fit-list";
+import { ReferenceList } from "@/features/research";
 
 function List({ items }: { items: readonly string[] }) {
   return (
@@ -20,10 +21,15 @@ export interface OnionSummaryViewProps {
   headingRef: Ref<HTMLHeadingElement>;
   onEdit: () => void;
   onStartAgain: () => void;
+  onExported: (label: string) => void;
 }
 
-/** The Research Onion Summary: the researcher's choices, why they work, their weaknesses and what to justify. */
-export function OnionSummaryView({ summary, headingRef, onEdit, onStartAgain }: OnionSummaryViewProps) {
+/**
+ * The Research Onion Summary: the researcher's choices, why they work, the evidence
+ * and differing views, weaknesses, what to justify and further reading.
+ */
+export function OnionSummaryView({ summary, headingRef, onEdit, onStartAgain, onExported }: OnionSummaryViewProps) {
+  const strong = summary.judgements.filter((judgement) => judgement.fit === "strong");
   const needsAttention = summary.judgements.filter((judgement) => judgement.fit !== "strong");
   const chosen = new Map(summary.choices.map(({ layer, option }) => [layer, option.name]));
 
@@ -31,9 +37,9 @@ export function OnionSummaryView({ summary, headingRef, onEdit, onStartAgain }: 
     <section aria-labelledby="onion-summary-title" className="grid gap-8">
       <div className="grid gap-2">
         <h2 id="onion-summary-title" ref={headingRef} tabIndex={-1} className="text-heading font-semibold focus-ring">
-          {copy.heading}
+          {SUMMARY_TEXT.title}
         </h2>
-        <p className="text-text-muted">{copy.intro}</p>
+        <p className="text-text-muted">{SUMMARY_TEXT.intro}</p>
       </div>
 
       {summary.missing.length > 0 && (
@@ -43,12 +49,12 @@ export function OnionSummaryView({ summary, headingRef, onEdit, onStartAgain }: 
       )}
 
       <div className="grid gap-4">
-        <h3 className="text-subheading font-semibold">{copy.choicesHeading}</h3>
+        <h3 className="text-subheading font-semibold">{SUMMARY_TEXT.choices}</h3>
         <dl className="grid gap-x-6 gap-y-2 rounded-panel border border-border bg-surface p-4 sm:grid-cols-[max-content_1fr]">
           {LAYER_ORDER.map((layer) => (
             <div key={layer} className="contents">
-              <dt className="font-medium">{summaryLabels[layer]}</dt>
-              <dd className={chosen.has(layer) ? undefined : "text-text-muted"}>{chosen.get(layer) ?? explorer.notChosen}</dd>
+              <dt className="font-medium">{SUMMARY_LABELS[layer]}</dt>
+              <dd className={chosen.has(layer) ? undefined : "text-text-muted"}>{chosen.get(layer) ?? SUMMARY_TEXT.notChosen}</dd>
             </div>
           ))}
         </dl>
@@ -56,33 +62,42 @@ export function OnionSummaryView({ summary, headingRef, onEdit, onStartAgain }: 
 
       {summary.judgements.length > 0 && (
         <div className="grid gap-4">
-          <h3 className="text-subheading font-semibold">{copy.whyItWorks}</h3>
-          {summary.whyItWorks.length > 0 ? <List items={summary.whyItWorks} /> : <p>{copy.noStrongFits}</p>}
+          <h3 className="text-subheading font-semibold">{SUMMARY_TEXT.whyItWorks}</h3>
+          {strong.length > 0 ? <FitList judgements={strong} showPair headingLevel={4} /> : <p>{SUMMARY_TEXT.noStrongFits}</p>}
         </div>
       )}
 
       {needsAttention.length > 0 && (
         <div className="grid gap-4">
-          <h3 className="text-subheading font-semibold">{copy.needsAttention}</h3>
-          <FitList judgements={needsAttention} showPair showJustify={false} />
+          <h3 className="text-subheading font-semibold">{SUMMARY_TEXT.needsAttention}</h3>
+          <FitList judgements={needsAttention} showPair showJustify={false} headingLevel={4} />
         </div>
       )}
 
       {summary.weaknesses.length > 0 && (
         <div className="grid gap-4">
-          <h3 className="text-subheading font-semibold">{copy.weaknesses}</h3>
+          <h3 className="text-subheading font-semibold">{SUMMARY_TEXT.weaknesses}</h3>
           <List items={summary.weaknesses} />
         </div>
       )}
 
       {summary.toJustify.length > 0 && (
         <div className="grid gap-4">
-          <h3 className="text-subheading font-semibold">{copy.toJustify}</h3>
+          <h3 className="text-subheading font-semibold">{SUMMARY_TEXT.toJustify}</h3>
           <List items={summary.toJustify} />
         </div>
       )}
 
+      {summary.furtherReading.length > 0 && (
+        <div className="grid gap-4">
+          <h3 className="text-subheading font-semibold">{SUMMARY_TEXT.furtherReading}</h3>
+          <ReferenceList references={summary.furtherReading} />
+        </div>
+      )}
+
       <p className="text-small text-text-muted">{copy.reminder}</p>
+
+      <ExportActions summary={summary} onExported={onExported} />
 
       <div className="flex flex-wrap gap-3">
         <Button variant="secondary" onClick={onEdit}>

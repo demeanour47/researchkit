@@ -5,7 +5,8 @@
 
 import { allJudgements, validateSelection } from "./compatibility";
 import { LAYERS, findOption } from "./research-onion";
-import type { Fit, Judgement, LayerId, OnionOption, OnionSelection } from "./types";
+import { getReference } from "./references";
+import type { Fit, Judgement, LayerId, OnionOption, OnionSelection, Reference } from "./types";
 import { LAYER_ORDER } from "./types";
 
 export interface OnionSummary {
@@ -22,6 +23,8 @@ export interface OnionSummary {
   weaknesses: string[];
   /** What the researcher should justify, including every pairing that isn't a strong fit. */
   toJustify: string[];
+  /** The further reading for every chosen option, each work once, in order of first appearance. */
+  furtherReading: Reference[];
 }
 
 export const GENERAL_JUSTIFICATION = "Explain how your research question led to each of these choices.";
@@ -40,6 +43,8 @@ export function summarise(selection: OnionSelection): OnionSummary {
   const counts: Record<Fit, number> = { strong: 0, possible: 0, careful: 0 };
   for (const judgement of judgements) counts[judgement.fit] += 1;
 
+  const readingIds = [...new Set(choices.flatMap(({ option }) => option.references))];
+
   return {
     choices,
     missing,
@@ -55,5 +60,6 @@ export function summarise(selection: OnionSelection): OnionSummary {
             GENERAL_JUSTIFICATION,
             ...judgements.flatMap((judgement) => (judgement.justify ? [judgement.justify] : [])),
           ],
+    furtherReading: readingIds.map(getReference),
   };
 }

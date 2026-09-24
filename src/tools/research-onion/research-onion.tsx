@@ -1,6 +1,6 @@
 import { guidesForTool, relatedTools } from "@/domains/catalogue";
 import { ToolPageLayout } from "@/features/tool";
-import { about, fitGuide, limits, page } from "./copy";
+import { about, evidenceGuide, fitGuide, limits, page } from "./copy";
 import { OnionExplorer } from "./onion-explorer";
 import { TOOL_ID } from "./path";
 
@@ -13,7 +13,8 @@ export function ResearchOnion() {
       noScript={page.noScript}
       sections={[
         { id: "about", heading: page.aboutHeading, items: about },
-        { id: "fits", heading: page.fitsHeading, items: fitGuide, aside: { heading: page.limitsHeading, items: limits } },
+        { id: "fits", heading: page.fitsHeading, items: fitGuide },
+        { id: "evidence", heading: page.evidenceHeading, items: evidenceGuide, aside: { heading: page.limitsHeading, items: limits } },
         { id: "privacy", heading: page.privacyHeading, text: page.privacy },
       ]}
       relatedGuides={guidesForTool(TOOL_ID)}

@@ -1,6 +1,6 @@
 /** All wording for the Research Onion Explorer. The teaching content itself lives in the knowledge layer. */
 
-import type { Fit, LayerId } from "@/knowledge/research";
+import { EVIDENCE_DESCRIPTIONS, EVIDENCE_LABELS } from "@/knowledge/research";
 
 export const page = {
   title: "Research Onion Explorer",
@@ -15,6 +15,7 @@ export const page = {
     "The Research Onion Explorer responds to your choices, which needs JavaScript. Turn on JavaScript to use it. The explanation of the research onion below works without it.",
   aboutHeading: "About the research onion",
   fitsHeading: "How to read the fit ratings",
+  evidenceHeading: "How strong the evidence is",
   limitsHeading: "Limitations",
   privacyHeading: "Privacy",
   privacy: "Your choices stay in your browser. Nothing you choose is sent anywhere or saved.",
@@ -33,11 +34,16 @@ export const fitGuide: readonly string[] = [
   "Only choices that directly shape each other are compared: for example, your time horizon is compared with your strategy, not with your philosophy.",
 ];
 
+/** How the evidence behind each rating is described, from the knowledge layer's own definitions. */
+export const evidenceGuide: readonly string[] = (["textbook", "guidance", "interpretive"] as const).map(
+  (level) => `${EVIDENCE_LABELS[level]}: ${EVIDENCE_DESCRIPTIONS[level]}`,
+);
+
 export const limits: readonly string[] = [
-  "The fit ratings describe common practice in methodology textbooks. Your discipline, supervisor or institution may view some combinations differently.",
+  "The fit ratings describe common practice in methodology textbooks. Your discipline, supervisor or institution may view some combinations differently, which is why differing views are shown alongside the ratings.",
   "Real studies often combine several techniques. The explorer asks for your main technique only; describe any others in your methodology chapter.",
   "Phenomenology is shown as a strategy, as many courses treat it, although it is also a research philosophy.",
-  "Academic references for each option haven't been added yet. They will be added after review by a methodology specialist.",
+  "The further reading is a starting point, not a complete literature. Check which editions your library holds, and cite the edition you actually read.",
 ];
 
 export const explorer = {
@@ -48,52 +54,57 @@ export const explorer = {
   whyUsed: "Why it is used",
   strengths: "Strengths",
   limitations: "Limitations",
+  learnMore: (name: string) => `Learn more about ${name}`,
   examples: "Typical examples",
+  mistakes: "Common mistakes",
+  furtherReading: "Further reading",
   fits: "How it fits your earlier choices",
   noEarlierLayers: "This is the outer layer, so there are no earlier choices to compare it with.",
   noEarlierChoices: "You haven't chosen anything yet in the layers this one is compared with.",
   justify: "What to justify:",
-  references: "Academic references",
-  referencesPending: "References for this option will be added after review by a methodology specialist.",
+  evidence: "Evidence:",
+  learnMoreFit: "Learn more about this rating",
+  alternativeView: "Another view",
+  sources: "Sources",
   back: "Back",
   next: (layerName: string) => `Next: ${layerName}`,
   seeSummary: "See summary",
 } as const;
 
+export const diagram = {
+  title: "Research onion",
+  description: (current: string | null, chosen: string[]) =>
+    [
+      "Six rings, from research philosophy on the outside to techniques and procedures at the centre.",
+      current ? `The ${current} ring is highlighted.` : "",
+      chosen.length > 0 ? `Chosen so far: ${chosen.join("; ")}.` : "Nothing chosen yet.",
+    ]
+      .filter(Boolean)
+      .join(" "),
+  legend: "Numbers match the layers. A bold outline marks the layer you are on; shaded rings have a choice.",
+} as const;
+
 export const summary = {
-  heading: "Research Onion Summary",
-  intro: "This summary describes the choices you made and how they fit together. It doesn't judge your design; use it to plan how you will justify your methodology.",
   missing: (names: string) => `You haven't chosen: ${names}. Go back to those layers to complete your design.`,
-  choicesHeading: "Your choices",
-  whyItWorks: "Why this combination works",
-  noStrongFits:
-    "None of your choices is a typical strong fit with another. That doesn't rule the design out, but every link between your choices will need a clear justification.",
-  needsAttention: "Combinations that need attention",
-  weaknesses: "Potential weaknesses",
-  toJustify: "What you should justify",
+  exportHeading: "Save your summary",
+  exportHint: "Download the summary with its evidence, differing views and further reading.",
+  exportMarkdown: "Download Markdown",
+  exportText: "Download plain text",
+  exportHtml: "Download print-friendly page",
   editLast: "Change your choices",
   startAgain: "Start again",
   reminder: "Talk your design through with your supervisor. They know the expectations of your discipline and institution.",
 } as const;
 
-/** The summary's name for each layer. */
-export const summaryLabels: Record<LayerId, string> = {
-  philosophy: "Philosophy",
-  approach: "Approach",
-  choice: "Method",
-  strategy: "Strategy",
-  timeHorizon: "Time horizon",
-  technique: "Data collection",
-};
-
-export const fitLabels: Record<Fit, string> = {
-  strong: "Strong fit",
-  possible: "Possible",
-  careful: "Needs careful justification",
-};
+export const exportFiles = {
+  markdown: { name: "research-onion-summary.md", type: "text/markdown", label: "Markdown file" },
+  text: { name: "research-onion-summary.txt", type: "text/plain", label: "Plain text file" },
+  html: { name: "research-onion-summary.html", type: "text/html", label: "Print-friendly page" },
+} as const;
 
 export const announcements = {
   chosen: (name: string, fits: string) => (fits ? `${name} chosen. ${fits}` : `${name} chosen.`),
-  fitWith: (label: string, name: string) => `${label} with ${name}.`,
+  fitWith: (label: string, name: string, evidence: string) => `${label} with ${name}, ${evidence.toLowerCase()}.`,
   cleared: "Choices cleared. Starting again from the first layer.",
+  downloaded: (label: string) => `${label} downloaded.`,
 } as const;

@@ -15,7 +15,7 @@ export interface OnionProgressProps {
 export function OnionProgress({ selection, current, reached, onJump }: OnionProgressProps) {
   return (
     <nav aria-label={explorer.progressLabel}>
-      <ol className="grid gap-2 sm:grid-cols-3 lg:grid-cols-6">
+      <ol className="grid gap-2 sm:grid-cols-2">
         {LAYERS.map((layer, index) => {
           const chosen = selection[layer.id];
           const isCurrent = index === current;

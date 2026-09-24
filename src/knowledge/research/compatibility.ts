@@ -5,9 +5,11 @@
  * - The later (inner) option's fit rule decides: listed as strong, listed as possible,
  *   or otherwise "needs careful justification".
  * - No combination is ever described as impossible or forbidden.
- * - Every judgement explains itself, using each option's own description.
+ * - Every judgement explains itself, using each option's own description, says how
+ *   firmly the literature supports it, and notes any differing view.
  */
 
+import { alternativeViewFor, evidenceFor } from "./evidence";
 import { COMPARED_LAYERS, LAYERS, findOption } from "./research-onion";
 import type { Fit, Judgement, LayerId, OnionOption, OnionSelection } from "./types";
 import { LAYER_ORDER } from "./types";
@@ -69,6 +71,8 @@ export function judge(firstId: string, secondId: string): Judgement | null {
     fit,
     reason: reasonFor(fit, later, earlier),
     justify: justificationFor(fit, later, earlier),
+    evidence: evidenceFor(earlier.id, later.id),
+    alternativeView: alternativeViewFor(earlier.id, later.id, fit === "careful"),
   };
 }
 
