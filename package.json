@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "next typegen && tsc --noEmit",
+    "pretest": "node -e \"require('fs').rmSync('.test-dist', { recursive: true, force: true })\"",
+    "test": "tsc -p tsconfig.test.json && cd .test-dist && node --test"
   },
   "dependencies": {
     "next": "16.3.6",

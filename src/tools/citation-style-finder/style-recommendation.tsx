@@ -2,7 +2,7 @@ import { Link, Tag } from "@/ui";
 import { CITATION_STYLES, styleTitle, type StyleId } from "@/knowledge/citation/styles";
 import type { Confidence, StyleRecommendation } from "@/knowledge/citation/style-finder";
 import { confidenceLabels, firstStepText, reasonText, resultLabels, styleSummaries } from "./copy";
-import { styleGuidePath } from "./path";
+import { hasStylePage, stylePath } from "@/domains/publishing";
 
 const confidenceTone: Record<Confidence, "info" | "neutral" | "caution"> = {
   strong: "info",
@@ -57,11 +57,13 @@ export function StyleRecommendationView({ recommendation, headingId, heading }: 
           <p className="text-small text-text-muted">
             {resultLabels.definedBy} {CITATION_STYLES[primary].authority}
           </p>
-          <div>
-            <Link href={styleGuidePath(primary)} variant="standalone">
-              {resultLabels.guideLink(CITATION_STYLES[primary].name)}
-            </Link>
-          </div>
+          {hasStylePage(primary) && (
+            <div>
+              <Link href={stylePath(primary)} variant="standalone">
+                {resultLabels.styleLink(CITATION_STYLES[primary].name)}
+              </Link>
+            </div>
+          )}
         </div>
       ) : (
         <div className="grid gap-3 rounded-panel border border-border bg-surface p-6">

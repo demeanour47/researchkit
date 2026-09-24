@@ -1,46 +1,12 @@
 import { Link, PageContainer } from "@/ui";
 import { TOOLS } from "@/domains/catalogue";
-import type { Guide, GuideBlock } from "@/domains/publishing";
+import type { Guide } from "@/domains/publishing";
 import { CatalogueList } from "@/features/catalogue";
-import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
+import { ContentBlock } from "@/features/reading";
 import { guideLabels } from "./copy";
 
 const FAQ_ID = "faq";
 const RELATED_ID = "related-tools";
-
-function Block({ block }: { block: GuideBlock }) {
-  switch (block.type) {
-    case "paragraph":
-      return <p>{block.text}</p>;
-    case "list": {
-      const List = block.ordered ? "ol" : "ul";
-      return (
-        <List className={`grid gap-2 ps-6 ${block.ordered ? "list-decimal" : "list-disc"}`}>
-          {block.items.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </List>
-      );
-    }
-    case "styles":
-      return (
-        <div className="grid gap-6">
-          {block.entries.map(({ style, usedIn, summary }) => (
-            <div key={style} className="grid gap-1">
-              <h3 className="text-subheading font-semibold">{styleTitle(style)}</h3>
-              <p className="text-small text-text-muted">
-                {guideLabels.definedBy} {CITATION_STYLES[style].authority}
-              </p>
-              <p>
-                <span className="font-medium">{guideLabels.usedIn}</span> {usedIn}
-              </p>
-              <p>{summary}</p>
-            </div>
-          ))}
-        </div>
-      );
-  }
-}
 
 function Credentials({ guide }: { guide: Guide }) {
   const updated = new Intl.DateTimeFormat("en", { dateStyle: "long", timeZone: "UTC" }).format(new Date(guide.updated));
@@ -91,7 +57,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
               {section.heading}
             </h2>
             {section.blocks.map((block, index) => (
-              <Block key={index} block={block} />
+              <ContentBlock key={index} block={block} />
             ))}
           </section>
         ))}

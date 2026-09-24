@@ -15,6 +15,11 @@ export function hasStylePage(style: StyleId): style is ProfiledStyleId {
   return (PROFILED_STYLES as readonly StyleId[]).includes(style);
 }
 
+/** Reads a style from untrusted input, such as a URL segment. */
+export function parseProfiledStyle(value: string): ProfiledStyleId | undefined {
+  return PROFILED_STYLES.find((style) => style === value);
+}
+
 export function getStyleProfile(style: ProfiledStyleId): StyleProfile {
   return styleProfiles[style];
 }

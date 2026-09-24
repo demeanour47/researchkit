@@ -228,5 +228,5 @@ export const resultLabels = {
   alternatives: "Also possible",
   why: "Why this recommendation",
   definedBy: "Defined by:",
-  guideLink: (name: string) => `Read the ${name} guide`,
+  styleLink: (name: string) => `More about ${name}`,
 } as const;

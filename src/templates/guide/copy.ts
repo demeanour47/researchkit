@@ -6,6 +6,4 @@ export const guideLabels = {
   updated: "Updated",
   reviewedBy: "Reviewed by",
   notReviewed: "Not yet checked by a named reviewer",
-  definedBy: "Defined by:",
-  usedIn: "Commonly used in:",
 } as const;

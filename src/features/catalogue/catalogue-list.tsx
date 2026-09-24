@@ -6,7 +6,7 @@ const statusLabels: Record<CatalogueStatus, string> = {
   "coming-soon": "Coming soon",
 };
 
-function CatalogueCard({ item }: { item: CatalogueItem }) {
+function CatalogueCard({ item, showStatus }: { item: CatalogueItem; showStatus: boolean }) {
   const descriptionId = `item-${item.id}-description`;
 
   return (
@@ -28,9 +28,11 @@ function CatalogueCard({ item }: { item: CatalogueItem }) {
       <p id={descriptionId} className="text-text-muted">
         {item.description}
       </p>
-      <div>
-        <Tag tone={item.status === "available" ? "info" : "neutral"}>{statusLabels[item.status]}</Tag>
-      </div>
+      {showStatus && (
+        <div>
+          <Tag tone={item.status === "available" ? "info" : "neutral"}>{statusLabels[item.status]}</Tag>
+        </div>
+      )}
     </li>
   );
 }
@@ -39,6 +41,8 @@ export interface CatalogueListProps {
   items: readonly CatalogueItem[];
   /** `grid` for directories; `stack` for a few related items beside other content. */
   layout?: "grid" | "stack";
+  /** Hide the status label where every item's status is stated once for the whole list. */
+  showStatus?: boolean;
 }
 
 /**
@@ -46,11 +50,11 @@ export interface CatalogueListProps {
  * themselves, with the whole card clickable; items not yet available are plain
  * text with a visible status.
  */
-export function CatalogueList({ items, layout = "grid" }: CatalogueListProps) {
+export function CatalogueList({ items, layout = "grid", showStatus = true }: CatalogueListProps) {
   return (
     <ul className={layout === "grid" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" : "grid gap-4"}>
       {items.map((item) => (
-        <CatalogueCard key={item.id} item={item} />
+        <CatalogueCard key={item.id} item={item} showStatus={showStatus} />
       ))}
     </ul>
   );
