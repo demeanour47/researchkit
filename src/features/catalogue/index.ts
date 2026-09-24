@@ -1,1 +1,1 @@
-export { ToolList, type ToolListProps } from "./tool-list";
+export { CatalogueList, type CatalogueListProps } from "./catalogue-list";

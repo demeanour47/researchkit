@@ -8,6 +8,5 @@ export const toolsIndex = {
     "Free tools for research, writing, citation and statistics. Every tool shows the reasoning behind its results, and none needs an account.",
   plannedNote: "Tools marked “Coming soon” are planned but not yet available.",
   categoriesLabel: "Tool categories",
-  summary: (available: number, comingSoon: number) =>
-    available > 0 ? `${available} available now, ${comingSoon} coming soon` : `${comingSoon} coming soon`,
+  crossLink: { lead: "Looking for explanations?", label: "Browse Research Guides" },
 } as const;

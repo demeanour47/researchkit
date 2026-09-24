@@ -1,5 +1,5 @@
 import { ButtonLink, Link, PageContainer, Section, SectionHeader, Tag, VisuallyHidden } from "@/ui";
-import { TOOLS_INDEX_PATH } from "@/domains/catalogue";
+import { GUIDES_INDEX_PATH, TOOLS_INDEX_PATH } from "@/domains/catalogue";
 import { CITATION_STYLE_FINDER_PATH, citationStyleFinderPage } from "@/tools/citation-style-finder";
 import { featured, hero, principles, start } from "./copy";
 
@@ -16,7 +16,7 @@ const startAreas: StartArea[] = [
   { ...start.areas.cite, href: CITATION_STYLE_FINDER_PATH },
   start.areas.write,
   start.areas.analyse,
-  start.areas.learn,
+  { ...start.areas.learn, href: GUIDES_INDEX_PATH },
 ];
 
 const card = "rounded-panel border border-border bg-surface p-6";

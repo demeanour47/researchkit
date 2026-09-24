@@ -5,7 +5,11 @@
  */
 
 import { page as citationStyleFinder } from "@/tools/citation-style-finder/copy";
-import { TOOL_PATH as CITATION_STYLE_FINDER_PATH } from "@/tools/citation-style-finder/path";
+import {
+  TOOL_ID as CITATION_STYLE_FINDER_ID,
+  TOOL_PATH as CITATION_STYLE_FINDER_PATH,
+} from "@/tools/citation-style-finder/path";
+import { availableFirst, comingSoon as catalogueComingSoon, type CatalogueItem } from "./item";
 
 /** The tools index address. Provisional until the URL strategy (ADR-0005) is accepted. */
 export const TOOLS_INDEX_PATH = "/tools";
@@ -36,32 +40,14 @@ export const TOOL_CATEGORIES = [
 export type ToolCategory = (typeof TOOL_CATEGORIES)[number];
 export type ToolCategoryId = ToolCategory["id"];
 
-interface ToolBase {
-  id: string;
-  name: string;
-  /** One sentence describing what the tool does. */
-  description: string;
-  category: ToolCategoryId;
-}
+export type ToolEntry = CatalogueItem & { category: ToolCategoryId };
 
-/** Only available tools have an address, so nothing can link to a tool that doesn't exist. */
-export type ToolEntry =
-  | (ToolBase & { status: "available"; href: string })
-  | (ToolBase & { status: "coming-soon" });
-
-export type ToolStatus = ToolEntry["status"];
-
-const comingSoon = (id: string, name: string, description: string, category: ToolCategoryId): ToolEntry => ({
-  id,
-  name,
-  description,
-  category,
-  status: "coming-soon",
-});
+const comingSoon = (id: string, name: string, description: string, category: ToolCategoryId): ToolEntry =>
+  catalogueComingSoon(id, name, description, { category });
 
 export const TOOLS: readonly ToolEntry[] = [
   {
-    id: "citation-style-finder",
+    id: CITATION_STYLE_FINDER_ID,
     name: citationStyleFinder.title,
     description: citationStyleFinder.description,
     category: "citation",
@@ -97,13 +83,5 @@ export const TOOLS: readonly ToolEntry[] = [
 
 /** A category's tools, available ones first, in catalogue order otherwise. */
 export function toolsInCategory(category: ToolCategoryId): ToolEntry[] {
-  const tools = TOOLS.filter((tool) => tool.category === category);
-  return [...tools.filter((tool) => tool.status === "available"), ...tools.filter((tool) => tool.status !== "available")];
-}
-
-export function countByStatus(tools: readonly ToolEntry[]): Record<ToolStatus, number> {
-  return {
-    available: tools.filter((tool) => tool.status === "available").length,
-    "coming-soon": tools.filter((tool) => tool.status === "coming-soon").length,
-  };
+  return availableFirst(TOOLS.filter((tool) => tool.category === category));
 }

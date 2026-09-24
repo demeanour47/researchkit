@@ -3,13 +3,13 @@
  * separate from layout and every guide renders with the same structure.
  */
 
-import type { StyleId } from "@/knowledge/citation/styles";
+import type { ProfiledStyleId } from "./style-profile";
 
 export type GuideBlock =
   | { type: "paragraph"; text: string }
   | { type: "list"; ordered?: boolean; items: readonly string[] }
-  /** Styles described with their facts (name, edition, authority) from the knowledge layer. */
-  | { type: "styles"; entries: readonly { style: StyleId; usedIn: string; summary: string }[] };
+  /** Styles described from their shared profiles, with facts from the knowledge layer. */
+  | { type: "styles"; styles: readonly ProfiledStyleId[] };
 
 export interface GuideSection {
   /** Stable anchor for linking to the section. */

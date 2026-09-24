@@ -1,6 +1,9 @@
 import { PageContainer, Section, VisuallyHidden } from "@/ui";
 import { parseAnswers, recommendStyle } from "@/knowledge/citation/style-finder";
+import { guidesForTool } from "@/domains/catalogue";
+import { CatalogueList } from "@/features/catalogue";
 import { missingLabels, page, statusText } from "./copy";
+import { TOOL_ID } from "./path";
 import { StyleFinderForm } from "./style-finder-form";
 import { StyleRecommendationView } from "./style-recommendation";
 
@@ -16,6 +19,7 @@ export interface CitationStyleFinderProps {
 export function CitationStyleFinder({ params }: CitationStyleFinderProps) {
   const { answers, missing, submitted } = parseAnswers(params);
   const recommendation = answers ? recommendStyle(answers) : null;
+  const relatedGuides = guidesForTool(TOOL_ID);
 
   return (
     <PageContainer width="reading">
@@ -64,6 +68,15 @@ export function CitationStyleFinder({ params }: CitationStyleFinderProps) {
         </h2>
         <StyleFinderForm answers={answers ?? {}} />
       </Section>
+
+      {relatedGuides.length > 0 && (
+        <Section labelledBy="related-guides-title" spacing="compact">
+          <h2 id="related-guides-title" className="mb-6 text-heading font-semibold">
+            {relatedGuides.length === 1 ? page.relatedGuide : page.relatedGuides}
+          </h2>
+          <CatalogueList items={relatedGuides} layout="stack" />
+        </Section>
+      )}
     </PageContainer>
   );
 }
