@@ -1,0 +1,17 @@
+/*
+ * Focus: one visible indicator for every interactive element.
+ * An outline (not a shadow) survives forced-colours modes, where the browser
+ * substitutes its own system colour.
+ */
+
+:root {
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-focus);
+    outline-offset: var(--focus-ring-offset);
+  }
+}

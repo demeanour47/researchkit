@@ -1,0 +1,48 @@
+/*
+ * Colour roles. Every colour is a role, never a raw hue, and each role holds its
+ * light and dark value together. The active scheme is chosen in themes.css.
+ *
+ * Contrast (WCAG 2.x), minimum across canvas, surface and sunken, light / dark:
+ *   text 15.8 / 14.3 · text-muted 6.6 / 7.5 · action 6.4 / 7.3
+ *   success 4.7 / 9.1 · warning 5.1 / 9.4 · danger 4.9 / 7.5
+ *   border-control 3.2 / 3.6 (non-text, needs 3:1) · focus 6.4 / 7.3
+ *   on-action on action 7.3 / 7.9 · on-emphasis on emphasis 14.1 / 12.8
+ * Re-check every pair when a value changes.
+ */
+
+@theme {
+  /* Only semantic roles exist; the default palette is removed. */
+  --color-*: initial;
+
+  /* Surfaces */
+  --color-canvas: light-dark(#f7f8fa, #0b1220);
+  --color-surface: light-dark(#ffffff, #131b2b);
+  --color-sunken: light-dark(#eef1f5, #0f1726);
+
+  /* Text */
+  --color-text: light-dark(#0f1729, #e6eaf2);
+  --color-text-muted: light-dark(#4a5568, #a3acbd);
+
+  /* Lines: `border` is decorative only; `border-control` identifies controls (3:1). */
+  --color-border: light-dark(#d5dae3, #2a3446);
+  --color-border-control: light-dark(#7d879a, #66728a);
+
+  /* Interaction */
+  --color-action: light-dark(#2445d6, #8ea4ff);
+  --color-action-hover: light-dark(#1b3ab8, #b0bfff);
+  --color-on-action: light-dark(#ffffff, #0b1220);
+  --color-focus: light-dark(#2445d6, #8ea4ff);
+
+  /* The single point of emphasis, always behind text, never as text. */
+  --color-emphasis: light-dark(#ffe45c, #f2d54b);
+  --color-on-emphasis: light-dark(#0f1729, #0b1220);
+
+  /* Status: always paired with words or an icon, never colour alone. */
+  --color-success: light-dark(#117a4b, #4ed39a);
+  --color-warning: light-dark(#9a5400, #f2b45a);
+  --color-danger: light-dark(#c0362c, #ff8a7f);
+
+  /* Compatibility roles used by the foundation components. */
+  --color-foreground: var(--color-text);
+  --color-background: var(--color-canvas);
+}

@@ -1,0 +1,23 @@
+/*
+ * Elevation: borders separate surfaces; shadows are reserved for layers that
+ * float above the page. Shadow tints follow the colour scheme.
+ */
+
+:root {
+  --shadow-tint-soft: light-dark(rgb(15 23 41 / 0.07), rgb(0 0 0 / 0.35));
+  --shadow-tint-strong: light-dark(rgb(15 23 41 / 0.14), rgb(0 0 0 / 0.55));
+
+  /* Stacking order. */
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-skip-link: 2000;
+}
+
+@theme {
+  --shadow-*: initial;
+  /* Menus and popovers. */
+  --shadow-raised: 0 1px 2px var(--shadow-tint-soft), 0 2px 8px var(--shadow-tint-soft);
+  /* Dialogs and the skip link. */
+  --shadow-overlay: 0 4px 12px var(--shadow-tint-soft), 0 16px 40px var(--shadow-tint-strong);
+}

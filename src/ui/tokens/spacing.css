@@ -1,0 +1,18 @@
+/*
+ * Spacing: a 4px base unit. Numeric utilities are multiples of the unit
+ * (p-4 = 1rem). Only the steps listed in spacing.ts are permitted;
+ * findOffScaleSpacing() there reports any class that uses another value.
+ */
+
+@theme {
+  --spacing: 0.25rem;
+
+  /* Semantic spacing for layout rhythm and touch targets. */
+  --spacing-gutter: 1rem;
+  --spacing-gutter-wide: 1.5rem;
+  --spacing-section: 4rem;
+  --spacing-section-wide: 6rem;
+  --spacing-section-compact: 2rem;
+  --spacing-control: 2.75rem;
+  --spacing-control-sm: 2.25rem;
+}

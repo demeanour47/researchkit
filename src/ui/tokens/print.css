@@ -1,0 +1,40 @@
+/*
+ * Print foundations: always the light scheme, no elevation or motion, sensible
+ * page breaks, and web addresses written out so printed references stay usable.
+ * Components hide interactive-only parts with the print:hidden variant.
+ */
+
+@media print {
+  :root {
+    color-scheme: light;
+    --shadow-tint-soft: transparent;
+    --shadow-tint-strong: transparent;
+    --duration-instant: 0ms;
+    --duration-quick: 0ms;
+    --duration-moderate: 0ms;
+  }
+
+  @page {
+    margin: 2cm;
+  }
+
+  @layer base {
+    h1, h2, h3, h4, h5, h6 {
+      break-after: avoid;
+    }
+
+    p, li {
+      orphans: 3;
+      widows: 3;
+    }
+
+    pre, blockquote, table, figure, img, svg {
+      break-inside: avoid;
+    }
+
+    a[href^="http"]::after {
+      content: " (" attr(href) ")";
+      word-break: break-all;
+    }
+  }
+}

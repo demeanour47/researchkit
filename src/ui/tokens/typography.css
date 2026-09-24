@@ -1,0 +1,63 @@
+/*
+ * Typography: typeface roles and a semantic type scale.
+ *
+ * Typefaces are not chosen here. Each role reads an optional --typeface-* hook,
+ * set by whichever font loader is used, and falls back to system faces.
+ *
+ * Fluid sizes grow gently with the viewport; the rem component keeps every size
+ * responsive to the reader's own text-size setting. Body text never drops below 1rem.
+ */
+
+@theme {
+  --font-*: initial;
+  --font-body: var(--typeface-body, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  --font-display: var(--typeface-display, var(--font-body));
+  --font-mono: var(--typeface-mono, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+
+  --default-font-family: var(--font-body);
+  --default-mono-font-family: var(--font-mono);
+
+  --text-*: initial;
+
+  /* Largest heading on a landing page; used once at most. */
+  --text-display: clamp(2.5rem, 1.6rem + 3.6vw, 4.25rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+
+  /* Page titles. */
+  --text-title: clamp(2.125rem, 1.8rem + 1.4vw, 3rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.015em;
+
+  /* Section headings. */
+  --text-heading: clamp(1.625rem, 1.4rem + 0.9vw, 2.125rem);
+  --text-heading--line-height: 1.2;
+  --text-heading--letter-spacing: -0.01em;
+
+  /* Sub-sections and item titles. */
+  --text-subheading: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem);
+  --text-subheading--line-height: 1.3;
+
+  /* Introductory paragraphs and long-form reading. */
+  --text-lead: clamp(1.125rem, 1.1rem + 0.15vw, 1.1875rem);
+  --text-lead--line-height: 1.65;
+
+  /* Interface and explanatory text. */
+  --text-body: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --text-body--line-height: 1.6;
+
+  /* Labels, hints, meta information. */
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.5;
+
+  /* The smallest permitted size: captions and eyebrows. */
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-caption--letter-spacing: 0.01em;
+
+  /* Compatibility sizes used by the foundation components. */
+  --text-base: var(--text-body);
+  --text-base--line-height: var(--text-body--line-height);
+  --text-sm: var(--text-small);
+  --text-sm--line-height: var(--text-small--line-height);
+}

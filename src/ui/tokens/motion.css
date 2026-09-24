@@ -1,0 +1,27 @@
+/*
+ * Motion: brief, calm, and explanatory. One easing curve for state changes.
+ * Under reduced motion every duration is zero, so all token-based motion stops.
+ */
+
+@theme {
+  --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --default-transition-timing-function: var(--ease-standard);
+  --default-transition-duration: var(--duration-instant);
+}
+
+:root {
+  /* Hover and press feedback. */
+  --duration-instant: 120ms;
+  /* A control changing state. */
+  --duration-quick: 200ms;
+  /* A panel opening or closing. */
+  --duration-moderate: 320ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-quick: 0ms;
+    --duration-moderate: 0ms;
+  }
+}
