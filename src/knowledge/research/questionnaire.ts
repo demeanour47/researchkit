@@ -35,6 +35,21 @@ export function findQuestion(questionnaire: Questionnaire, id: string): Question
 /** A section's questions, in order. */
 export const sectionQuestions = (questionnaire: Questionnaire, sectionId: string): Question[] => questionnaire.questions.filter((question) => question.section === sectionId);
 
+/**
+ * Where a question joins a section at a position among its questions, as an index into
+ * the full list. Keeps the stored order matching the section order, even for a section
+ * that has no questions yet. Positions are clamped to the section.
+ */
+export function insertionIndex(sections: readonly QuestionnaireSection[], questions: readonly Question[], sectionId: string, position = Number.POSITIVE_INFINITY): number {
+  const siblings = questions.filter((question) => question.section === sectionId);
+  const at = Math.max(0, Math.min(siblings.length, Math.round(position)));
+  if (at < siblings.length) return questions.indexOf(siblings[at]);
+  if (siblings.length > 0) return questions.indexOf(siblings[siblings.length - 1]) + 1;
+  const order = sections.map((section) => section.id);
+  const later = questions.findIndex((question) => order.indexOf(question.section) > order.indexOf(sectionId));
+  return later === -1 ? questions.length : later;
+}
+
 /** Every question in the order respondents meet them: section by section. */
 export const orderedQuestions = (questionnaire: Questionnaire): Question[] => questionnaire.sections.flatMap((section) => sectionQuestions(questionnaire, section.id));
 

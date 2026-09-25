@@ -8,7 +8,7 @@
  * the same questionnaire.
  */
 
-import { questionNumbers } from "./questionnaire";
+import { insertionIndex, questionNumbers } from "./questionnaire";
 import { createQuestion } from "./questionnaire-items";
 import { DEFAULT_SECTIONS } from "./questionnaire-sections";
 import { QUESTION_TYPE_INFO, TYPE_FOR_LEVEL, type Question, type Questionnaire, type QuestionnaireSection, type QuestionType } from "./questionnaire-types";
@@ -116,8 +116,7 @@ export function addMissingQuestions(questionnaire: Questionnaire, project: Resea
     const section = questionnaire.sections.some((candidate) => candidate.id === preferred) ? preferred : fallback?.id;
     if (!section) continue;
     const question = createQuestion(`q-${nextNumber(questions)}`, section, { type: suggestedType(variable, indicator), variableId: variable.id, indicatorId: indicator?.id ?? null });
-    const last = questions.map((candidate) => candidate.section).lastIndexOf(section);
-    const at = last === -1 ? questions.length : last + 1;
+    const at = insertionIndex(questionnaire.sections, questions, section);
     questions = [...questions.slice(0, at), question, ...questions.slice(at)];
   }
   return { ...questionnaire, questions };
@@ -201,8 +200,8 @@ export function questionOrigin(question: Question, project: ResearchProjectDraft
   const level = indicator?.level ?? variable.measurementLevel;
   const explanation = [
     indicator
-      ? `${number ? `Question ${number}` : "This question"} measures “${indicator.name}”, an indicator of ${variable.name} (${kind} variable).`
-      : `${number ? `Question ${number}` : "This question"} measures ${variable.name} (${kind} variable), but no indicator is chosen, so what it measures isn't yet specific.`,
+      ? `${number ? `Question ${number}` : "This question"} measures “${indicator.name}”, an indicator of ${variable.name} (${kind}).`
+      : `${number ? `Question ${number}` : "This question"} measures ${variable.name} (${kind}), but no indicator is chosen, so what it measures isn't yet specific.`,
     question.text.trim() ? "Its wording is yours." : "Its wording is still to be written: the builder never writes questions for you.",
     level
       ? TYPE_FOR_LEVEL[level] === question.type

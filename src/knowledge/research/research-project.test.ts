@@ -45,6 +45,14 @@ const variable = {
   sources: [{ kind: "list" as const, asKind: "independent" as const, references: [] }],
 };
 
+const questionnaire = {
+  title: "Sleep survey",
+  sections: [{ id: "section-a", kind: "items" as const, title: "Section A", content: "" }],
+  questions: [
+    { id: "q-1", section: "section-a", text: "How many hours did you sleep last night?", type: "numeric" as const, variableId: null, indicatorId: null, required: true, helpText: "", notes: "", options: [], rows: [], scale: null },
+  ],
+};
+
 const sampleSize = {
   method: "cochran" as const,
   inputs: { populationType: "unknown" as const, populationSize: null, confidence: 95 as const, margin: 5, proportion: 50, responseRate: null, designEffect: 1 },
@@ -110,6 +118,7 @@ describe("createProjectDraft", () => {
       researchDesign: design,
       samplingPlan: sampling,
       sampleSizePlan: sampleSize,
+      questionnaire,
       methodology: "quantitative",
       researchOnionSelection: { philosophy: "positivism" },
       notes: "Check access",
@@ -134,6 +143,7 @@ describe("createProjectDraft", () => {
       researchDesign: design,
       samplingPlan: sampling,
       sampleSizePlan: sampleSize,
+      questionnaire,
       methodology: "quantitative",
       researchOnionSelection: { philosophy: "positivism" },
       notes: "Check access",

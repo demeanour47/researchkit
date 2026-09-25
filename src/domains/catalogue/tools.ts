@@ -19,6 +19,8 @@ import {
 import { page as hypothesisBuilder } from "@/tools/hypothesis-builder/copy";
 import { page as sampleSizeCalculator } from "@/tools/sample-size-calculator/copy";
 import { TOOL_ID as SAMPLE_SIZE_CALCULATOR_ID, TOOL_PATH as SAMPLE_SIZE_CALCULATOR_PATH } from "@/tools/sample-size-calculator/path";
+import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
+import { TOOL_ID as QUESTIONNAIRE_BUILDER_ID, TOOL_PATH as QUESTIONNAIRE_BUILDER_PATH } from "@/tools/questionnaire-builder/path";
 import { page as samplingBuilder } from "@/tools/sampling-builder/copy";
 import { TOOL_ID as SAMPLING_BUILDER_ID, TOOL_PATH as SAMPLING_BUILDER_PATH } from "@/tools/sampling-builder/path";
 import { page as researchDesignBuilder } from "@/tools/research-design-builder/copy";
@@ -219,6 +221,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: SAMPLING_BUILDER_PATH,
+  },
+  {
+    id: QUESTIONNAIRE_BUILDER_ID,
+    name: questionnaireBuilder.title,
+    description: questionnaireBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: QUESTIONNAIRE_BUILDER_PATH,
   },
 ];
 

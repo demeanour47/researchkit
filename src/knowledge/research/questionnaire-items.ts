@@ -4,7 +4,7 @@
  * researcher's; a new question starts without any.
  */
 
-import { findQuestion, findSection } from "./questionnaire";
+import { findQuestion, findSection, insertionIndex } from "./questionnaire";
 import { createScale, type QuestionScale } from "./questionnaire-scales";
 import { QUESTION_TYPES, QUESTION_TYPE_INFO, type Question, type QuestionType, type Questionnaire } from "./questionnaire-types";
 
@@ -52,9 +52,8 @@ export function createQuestion(id: string, section: string, details: NewQuestion
 export function addQuestion(questionnaire: Questionnaire, sectionId: string, details: NewQuestion = {}): { questionnaire: Questionnaire; id: string } {
   findSection(questionnaire, sectionId);
   const id = nextQuestionId(questionnaire);
-  const last = questionnaire.questions.map((question) => question.section).lastIndexOf(sectionId);
   const question = createQuestion(id, sectionId, details);
-  const at = last === -1 ? questionnaire.questions.length : last + 1;
+  const at = insertionIndex(questionnaire.sections, questionnaire.questions, sectionId);
   return { questionnaire: { ...questionnaire, questions: [...questionnaire.questions.slice(0, at), question, ...questionnaire.questions.slice(at)] }, id };
 }
 
@@ -76,10 +75,7 @@ export function deleteQuestion(questionnaire: Questionnaire, id: string): Questi
 export function moveQuestion(questionnaire: Questionnaire, id: string, toIndex: number): Questionnaire {
   const question = findQuestion(questionnaire, id);
   const others = questionnaire.questions.filter((candidate) => candidate.id !== id);
-  const siblings = others.filter((candidate) => candidate.section === question.section);
-  const at = Math.max(0, Math.min(siblings.length, Math.round(toIndex)));
-  const before = siblings[at];
-  const position = before ? others.indexOf(before) : siblings.length > 0 ? others.indexOf(siblings[siblings.length - 1]) + 1 : others.length;
+  const position = insertionIndex(questionnaire.sections, others, question.section, toIndex);
   return { ...questionnaire, questions: [...others.slice(0, position), question, ...others.slice(position)] };
 }
 
@@ -89,8 +85,7 @@ export function changeSection(questionnaire: Questionnaire, id: string, sectionI
   findSection(questionnaire, sectionId);
   if (question.section === sectionId) return questionnaire;
   const others = questionnaire.questions.filter((candidate) => candidate.id !== id);
-  const last = others.map((candidate) => candidate.section).lastIndexOf(sectionId);
-  const at = last === -1 ? others.length : last + 1;
+  const at = insertionIndex(questionnaire.sections, others, sectionId);
   return { ...questionnaire, questions: [...others.slice(0, at), { ...question, section: sectionId }, ...others.slice(at)] };
 }
 

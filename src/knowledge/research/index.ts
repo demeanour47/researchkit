@@ -473,6 +473,7 @@ export {
   cleanQuestionnaire,
   findQuestion,
   findSection,
+  insertionIndex,
   matrixRows,
   orderedQuestions,
   questionNumbers,
