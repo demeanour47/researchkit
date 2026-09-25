@@ -22,6 +22,8 @@ import { TOOL_ID as SAMPLE_SIZE_CALCULATOR_ID, TOOL_PATH as SAMPLE_SIZE_CALCULAT
 import { page as dataAnalysisRecommender } from "@/tools/data-analysis-recommender/copy";
 import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
+import { page as resultsInterpretation } from "@/tools/results-interpretation/copy";
+import { TOOL_ID as RESULTS_INTERPRETATION_ID, TOOL_PATH as RESULTS_INTERPRETATION_PATH } from "@/tools/results-interpretation/path";
 import { TOOL_ID as QUESTIONNAIRE_BUILDER_ID, TOOL_PATH as QUESTIONNAIRE_BUILDER_PATH } from "@/tools/questionnaire-builder/path";
 import { page as samplingBuilder } from "@/tools/sampling-builder/copy";
 import { TOOL_ID as SAMPLING_BUILDER_ID, TOOL_PATH as SAMPLING_BUILDER_PATH } from "@/tools/sampling-builder/path";
@@ -241,6 +243,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: DATA_ANALYSIS_RECOMMENDER_PATH,
+  },
+  {
+    id: RESULTS_INTERPRETATION_ID,
+    name: resultsInterpretation.title,
+    description: resultsInterpretation.summary,
+    category: "statistics",
+    family: "research",
+    status: "available",
+    href: RESULTS_INTERPRETATION_PATH,
   },
 ];
 

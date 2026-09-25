@@ -564,3 +564,5 @@ export {
 } from "./data-analysis";
 export { DATA_ANALYSIS_LIMITATIONS, DATA_ANALYSIS_REVIEW_ITEMS, analysisPlanText } from "./data-analysis-summary";
 export { parseVariableLines, variablesFromLines, type VariableLine } from "./variable-lines";
+export * from "./results";
+export { EMPTY_TYPED_PROJECT, TYPED_MARGINS, TYPED_VARIABLE_FIELDS, projectFromTyped, variablesFromTyped, type TypedProject } from "./typed-project";
