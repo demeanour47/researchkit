@@ -23,6 +23,8 @@ import { page as dataAnalysisRecommender } from "@/tools/data-analysis-recommend
 import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
 import { page as resultsInterpretation } from "@/tools/results-interpretation/copy";
+import { page as statisticalAssumptionChecker } from "@/tools/statistical-assumption-checker/copy";
+import { TOOL_ID as STATISTICAL_ASSUMPTION_CHECKER_ID, TOOL_PATH as STATISTICAL_ASSUMPTION_CHECKER_PATH } from "@/tools/statistical-assumption-checker/path";
 import { TOOL_ID as RESULTS_INTERPRETATION_ID, TOOL_PATH as RESULTS_INTERPRETATION_PATH } from "@/tools/results-interpretation/path";
 import { TOOL_ID as QUESTIONNAIRE_BUILDER_ID, TOOL_PATH as QUESTIONNAIRE_BUILDER_PATH } from "@/tools/questionnaire-builder/path";
 import { page as samplingBuilder } from "@/tools/sampling-builder/copy";
@@ -252,6 +254,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: RESULTS_INTERPRETATION_PATH,
+  },
+  {
+    id: STATISTICAL_ASSUMPTION_CHECKER_ID,
+    name: statisticalAssumptionChecker.title,
+    description: statisticalAssumptionChecker.summary,
+    category: "statistics",
+    family: "research",
+    status: "available",
+    href: STATISTICAL_ASSUMPTION_CHECKER_PATH,
   },
 ];
 
