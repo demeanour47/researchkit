@@ -19,6 +19,8 @@ import {
 import { page as hypothesisBuilder } from "@/tools/hypothesis-builder/copy";
 import { page as sampleSizeCalculator } from "@/tools/sample-size-calculator/copy";
 import { TOOL_ID as SAMPLE_SIZE_CALCULATOR_ID, TOOL_PATH as SAMPLE_SIZE_CALCULATOR_PATH } from "@/tools/sample-size-calculator/path";
+import { page as dataAnalysisRecommender } from "@/tools/data-analysis-recommender/copy";
+import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
 import { TOOL_ID as QUESTIONNAIRE_BUILDER_ID, TOOL_PATH as QUESTIONNAIRE_BUILDER_PATH } from "@/tools/questionnaire-builder/path";
 import { page as samplingBuilder } from "@/tools/sampling-builder/copy";
@@ -230,6 +232,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: QUESTIONNAIRE_BUILDER_PATH,
+  },
+  {
+    id: DATA_ANALYSIS_RECOMMENDER_ID,
+    name: dataAnalysisRecommender.title,
+    description: dataAnalysisRecommender.summary,
+    category: "statistics",
+    family: "research",
+    status: "available",
+    href: DATA_ANALYSIS_RECOMMENDER_PATH,
   },
 ];
 

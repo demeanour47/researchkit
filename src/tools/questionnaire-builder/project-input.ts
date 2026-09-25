@@ -6,8 +6,6 @@
 
 import {
   EMPTY_SAMPLING_PLAN,
-  addIndicator,
-  addProjectVariable,
   applyHypotheses,
   applySampling,
   applyVariables,
@@ -18,35 +16,14 @@ import {
   toProjectHypotheses,
   updatePopulation,
   updateProjectDraft,
-  updateVariable,
+  variablesFromLines,
   type MeasurementLevel,
   type ProjectVariable,
   type ResearchProjectDraft,
   type VariableKind,
 } from "../../knowledge/research";
 
-export interface VariableLine {
-  name: string;
-  indicators: string[];
-}
-
-/**
- * One variable per line, with its indicators after a colon, separated by semicolons:
- * “sleep quality: time to fall asleep; feeling rested”. Repeated names are merged.
- */
-export function parseVariableLines(text: string): VariableLine[] {
-  const lines: VariableLine[] = [];
-  for (const raw of text.split("\n")) {
-    const colon = raw.indexOf(":");
-    const name = (colon === -1 ? raw : raw.slice(0, colon)).replace(/\s+/g, " ").trim();
-    if (!name) continue;
-    const indicators = colon === -1 ? [] : raw.slice(colon + 1).split(";").map((indicator) => indicator.replace(/\s+/g, " ").trim()).filter(Boolean);
-    const existing = lines.find((line) => line.name.toLowerCase() === name.toLowerCase());
-    if (existing) existing.indicators.push(...indicators.filter((indicator) => !existing.indicators.some((known) => known.toLowerCase() === indicator.toLowerCase())));
-    else lines.push({ name, indicators: [...new Set(indicators)] });
-  }
-  return lines;
-}
+export { parseVariableLines, type VariableLine } from "../../knowledge/research";
 
 export interface ProjectInputs {
   topic: string;
@@ -61,26 +38,16 @@ export interface ProjectInputs {
 
 export const EMPTY_PROJECT_INPUTS: ProjectInputs = { topic: "", researchAim: "", researchQuestion: "", researchObjectives: "", independent: "", dependent: "", control: "", targetPopulation: "" };
 
-const KINDS: [keyof ProjectInputs, VariableKind][] = [
-  ["independent", "independent"],
-  ["dependent", "dependent"],
-  ["control", "control"],
-];
-
 /** The variables typed in, with their indicators. A name in more than one list keeps its first kind. */
 export function variablesFromInputs(inputs: ProjectInputs, levels: Readonly<Record<string, MeasurementLevel | "">> = {}): ProjectVariable[] {
-  let variables: ProjectVariable[] = [];
-  for (const [field, kind] of KINDS) {
-    for (const line of parseVariableLines(inputs[field])) {
-      if (variables.some((variable) => variable.name.toLowerCase() === line.name.toLowerCase())) continue;
-      variables = addProjectVariable(variables, line.name, kind);
-      const id = variables[variables.length - 1].id;
-      for (const indicator of line.indicators) variables = addIndicator(variables, id, { name: indicator });
-      const level = levels[id];
-      if (level) variables = updateVariable(variables, id, { measurementLevel: level });
-    }
-  }
-  return variables;
+  return variablesFromLines(
+    [
+      [inputs.independent, "independent"],
+      [inputs.dependent, "dependent"],
+      [inputs.control, "control"],
+    ],
+    levels,
+  );
 }
 
 /**

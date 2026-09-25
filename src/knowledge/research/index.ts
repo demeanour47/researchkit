@@ -529,3 +529,38 @@ export {
   type QuestionnaireCounts,
 } from "./questionnaire-summary";
 export { PDF_PAGE, layoutPdf, pageLabel, questionnaireDocx, questionnairePdf, utf8, xmlText, zip, type PdfItem, type PdfPage, type ZipEntry } from "./questionnaire-export";
+export {
+  ANALYSIS_FAMILY_LABELS,
+  ANALYSIS_METHODS,
+  ANALYSIS_METHOD_IDS,
+  NON_PARAMETRIC_ALTERNATIVE,
+  RECOMMENDATION_STRENGTHS,
+  STRENGTH_LABELS,
+  getAnalysisMethod,
+  type AnalysisFamily,
+  type AnalysisMethod,
+  type AnalysisMethodId,
+  type RecommendationStrength,
+} from "./data-analysis-types";
+export { MEASURES, MEASURE_FOR_LEVEL, MEASURE_LABELS, analysisProfile, measureVariable, type AnalysisProfile, type Measure, type MeasuredVariable, type MethodologicalChoice } from "./data-analysis-profile";
+export { applyContext, controlRules, manovaRule, mediationRules, mergeRecommendations, moderationRules, multipleRules, pairRules, recommend, stronger, twoGroups, weaken, withFallbacks, type Recommendation } from "./data-analysis-rules";
+export {
+  STAGE_IDS,
+  STAGE_TITLES,
+  allRecommendations,
+  analysisQuestions,
+  describeStage,
+  measuresStage,
+  modelStage,
+  overview as analysisOverview,
+  questionRecommendations,
+  questionsStage,
+  recommendAnalyses,
+  uses as planUses,
+  type AnalysisPlan,
+  type AnalysisQuestion,
+  type AnalysisStage,
+  type StageId,
+} from "./data-analysis";
+export { DATA_ANALYSIS_LIMITATIONS, DATA_ANALYSIS_REVIEW_ITEMS, analysisPlanText } from "./data-analysis-summary";
+export { parseVariableLines, variablesFromLines, type VariableLine } from "./variable-lines";
