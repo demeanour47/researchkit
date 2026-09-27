@@ -25,6 +25,8 @@ import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy
 import { page as resultsInterpretation } from "@/tools/results-interpretation/copy";
 import { page as chartBuilder } from "@/tools/chart-builder/copy";
 import { page as tableBuilder } from "@/tools/table-builder/copy";
+import { page as literatureMatrix } from "@/tools/literature-matrix/copy";
+import { TOOL_ID as LITERATURE_MATRIX_ID, TOOL_PATH as LITERATURE_MATRIX_PATH } from "@/tools/literature-matrix/path";
 import { TOOL_ID as TABLE_BUILDER_ID, TOOL_PATH as TABLE_BUILDER_PATH } from "@/tools/table-builder/path";
 import { TOOL_ID as CHART_BUILDER_ID, TOOL_PATH as CHART_BUILDER_PATH } from "@/tools/chart-builder/path";
 import { page as statisticalAssumptionChecker } from "@/tools/statistical-assumption-checker/copy";
@@ -285,6 +287,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: TABLE_BUILDER_PATH,
+  },
+  {
+    id: LITERATURE_MATRIX_ID,
+    name: literatureMatrix.title,
+    description: literatureMatrix.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: LITERATURE_MATRIX_PATH,
   },
 ];
 

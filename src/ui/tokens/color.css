@@ -46,6 +46,15 @@
   --color-warning: light-dark(#9a5400, #f2b45a);
   --color-danger: light-dark(#c0362c, #ff8a7f);
 
+  /* Tags the researcher assigns, such as colour tags on studies. Always shown with the tag's name, never colour alone.
+     Contrast against surface and canvas, light / dark: red 5.3 / 6.8 · orange 4.9 / 8.2 · yellow 4.6 / 10.3 · green 4.8 / 8.9 · blue 5.7 / 7.2 · purple 6.7 / 7.9 */
+  --color-tag-red: light-dark(#c62828, #ff7b72);
+  --color-tag-orange: light-dark(#c2410c, #ff9a57);
+  --color-tag-yellow: light-dark(#8a6d00, #e8c547);
+  --color-tag-green: light-dark(#2e7d32, #5fd07a);
+  --color-tag-blue: light-dark(#1d5fc2, #6fa8ff);
+  --color-tag-purple: light-dark(#7b2cbf, #c69cff);
+
   /* Compatibility roles used by the foundation components. */
   --color-foreground: var(--color-text);
   --color-background: var(--color-canvas);
