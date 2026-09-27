@@ -20,7 +20,7 @@ export function BrandLink({ brand }: { brand: Brand }) {
         <span>{brand.name}</span>
       </NextLink>
       {brand.badge && (
-        <span className="hidden rounded-pill border border-border px-2 py-0.5 text-caption font-medium text-text-muted tabular-nums sm:inline">
+        <span className="hidden rounded-pill border border-border px-2 py-0.5 text-caption font-medium text-text-muted tabular-nums xl:inline">
           <span className="sr-only">{brand.badgeLabel ?? brand.badge}</span>
           <span aria-hidden="true">{brand.badge}</span>
         </span>

@@ -46,7 +46,15 @@ export function PrimaryNav({ items, orientation = "horizontal", label = "Main" }
                   : "min-h-control w-full px-3 aria-[current]:shadow-[inset_3px_0_0_var(--color-action)]",
               )}
             >
-              {item.icon && <Icon name={item.icon} className={horizontal ? "size-4" : undefined} />}
+              {/* Icons join the labels from wide screens up, where the bar has room for them. */}
+              {item.icon &&
+                (horizontal ? (
+                  <span className="hidden xl:inline-flex">
+                    <Icon name={item.icon} className="size-4" />
+                  </span>
+                ) : (
+                  <Icon name={item.icon} />
+                ))}
               {item.label}
             </NextLink>
           </li>

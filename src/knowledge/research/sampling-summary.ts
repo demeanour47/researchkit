@@ -79,7 +79,7 @@ export const SAMPLING_LIMITATIONS: readonly string[] = [
   "It doesn't calculate sample size. That needs a sample size calculation for your analysis, which a later tool will provide.",
   "Compatibility checks compare your project's wording and choices with typical practice. They can't judge whether you can actually reach your population, or whether your approach is ethical.",
   "Some terms are used differently by different authors: judgmental and purposive sampling, for example, are often treated as the same technique.",
-  "Nothing is saved. Your plan is lost when you leave the page.",
+  "Nothing is saved unless you start a project in your research workspace, which keeps it in this browser only. Otherwise your plan is lost when you leave the page.",
 ];
 
 /** Content awaiting review before launch. */

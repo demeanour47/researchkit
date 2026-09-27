@@ -3,11 +3,15 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, VisuallyHidden } from "@/ui";
 import { ProjectFields } from "@/features/research";
-import { EMPTY_TYPED_PROJECT, assumptionChecklist, checklistText, projectFromTyped, type MeasurementLevel, type TypedProject } from "@/knowledge/research";
+import { EMPTY_TYPED_PROJECT, assumptionChecklist, checklistText, projectFromTyped, updateProjectDraft, type MeasurementLevel, type TypedProject } from "@/knowledge/research";
+import { acceptance, checklistMethods } from "@/knowledge/workspace/accepted";
 import { announcements, checklistAnnouncement } from "./announcements";
 import { ChecklistView } from "./checklist-view";
 import { steps } from "./copy";
 import { exampleLevels, exampleProject } from "./example";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { SaveToProject } from "@/features/workspace/save-to-project";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 function Step({ id, heading, children }: { id: string; heading: string; children: ReactNode }) {
   return (
@@ -21,11 +25,15 @@ function Step({ id, heading, children }: { id: string; heading: string; children
 }
 
 /** The project and its assumption checklist. The guide to every analysis is rendered on the server and passed in. */
-export function ChecklistForm({ guide }: { guide: ReactNode }) {
+function ChecklistFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [project, setProject] = useState<TypedProject>(EMPTY_TYPED_PROJECT);
   const [levels, setLevels] = useState<Record<string, MeasurementLevel | "">>({});
   const [announcement, setAnnouncement] = useState("");
-  const checklist = useMemo(() => assumptionChecklist(projectFromTyped(project, levels)), [project, levels]);
+  // In the workspace the checklist reads the saved project; on its own, the details typed here.
+  const draft = useMemo(() => link.project ?? projectFromTyped(project, levels), [link.project, project, levels]);
+  const checklist = useMemo(() => assumptionChecklist(draft), [draft]);
+  const methods = useMemo(() => checklistMethods(checklist), [checklist]);
 
   const announce = (message: string) => {
     setAnnouncement("");
@@ -41,21 +49,27 @@ export function ChecklistForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setProject({ ...exampleProject });
-              setLevels({ ...exampleLevels });
-              announce(`${steps.exampleLoaded} ${checklistAnnouncement(assumptionChecklist(projectFromTyped(exampleProject, { ...exampleLevels })))}`);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        <ProjectFields prefix="ac" value={project} levels={levels} onType={(field, text) => setProject((current) => ({ ...current, [field]: text }))} onChoose={choose} />
+        {link.project ? (
+          <WorkspaceProjectSummary stage="assumptions" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setProject({ ...exampleProject });
+                  setLevels({ ...exampleLevels });
+                  announce(`${steps.exampleLoaded} ${checklistAnnouncement(assumptionChecklist(projectFromTyped(exampleProject, { ...exampleLevels })))}`);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            <ProjectFields prefix="ac" value={project} levels={levels} onType={(field, text) => setProject((current) => ({ ...current, [field]: text }))} onChoose={choose} />
+          </>
+        )}
       </Step>
 
       <Step id="checklist" heading={steps.checklist}>
@@ -64,6 +78,13 @@ export function ChecklistForm({ guide }: { guide: ReactNode }) {
         <div>
           <CopyButton text={checklistText(checklist)} subject={steps.copySubject} copyLabel={steps.copyLabel} copiedLabel={steps.copiedLabel} onResult={(result) => announce(result === "copied" ? announcements.copied : announcements.copyFailed)} />
         </div>
+        {link.project && (
+          <SaveToProject
+            subject={steps.saveSubject}
+            state={acceptance(link.project.statisticalAssumptions, methods)}
+            onSave={() => link.save(updateProjectDraft(draft, { statisticalAssumptions: { methods, notes: link.project?.statisticalAssumptions?.notes ?? "" } }))}
+          />
+        )}
       </Step>
 
       <Step id="guide" heading={steps.guide}>
@@ -74,5 +95,14 @@ export function ChecklistForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function ChecklistForm(props: Parameters<typeof ChecklistFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="assumptions">
+      <ChecklistFormContent {...props} />
+    </WorkspaceScope>
   );
 }

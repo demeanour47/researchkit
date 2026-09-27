@@ -3,12 +3,16 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, VisuallyHidden } from "@/ui";
 import { ProjectFields } from "@/features/research";
-import { analysisPlanText, recommendAnalyses, type MeasurementLevel } from "@/knowledge/research";
+import { analysisPlanText, recommendAnalyses, updateProjectDraft, type MeasurementLevel } from "@/knowledge/research";
+import { acceptance, planMethods } from "@/knowledge/workspace/accepted";
 import { announcements, planAnnouncement } from "./announcements";
 import { steps } from "./copy";
 import { exampleInputs, exampleLevels } from "./example";
 import { PlanView } from "./plan-view";
 import { EMPTY_PROJECT_INPUTS, projectFromInputs, type ProjectInputs } from "./project-input";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { SaveToProject } from "@/features/workspace/save-to-project";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 function Step({ id, heading, children }: { id: string; heading: string; children: ReactNode }) {
   return (
@@ -22,12 +26,15 @@ function Step({ id, heading, children }: { id: string; heading: string; children
 }
 
 /** The project the recommender reads, and the plan it gives. Every rule runs in the knowledge layer. */
-export function RecommenderForm({ guide }: { guide: ReactNode }) {
+function RecommenderFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [inputs, setInputs] = useState<ProjectInputs>(EMPTY_PROJECT_INPUTS);
   const [levels, setLevels] = useState<Record<string, MeasurementLevel | "">>({});
   const [announcement, setAnnouncement] = useState("");
-  const project = useMemo(() => projectFromInputs(inputs, levels), [inputs, levels]);
+  const typedProject = useMemo(() => projectFromInputs(inputs, levels), [inputs, levels]);
+  const project = link.project ?? typedProject;
   const plan = useMemo(() => recommendAnalyses(project), [project]);
+  const methods = useMemo(() => planMethods(plan), [plan]);
 
   const announce = (message: string) => {
     setAnnouncement("");
@@ -42,21 +49,27 @@ export function RecommenderForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setInputs({ ...exampleInputs });
-              setLevels({ ...exampleLevels });
-              announce(`${announcements.exampleLoaded} ${planAnnouncement(recommendAnalyses(projectFromInputs(exampleInputs, exampleLevels)))}`);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        <ProjectFields prefix="da" value={inputs} levels={levels} onType={(field, text) => setInputs((current) => ({ ...current, [field]: text }))} onChoose={choose} />
+        {link.project ? (
+          <WorkspaceProjectSummary stage="analysis" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setInputs({ ...exampleInputs });
+                  setLevels({ ...exampleLevels });
+                  announce(`${announcements.exampleLoaded} ${planAnnouncement(recommendAnalyses(projectFromInputs(exampleInputs, exampleLevels)))}`);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            <ProjectFields prefix="da" value={inputs} levels={levels} onType={(field, text) => setInputs((current) => ({ ...current, [field]: text }))} onChoose={choose} />
+          </>
+        )}
       </Step>
 
       <Step id="plan" heading={steps.plan}>
@@ -65,6 +78,13 @@ export function RecommenderForm({ guide }: { guide: ReactNode }) {
         <div>
           <CopyButton text={analysisPlanText(plan)} subject={steps.copySubject} copyLabel={steps.copyLabel} copiedLabel={steps.copiedLabel} onResult={(result) => announce(result === "copied" ? announcements.copied : announcements.copyFailed)} />
         </div>
+        {link.project && (
+          <SaveToProject
+            subject={steps.saveSubject}
+            state={acceptance(link.project.dataAnalysisPlan, methods)}
+            onSave={() => link.save(updateProjectDraft(project, { dataAnalysisPlan: { methods, notes: link.project?.dataAnalysisPlan?.notes ?? "" } }))}
+          />
+        )}
       </Step>
 
       <Step id="guide" heading={steps.guide}>
@@ -75,5 +95,14 @@ export function RecommenderForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function RecommenderForm(props: Parameters<typeof RecommenderFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="analysis">
+      <RecommenderFormContent {...props} />
+    </WorkspaceScope>
   );
 }

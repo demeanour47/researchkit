@@ -387,7 +387,7 @@ export const FRAMEWORK_LIMITATIONS: readonly string[] = [
   "Text is fitted to boxes using Helvetica measurements. An application that substitutes another font may fit text slightly differently.",
   "Pasting depends on the application and its version, and not every application accepts SVG from the clipboard. If pasting doesn't work, download the SVG or PNG and insert it as a picture.",
   "The figure doesn't follow any particular journal's requirements. Check your target journal's figure guidelines.",
-  "Nothing is saved. The framework is lost when you leave the page.",
+  "Nothing is saved unless you start a project in your research workspace, which keeps it in this browser only. Otherwise the framework is lost when you leave the page.",
 ];
 
 /** Content awaiting review before launch. */

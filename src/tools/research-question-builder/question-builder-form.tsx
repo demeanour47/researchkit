@@ -8,14 +8,16 @@ import {
   evaluateQuestion,
   getQuestionType,
   parseList,
+  updateProjectDraft,
   suggestQuestionTypes,
   type MethodologyId,
   type QuestionTypeId,
 } from "@/knowledge/research";
 import { announcements, drafting, feedback as feedbackCopy, form, types as typesCopy } from "./copy";
-import { ProjectFields, emptyProjectInput, type ProjectInput } from "./project-fields";
+import { ProjectFields, emptyProjectInput, projectInputFrom, type ProjectInput } from "./project-fields";
 import { QuestionFeedback } from "./question-feedback";
 import { TypeChooser } from "./type-chooser";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 /** How long typing must pause before the feedback summary is announced. */
 const ANNOUNCE_AFTER_MS = 1200;
@@ -36,10 +38,11 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * The builder: project details, a question type, the researcher's own question, and
  * feedback. Everything is computed by the knowledge layer and held only in this page's memory.
  */
-export function QuestionBuilderForm() {
-  const [input, setInput] = useState<ProjectInput>(emptyProjectInput);
+function QuestionBuilderFormContent() {
+  const link = useWorkspaceLink();
+  const [input, setInput] = useState<ProjectInput>(() => (link.project ? projectInputFrom(link.project) : emptyProjectInput));
   const [type, setType] = useState<QuestionTypeId | null>(null);
-  const [question, setQuestion] = useState("");
+  const [question, setQuestion] = useState(() => link.project?.researchQuestion ?? "");
   const [announcement, setAnnouncement] = useState("");
   const typed = useRef(false);
 
@@ -61,6 +64,8 @@ export function QuestionBuilderForm() {
   );
   const suggestions = useMemo(() => suggestQuestionTypes(project), [project]);
   const draft = useMemo(() => (type ? buildDraftQuestion(type, project) : null), [type, project]);
+  const updated = useMemo(() => updateProjectDraft(project, { researchQuestion: question }), [project, question]);
+  useEffect(() => link.save(updated), [link, updated]);
   const evaluation = useMemo(() => (question.trim() ? evaluateQuestion(question, project, type) : null), [question, project, type]);
 
   const summary = evaluation
@@ -89,6 +94,7 @@ export function QuestionBuilderForm() {
     <div className="grid gap-10">
       <Step id="project" heading={form.projectHeading}>
         <p className="text-text-muted">{form.projectHint}</p>
+        {link.project && <p className="text-small text-text-muted">{form.workspaceNote}</p>}
         <ProjectFields input={input} onChange={(changes) => setInput((current) => ({ ...current, ...changes }))} />
       </Step>
 
@@ -136,5 +142,14 @@ export function QuestionBuilderForm() {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function QuestionBuilderForm() {
+  return (
+    <WorkspaceScope stage="question">
+      <QuestionBuilderFormContent />
+    </WorkspaceScope>
   );
 }

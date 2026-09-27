@@ -1,5 +1,5 @@
 import { SelectField, TextField } from "@/ui";
-import { METHODOLOGIES, findOption, optionsFor } from "@/knowledge/research";
+import { METHODOLOGIES, findOption, optionsFor, type ResearchProjectDraft } from "@/knowledge/research";
 import { form } from "./copy";
 
 /** The raw text of every project field, exactly as typed. */
@@ -30,6 +30,24 @@ export const emptyProjectInput: ProjectInput = {
   philosophy: "",
   approach: "",
 };
+
+/** The fields as they would be typed, from a saved project. Lists are one item per line. */
+export function projectInputFrom(project: ResearchProjectDraft): ProjectInput {
+  const lines = (items: readonly string[] | undefined) => (items ?? []).join("\n");
+  return {
+    researchArea: project.researchArea ?? "",
+    topic: project.topic ?? "",
+    population: project.population ?? "",
+    location: project.location ?? "",
+    timeContext: project.timeContext ?? "",
+    researchAim: project.researchAim ?? "",
+    independentVariables: lines(project.independentVariables),
+    dependentVariables: lines(project.dependentVariables),
+    methodology: project.methodology ?? "",
+    philosophy: project.researchOnionSelection?.philosophy ?? "",
+    approach: project.researchOnionSelection?.approach ?? "",
+  };
+}
 
 const optionList = (ids: readonly string[]) => ids.map((id) => ({ value: id, label: findOption(id)?.name ?? id }));
 const methodologyOptions = optionList(METHODOLOGIES);

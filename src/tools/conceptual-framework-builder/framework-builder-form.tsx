@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Button, CopyButton, RadioGroup, Tag, TextField, VisuallyHidden } from "@/ui";
 import { LearnMore } from "@/features/research";
 import {
@@ -48,6 +48,8 @@ import { exampleProject } from "./example";
 import { copyFigure, download, svgToPng } from "@/features/figure-export";
 import { RelationshipPanel } from "./relationship-panel";
 import { VariablePanel } from "./variable-panel";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 const HISTORY_LIMIT = 50;
 
@@ -93,11 +95,12 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * the updated project draft. Every rule, layout and export comes from the knowledge
  * layer; this component holds what the researcher typed and their edits.
  */
-export function FrameworkBuilderForm() {
+function FrameworkBuilderFormContent() {
+  const link = useWorkspaceLink();
   const [inputs, setInputs] = useState<Inputs>(emptyInputs);
   const [form, setForm] = useState<HypothesisForm>("prediction");
   const [direction, setDirection] = useState<Direction>("non-directional");
-  const [edited, setEdited] = useState<ConceptualFramework | null>(null);
+  const [edited, setEdited] = useState<ConceptualFramework | null>(() => link.project?.conceptualFramework ?? null);
   const [history, setHistory] = useState<ConceptualFramework[]>([]);
   const [confirmRebuild, setConfirmRebuild] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
@@ -106,7 +109,7 @@ export function FrameworkBuilderForm() {
   const [announcement, setAnnouncement] = useState("");
   const dragging = useRef(false);
 
-  const project = useMemo(() => {
+  const typedProject = useMemo(() => {
     const base = createProjectDraft({
       researchQuestion: inputs.researchQuestion,
       researchObjectives: parseList(inputs.researchObjectives),
@@ -122,6 +125,7 @@ export function FrameworkBuilderForm() {
     const canDraft = (base.independentVariables?.length ?? 0) > 0 && (base.dependentVariables?.length ?? 0) > 0;
     return canDraft ? applyHypotheses(base, toProjectHypotheses(generateHypotheses(base, { form, direction }), {})) : base;
   }, [inputs, form, direction]);
+  const project = link.project ?? typedProject;
 
   const framework = useMemo(() => edited ?? frameworkFromProject(project), [edited, project]);
   const layout = useMemo(() => layoutFramework(framework, { showTypes }), [framework, showTypes]);
@@ -129,6 +133,7 @@ export function FrameworkBuilderForm() {
   const svg = useMemo(() => toSvg(layout, { monochrome, title: steps.figureTitle, description }), [layout, monochrome, description]);
   const warnings = useMemo(() => validateFramework(framework, project, layout), [framework, project, layout]);
   const updated = useMemo(() => applyFramework(project, framework), [project, framework]);
+  useEffect(() => link.save(updated), [link, updated]);
   const trace = selected && framework.relationships.some((relationship) => relationship.id === selected) ? traceRelationship(framework, selected, project) : null;
 
   const announce = (message: string) => {
@@ -225,33 +230,39 @@ export function FrameworkBuilderForm() {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setInputs({ ...exampleProject });
-              announce(steps.exampleLoaded);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        {input("researchQuestion", steps.question)}
-        {input("researchObjectives", steps.objectives, steps.objectivesHint)}
-        <div className="grid items-start gap-6 sm:grid-cols-2">
-          {input("independentVariables", steps.independent, steps.perLine)}
-          {input("dependentVariables", steps.dependent, steps.perLine)}
-          {input("mediatorVariables", steps.mediator, steps.perLine)}
-          {input("moderatorVariables", steps.moderator, steps.perLine)}
-          {input("controlVariables", steps.control, steps.perLine)}
-        </div>
-        <div className="grid items-start gap-6 sm:grid-cols-3">
-          {input("population", steps.population, steps.populationHint, true)}
-          {input("location", steps.location, undefined, true)}
-          {input("timeContext", steps.timeContext, undefined, true)}
-        </div>
+        {link.project ? (
+          <WorkspaceProjectSummary stage="framework" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setInputs({ ...exampleProject });
+                  announce(steps.exampleLoaded);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            {input("researchQuestion", steps.question)}
+            {input("researchObjectives", steps.objectives, steps.objectivesHint)}
+            <div className="grid items-start gap-6 sm:grid-cols-2">
+              {input("independentVariables", steps.independent, steps.perLine)}
+              {input("dependentVariables", steps.dependent, steps.perLine)}
+              {input("mediatorVariables", steps.mediator, steps.perLine)}
+              {input("moderatorVariables", steps.moderator, steps.perLine)}
+              {input("controlVariables", steps.control, steps.perLine)}
+            </div>
+            <div className="grid items-start gap-6 sm:grid-cols-3">
+              {input("population", steps.population, steps.populationHint, true)}
+              {input("location", steps.location, undefined, true)}
+              {input("timeContext", steps.timeContext, undefined, true)}
+            </div>
+          </>
+        )}
       </Step>
 
       <Step id="hypotheses" heading={steps.hypotheses}>
@@ -433,5 +444,14 @@ export function FrameworkBuilderForm() {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function FrameworkBuilderForm() {
+  return (
+    <WorkspaceScope stage="framework">
+      <FrameworkBuilderFormContent />
+    </WorkspaceScope>
   );
 }

@@ -117,7 +117,7 @@ export const VARIABLE_LIMITATIONS: readonly string[] = [
   "It can't check that a definition matches the literature, or that an indicator measures what it should. That needs your reading and, ideally, an established instrument.",
   "It can't test reliability or validity. Those need data and the right statistical checks.",
   "Links to your question, objectives, hypotheses and framework are found by matching variable names, so a variable described in other words won't be matched.",
-  "Nothing is saved. Your variables are lost when you leave the page.",
+  "Nothing is saved unless you start a project in your research workspace, which keeps it in this browser only. Otherwise your variables are lost when you leave the page.",
 ];
 
 /** Content awaiting review before launch. */

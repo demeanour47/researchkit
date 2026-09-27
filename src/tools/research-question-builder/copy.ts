@@ -30,6 +30,7 @@ export const finerAbout: readonly string[] = [
 ];
 
 export const form = {
+  workspaceNote: "Working in your project: the topic, context, variables and question you enter here are saved to it. The aim is saved from Objectives in your workspace, and the philosophy and approach from the Research Onion Explorer.",
   projectHeading: "Your project",
   projectHint: "Only the population is essential for most questions. Add whatever you know; you can change it at any time.",
   researchArea: "Research area",

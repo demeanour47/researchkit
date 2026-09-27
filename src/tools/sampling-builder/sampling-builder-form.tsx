@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, RadioGroup, SelectField, Tag, TextField, VisuallyHidden } from "@/ui";
 import {
   CHECK_STATUS_LABELS,
@@ -47,6 +47,8 @@ import { ComparisonView } from "./comparison-view";
 import { CompatibilityView, tones } from "./compatibility-view";
 import { steps } from "./copy";
 import { examplePopulation, exampleProject } from "./example";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 type Inputs = Record<"researchQuestion" | "researchObjectives" | "independentVariables" | "dependentVariables" | "philosophy" | "approach" | "choice" | "strategy" | "timeHorizon" | "design", string>;
 const emptyInputs: Inputs = { researchQuestion: "", researchObjectives: "", independentVariables: "", dependentVariables: "", philosophy: "", approach: "", choice: "", strategy: "", timeHorizon: "", design: "" };
@@ -75,17 +77,22 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * shortlist, compatibility checks, a comparison, and the researcher's own sampling
  * plan. Every judgement comes from the knowledge layer.
  */
-export function SamplingBuilderForm({ guide }: { guide: ReactNode }) {
+function SamplingBuilderFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [inputs, setInputs] = useState<Inputs>(emptyInputs);
   const [withHypotheses, setWithHypotheses] = useState(true);
-  const [plan, setPlan] = useState<SamplingPlan>(EMPTY_SAMPLING_PLAN);
-  const [criteria, setCriteria] = useState({ inclusionCriteria: "", exclusionCriteria: "" });
-  const [rateText, setRateText] = useState("");
+  // A new plan starts from the population named with the research question.
+  const [plan, setPlan] = useState<SamplingPlan>(() => link.project?.samplingPlan ?? updatePopulation(EMPTY_SAMPLING_PLAN, { targetPopulation: link.project?.population ?? "" }));
+  const [criteria, setCriteria] = useState(() => ({
+    inclusionCriteria: (link.project?.samplingPlan?.population.inclusionCriteria ?? []).join("\n"),
+    exclusionCriteria: (link.project?.samplingPlan?.population.exclusionCriteria ?? []).join("\n"),
+  }));
+  const [rateText, setRateText] = useState(() => String(link.project?.samplingPlan?.expectedResponseRate ?? ""));
   const [onlyConsistent, setOnlyConsistent] = useState(false);
   const [toAdd, setToAdd] = useState("");
   const [announcement, setAnnouncement] = useState("");
 
-  const project = useMemo(() => {
+  const typedProject = useMemo(() => {
     let draft = createProjectDraft({
       researchQuestion: inputs.researchQuestion,
       researchObjectives: parseList(inputs.researchObjectives),
@@ -99,9 +106,11 @@ export function SamplingBuilderForm({ guide }: { guide: ReactNode }) {
     if (inputs.design) draft = applyDesign(draft, chooseDesign(EMPTY_DESIGN, inputs.design as DesignId));
     return draft;
   }, [inputs, withHypotheses]);
+  const project = link.project ?? typedProject;
 
   // Compatibility reads the population from the plan, so checks use the draft with the plan applied.
   const updated = useMemo(() => applySampling(project, plan), [project, plan]);
+  useEffect(() => link.save(updated), [link, updated]);
   const narrowing = useMemo(() => narrowTechniques(plan.answers), [plan.answers]);
   const consistent = useMemo(() => consistentTechniques(plan.answers), [plan.answers]);
   const answered = Object.keys(plan.answers).length;
@@ -142,68 +151,74 @@ export function SamplingBuilderForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setInputs({ ...exampleProject });
-              const { inclusionCriteria, exclusionCriteria, ...rest } = examplePopulation;
-              setCriteria({ inclusionCriteria, exclusionCriteria });
-              setPlan(updatePopulation(plan, { ...rest, inclusionCriteria: parseList(inclusionCriteria), exclusionCriteria: parseList(exclusionCriteria) }));
-              announce(steps.exampleLoaded);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        {text("researchQuestion", steps.question)}
-        {text("researchObjectives", steps.objectives, steps.perLine)}
-        <div className="grid items-start gap-6 sm:grid-cols-2">
-          {text("independentVariables", steps.independent, steps.perLine)}
-          {text("dependentVariables", steps.dependent, steps.perLine)}
-        </div>
-        <fieldset className="grid gap-4" aria-describedby="sampling-onion-hint">
-          <legend className="mb-1 text-subheading font-semibold">{steps.onionHeading}</legend>
-          <p id="sampling-onion-hint" className="text-small text-text-muted">
-            {steps.onionHint}
-          </p>
-          <div className="grid items-start gap-4 sm:grid-cols-2">
-            {ONION_LAYERS.map(([layer, label]) => (
-              <SelectField
-                key={layer}
-                id={`sampling-${layer}`}
-                label={label}
-                emptyOption={steps.notChosen}
-                options={optionsFor(layer).map((option) => ({ value: option.id, label: option.name }))}
-                value={inputs[layer]}
-                onChange={(event) => setInputs((current) => ({ ...current, [layer]: event.target.value }))}
-              />
-            ))}
-            <SelectField
-              id="sampling-design"
-              label={steps.design}
-              hint={steps.designHint}
-              emptyOption={steps.notChosen}
-              options={RESEARCH_DESIGNS.map((design) => ({ value: design.id, label: design.name }))}
-              value={inputs.design}
-              onChange={(event) => setInputs((current) => ({ ...current, design: event.target.value }))}
+        {link.project ? (
+          <WorkspaceProjectSummary stage="sampling" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setInputs({ ...exampleProject });
+                  const { inclusionCriteria, exclusionCriteria, ...rest } = examplePopulation;
+                  setCriteria({ inclusionCriteria, exclusionCriteria });
+                  setPlan(updatePopulation(plan, { ...rest, inclusionCriteria: parseList(inclusionCriteria), exclusionCriteria: parseList(exclusionCriteria) }));
+                  announce(steps.exampleLoaded);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            {text("researchQuestion", steps.question)}
+            {text("researchObjectives", steps.objectives, steps.perLine)}
+            <div className="grid items-start gap-6 sm:grid-cols-2">
+              {text("independentVariables", steps.independent, steps.perLine)}
+              {text("dependentVariables", steps.dependent, steps.perLine)}
+            </div>
+            <fieldset className="grid gap-4" aria-describedby="sampling-onion-hint">
+              <legend className="mb-1 text-subheading font-semibold">{steps.onionHeading}</legend>
+              <p id="sampling-onion-hint" className="text-small text-text-muted">
+                {steps.onionHint}
+              </p>
+              <div className="grid items-start gap-4 sm:grid-cols-2">
+                {ONION_LAYERS.map(([layer, label]) => (
+                  <SelectField
+                    key={layer}
+                    id={`sampling-${layer}`}
+                    label={label}
+                    emptyOption={steps.notChosen}
+                    options={optionsFor(layer).map((option) => ({ value: option.id, label: option.name }))}
+                    value={inputs[layer]}
+                    onChange={(event) => setInputs((current) => ({ ...current, [layer]: event.target.value }))}
+                  />
+                ))}
+                <SelectField
+                  id="sampling-design"
+                  label={steps.design}
+                  hint={steps.designHint}
+                  emptyOption={steps.notChosen}
+                  options={RESEARCH_DESIGNS.map((design) => ({ value: design.id, label: design.name }))}
+                  value={inputs.design}
+                  onChange={(event) => setInputs((current) => ({ ...current, design: event.target.value }))}
+                />
+              </div>
+            </fieldset>
+            <RadioGroup
+              name="sampling-hypotheses"
+              legend={steps.hypothesesLegend}
+              hint={steps.hypothesesHint}
+              variant="inline"
+              options={[
+                { value: "yes", label: steps.withHypotheses },
+                { value: "no", label: steps.withoutHypotheses },
+              ]}
+              value={withHypotheses ? "yes" : "no"}
+              onChange={(value) => setWithHypotheses(value === "yes")}
             />
-          </div>
-        </fieldset>
-        <RadioGroup
-          name="sampling-hypotheses"
-          legend={steps.hypothesesLegend}
-          hint={steps.hypothesesHint}
-          variant="inline"
-          options={[
-            { value: "yes", label: steps.withHypotheses },
-            { value: "no", label: steps.withoutHypotheses },
-          ]}
-          value={withHypotheses ? "yes" : "no"}
-          onChange={(value) => setWithHypotheses(value === "yes")}
-        />
+          </>
+        )}
       </Step>
 
       <Step id="population" heading={steps.population}>
@@ -439,5 +454,14 @@ export function SamplingBuilderForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function SamplingBuilderForm(props: Parameters<typeof SamplingBuilderFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="sampling">
+      <SamplingBuilderFormContent {...props} />
+    </WorkspaceScope>
   );
 }

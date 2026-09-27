@@ -61,7 +61,7 @@ export const DESIGN_LIMITATIONS: readonly string[] = [
   "Compatibility checks compare your project's wording and choices with typical practice. They can't judge whether a design is feasible, ethical or acceptable in your discipline.",
   "Matching objectives and questions to designs relies on common wording, so an objective phrased differently may not be recognised.",
   "Design descriptions summarise common practice. Methodology texts define some designs differently, and terms such as “concurrent” and “convergent” mixed methods vary between authors.",
-  "Nothing is saved. Your choices are lost when you leave the page.",
+  "Nothing is saved unless you start a project in your research workspace, which keeps it in this browser only. Otherwise your choices are lost when you leave the page.",
 ];
 
 /** Content awaiting review before launch. */

@@ -6,7 +6,7 @@ export const hero = {
   description:
     "Free, exact tools for research, methodology, analysis, writing and publication. Every result shows the reasoning behind it, so you can check it and learn it.",
   primaryAction: "Explore the tools",
-  secondaryAction: "Start with a research question",
+  secondaryAction: "Start a project in your workspace",
   workflowLabel: "The research workflow",
 } as const;
 

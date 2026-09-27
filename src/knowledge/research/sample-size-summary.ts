@@ -109,7 +109,7 @@ export const SAMPLE_SIZE_LIMITATIONS: readonly string[] = [
   "The confidence level and margin of error strictly apply only to random samples, and cover sampling error, not bias.",
   "Estimating a mean needs its standard deviation, which these formulas don't use.",
   "Qualitative studies usually decide sample size by saturation or depth, not by formula.",
-  "Nothing is saved. Your plan is lost when you leave the page.",
+  "Nothing is saved unless you start a project in your research workspace, which keeps it in this browser only. Otherwise your plan is lost when you leave the page.",
 ];
 
 /** Content awaiting review before launch. */

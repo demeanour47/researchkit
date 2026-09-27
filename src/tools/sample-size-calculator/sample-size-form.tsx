@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, RadioGroup, SelectField, Tag, TextField, VisuallyHidden } from "@/ui";
 import { LearnMore } from "@/features/research";
 import {
@@ -59,6 +59,8 @@ import {
 import { announcements, numberError, resultSentence } from "./announcements";
 import { steps } from "./copy";
 import { exampleInputs, exampleProject } from "./example";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 type ProjectInputs = Record<keyof typeof exampleProject, string>;
 const emptyProject: ProjectInputs = {
@@ -179,6 +181,13 @@ function ScenarioTable({ caption, scenarios }: { caption: string; scenarios: rea
   );
 }
 
+/** The calculator's number fields from a saved plan, as they would be typed. */
+function numbersFromPlan(plan: SampleSizePlan): Record<NumberInput, string> {
+  const text = (value: number | null) => (value === null || !Number.isFinite(value) ? "" : String(value));
+  const { populationSize, margin, proportion, responseRate, designEffect } = plan.inputs;
+  return { populationSize: text(populationSize), margin: text(margin), proportion: text(proportion), responseRate: text(responseRate), designEffect: text(designEffect) };
+}
+
 /** The project draft the calculator reads, built from the details entered in the first step. */
 function buildProject(inputs: ProjectInputs, withHypotheses: boolean): ResearchProjectDraft {
   const independent = parseList(inputs.independentVariables);
@@ -222,18 +231,22 @@ function buildProject(inputs: ProjectInputs, withHypotheses: boolean): ResearchP
  * its full working, the checks, the sensitivity tables and the report. Every number
  * and judgement comes from the knowledge layer.
  */
-export function SampleSizeForm({ guide }: { guide: ReactNode }) {
+function SampleSizeFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [projectInputs, setProjectInputs] = useState<ProjectInputs>(emptyProject);
   const [withHypotheses, setWithHypotheses] = useState(false);
-  const [method, setMethod] = useState<SampleSizeMethodId>("cochran");
-  const [populationType, setPopulationType] = useState<"finite" | "unknown">("unknown");
-  const [confidence, setConfidence] = useState<ConfidenceLevel>(95);
-  const [numbers, setNumbers] = useState(emptyNumbers);
-  const [justification, setJustification] = useState("");
-  const [notes, setNotes] = useState("");
+  const saved = link.project?.sampleSizePlan;
+  const [method, setMethod] = useState<SampleSizeMethodId>(() => saved?.method ?? "cochran");
+  const [populationType, setPopulationType] = useState<"finite" | "unknown">(() => saved?.inputs.populationType ?? "unknown");
+  const [confidence, setConfidence] = useState<ConfidenceLevel>(() => saved?.inputs.confidence ?? 95);
+  // A new plan takes the response rate expected in the sampling plan.
+  const [numbers, setNumbers] = useState(() => (saved ? numbersFromPlan(saved) : { ...emptyNumbers, responseRate: String(link.project?.samplingPlan?.expectedResponseRate ?? "") }));
+  const [justification, setJustification] = useState(() => saved?.justification ?? "");
+  const [notes, setNotes] = useState(() => saved?.notes ?? "");
   const [announcement, setAnnouncement] = useState("");
 
-  const project = useMemo(() => buildProject(projectInputs, withHypotheses), [projectInputs, withHypotheses]);
+  const typedProject = useMemo(() => buildProject(projectInputs, withHypotheses), [projectInputs, withHypotheses]);
+  const project = link.project ?? typedProject;
   const plan: SampleSizePlan = useMemo(
     () => ({
       method,
@@ -252,6 +265,7 @@ export function SampleSizeForm({ guide }: { guide: ReactNode }) {
     [method, populationType, confidence, numbers, justification, notes],
   );
   const updated = useMemo(() => applySampleSize(project, plan), [project, plan]);
+  useEffect(() => link.save(updated), [link, updated]);
   const problems = inputProblems(plan);
   const result = problems.length === 0 ? calculateSampleSize(plan) : null;
   const inputChecks = checkInputs(plan);
@@ -279,78 +293,84 @@ export function SampleSizeForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setProjectInputs({ ...exampleProject });
-              setPopulationType("finite");
-              setMethod("finite-population-correction");
-              setNumbers({ ...exampleInputs });
-              announce(steps.exampleLoaded);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        {projectText("researchQuestion", steps.question)}
-        {projectText("researchObjectives", steps.objectives, steps.perLine)}
-        <div className="grid items-start gap-6 sm:grid-cols-2">
-          {projectText("independentVariables", steps.independent, steps.perLine)}
-          {projectText("dependentVariables", steps.dependent, steps.perLine)}
-          <SelectField
-            id="size-outcomeLevel"
-            label={steps.outcomeLevel}
-            hint={steps.outcomeLevelHint}
-            emptyOption={steps.notChosen}
-            options={MEASUREMENT_LEVELS.map((level) => ({ value: level, label: MEASUREMENT_LEVEL_INFO[level].label }))}
-            value={projectInputs.outcomeLevel}
-            onChange={(event) => setProject("outcomeLevel", event.target.value)}
-          />
-          <SelectField
-            id="size-design"
-            label={steps.design}
-            hint={steps.designHint}
-            emptyOption={steps.notChosen}
-            options={RESEARCH_DESIGNS.map((design) => ({ value: design.id, label: design.name }))}
-            value={projectInputs.design}
-            onChange={(event) => setProject("design", event.target.value)}
-          />
-          <SelectField
-            id="size-technique"
-            label={steps.technique}
-            hint={steps.techniqueHint}
-            emptyOption={steps.notChosen}
-            options={SAMPLING_TECHNIQUES.map((technique) => ({ value: technique.id, label: `${technique.name} sampling` }))}
-            value={projectInputs.technique}
-            onChange={(event) => setProject("technique", event.target.value)}
-          />
-          <TextField id="size-targetPopulation" label={steps.targetPopulation} autoComplete="off" value={projectInputs.targetPopulation} onChange={(event) => setProject("targetPopulation", event.target.value)} />
-          <TextField id="size-samplingFrame" label={steps.samplingFrame} autoComplete="off" value={projectInputs.samplingFrame} onChange={(event) => setProject("samplingFrame", event.target.value)} />
-          <TextField
-            id="size-planResponseRate"
-            label={steps.planResponseRate}
-            inputMode="decimal"
-            autoComplete="off"
-            value={projectInputs.planResponseRate}
-            error={planRateError ?? undefined}
-            onChange={(event) => setProject("planResponseRate", event.target.value)}
-          />
-        </div>
-        <RadioGroup
-          name="size-hypotheses"
-          legend={steps.hypothesesLegend}
-          hint={steps.hypothesesHint}
-          variant="inline"
-          options={[
-            { value: "yes", label: steps.withHypotheses },
-            { value: "no", label: steps.withoutHypotheses },
-          ]}
-          value={withHypotheses ? "yes" : "no"}
-          onChange={(value) => setWithHypotheses(value === "yes")}
-        />
+        {link.project ? (
+          <WorkspaceProjectSummary stage="sample-size" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setProjectInputs({ ...exampleProject });
+                  setPopulationType("finite");
+                  setMethod("finite-population-correction");
+                  setNumbers({ ...exampleInputs });
+                  announce(steps.exampleLoaded);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            {projectText("researchQuestion", steps.question)}
+            {projectText("researchObjectives", steps.objectives, steps.perLine)}
+            <div className="grid items-start gap-6 sm:grid-cols-2">
+              {projectText("independentVariables", steps.independent, steps.perLine)}
+              {projectText("dependentVariables", steps.dependent, steps.perLine)}
+              <SelectField
+                id="size-outcomeLevel"
+                label={steps.outcomeLevel}
+                hint={steps.outcomeLevelHint}
+                emptyOption={steps.notChosen}
+                options={MEASUREMENT_LEVELS.map((level) => ({ value: level, label: MEASUREMENT_LEVEL_INFO[level].label }))}
+                value={projectInputs.outcomeLevel}
+                onChange={(event) => setProject("outcomeLevel", event.target.value)}
+              />
+              <SelectField
+                id="size-design"
+                label={steps.design}
+                hint={steps.designHint}
+                emptyOption={steps.notChosen}
+                options={RESEARCH_DESIGNS.map((design) => ({ value: design.id, label: design.name }))}
+                value={projectInputs.design}
+                onChange={(event) => setProject("design", event.target.value)}
+              />
+              <SelectField
+                id="size-technique"
+                label={steps.technique}
+                hint={steps.techniqueHint}
+                emptyOption={steps.notChosen}
+                options={SAMPLING_TECHNIQUES.map((technique) => ({ value: technique.id, label: `${technique.name} sampling` }))}
+                value={projectInputs.technique}
+                onChange={(event) => setProject("technique", event.target.value)}
+              />
+              <TextField id="size-targetPopulation" label={steps.targetPopulation} autoComplete="off" value={projectInputs.targetPopulation} onChange={(event) => setProject("targetPopulation", event.target.value)} />
+              <TextField id="size-samplingFrame" label={steps.samplingFrame} autoComplete="off" value={projectInputs.samplingFrame} onChange={(event) => setProject("samplingFrame", event.target.value)} />
+              <TextField
+                id="size-planResponseRate"
+                label={steps.planResponseRate}
+                inputMode="decimal"
+                autoComplete="off"
+                value={projectInputs.planResponseRate}
+                error={planRateError ?? undefined}
+                onChange={(event) => setProject("planResponseRate", event.target.value)}
+              />
+            </div>
+            <RadioGroup
+              name="size-hypotheses"
+              legend={steps.hypothesesLegend}
+              hint={steps.hypothesesHint}
+              variant="inline"
+              options={[
+                { value: "yes", label: steps.withHypotheses },
+                { value: "no", label: steps.withoutHypotheses },
+              ]}
+              value={withHypotheses ? "yes" : "no"}
+              onChange={(value) => setWithHypotheses(value === "yes")}
+            />
+          </>
+        )}
       </Step>
 
       <Step id="method" heading={steps.method}>
@@ -583,5 +603,14 @@ export function SampleSizeForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function SampleSizeForm(props: Parameters<typeof SampleSizeFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="sample-size">
+      <SampleSizeFormContent {...props} />
+    </WorkspaceScope>
   );
 }
