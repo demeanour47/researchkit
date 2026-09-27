@@ -26,6 +26,8 @@ import { page as resultsInterpretation } from "@/tools/results-interpretation/co
 import { page as chartBuilder } from "@/tools/chart-builder/copy";
 import { page as tableBuilder } from "@/tools/table-builder/copy";
 import { page as literatureMatrix } from "@/tools/literature-matrix/copy";
+import { page as prismaFlowBuilder } from "@/tools/prisma-flow-builder/copy";
+import { TOOL_ID as PRISMA_FLOW_BUILDER_ID, TOOL_PATH as PRISMA_FLOW_BUILDER_PATH } from "@/tools/prisma-flow-builder/path";
 import { TOOL_ID as LITERATURE_MATRIX_ID, TOOL_PATH as LITERATURE_MATRIX_PATH } from "@/tools/literature-matrix/path";
 import { TOOL_ID as TABLE_BUILDER_ID, TOOL_PATH as TABLE_BUILDER_PATH } from "@/tools/table-builder/path";
 import { TOOL_ID as CHART_BUILDER_ID, TOOL_PATH as CHART_BUILDER_PATH } from "@/tools/chart-builder/path";
@@ -296,6 +298,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: LITERATURE_MATRIX_PATH,
+  },
+  {
+    id: PRISMA_FLOW_BUILDER_ID,
+    name: prismaFlowBuilder.title,
+    description: prismaFlowBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: PRISMA_FLOW_BUILDER_PATH,
   },
 ];
 

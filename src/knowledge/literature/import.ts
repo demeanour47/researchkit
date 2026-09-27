@@ -64,7 +64,7 @@ export function columnFor(name: string): MatrixField | null {
 }
 
 type Organisation = Pick<Study, "status" | "priority" | "tag" | "favourite">;
-interface Row {
+export interface Row {
   fields: Partial<Record<MatrixField, string>>;
   organisation: Partial<Organisation>;
 }
@@ -109,19 +109,22 @@ export interface ImportResult {
   notes: string[];
 }
 
-/** Adds the studies in a text to the matrix. */
-export function importStudies(matrix: Matrix, format: ImportFormat, text: string): ImportResult {
-  let rows: Row[];
-  let notes: string[];
+/** Every record in a text, as column values, without removing duplicates. Other tools count records with it. */
+export function readRecords(format: ImportFormat, text: string): { rows: Row[]; notes: string[] } {
   if (format === "bibtex") {
     const parsed = parseBibtex(text);
-    rows = parsed.entries.map((entry) => ({ fields: studyFromBibtex(entry), organisation: {} }));
-    notes = parsed.notes;
-  } else if (format === "ris") {
+    return { rows: parsed.entries.map((entry) => ({ fields: studyFromBibtex(entry), organisation: {} })), notes: parsed.notes };
+  }
+  if (format === "ris") {
     const parsed = parseRis(text);
-    rows = parsed.entries.map((record) => ({ fields: studyFromRis(record), organisation: {} }));
-    notes = parsed.notes;
-  } else ({ rows, notes } = readCsv(text));
+    return { rows: parsed.entries.map((record) => ({ fields: studyFromRis(record), organisation: {} })), notes: parsed.notes };
+  }
+  return readCsv(text);
+}
+
+/** Adds the studies in a text to the matrix. */
+export function importStudies(matrix: Matrix, format: ImportFormat, text: string): ImportResult {
+  let { rows, notes } = readRecords(format, text);
   if (rows.length > MAX_IMPORT) {
     notes = [...notes, `Only the first ${MAX_IMPORT} studies were imported.`];
     rows = rows.slice(0, MAX_IMPORT);
