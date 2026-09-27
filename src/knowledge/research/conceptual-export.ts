@@ -108,6 +108,13 @@ const WIN_ANSI: Readonly<Record<string, number>> = {
   "−": 0x2d,
 };
 
+/** A character's code in WinAnsi encoding, or null when the standard text fonts can't show it. */
+export function winAnsiCode(character: string): number | null {
+  const code = character.codePointAt(0)!;
+  if (code >= 32 && code <= 126) return code;
+  return WIN_ANSI[character] ?? (code >= 160 && code <= 255 ? code : null);
+}
+
 /**
  * Text as a PDF string literal in WinAnsi encoding. Characters the standard fonts
  * can't show are replaced with "?"; this is a stated limitation of PDF export.
@@ -115,8 +122,7 @@ const WIN_ANSI: Readonly<Record<string, number>> = {
 export function pdfString(text: string): string {
   let out = "(";
   for (const character of text) {
-    const code = character.codePointAt(0)!;
-    const byte = code >= 32 && code <= 126 ? code : WIN_ANSI[character] ?? (code >= 160 && code <= 255 ? code : 0x3f);
+    const byte = winAnsiCode(character) ?? 0x3f;
     if (byte === 0x28 || byte === 0x29 || byte === 0x5c) out += `\\${String.fromCharCode(byte)}`;
     else if (byte > 126) out += `\\${byte.toString(8).padStart(3, "0")}`;
     else out += String.fromCharCode(byte);

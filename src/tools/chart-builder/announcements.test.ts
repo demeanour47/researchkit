@@ -21,7 +21,7 @@ describe("chartAnnouncement", () => {
     assert.match(chartAnnouncement("scatter", issues, true), /^Scatter plot can't be drawn yet: Two numeric columns/);
   });
   it("names example data as fictional", () => {
-    assert.equal(announcements.exampleLoaded("likert"), "Example data for the likert scale chart loaded. It is fictional.");
+    assert.equal(announcements.exampleLoaded("likert"), "Example data loaded: Likert scale chart. It is fictional.");
     assert.equal(announcements.exported("PNG"), "PNG downloaded.");
   });
 });

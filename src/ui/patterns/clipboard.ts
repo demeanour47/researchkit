@@ -20,3 +20,30 @@ export async function copyText(
     return false;
   }
 }
+
+/** The part of the Clipboard API rich copying needs. */
+export interface RichClipboardWriter extends ClipboardWriter {
+  write?(items: ClipboardItem[]): Promise<void>;
+}
+
+/**
+ * Copies formatted HTML with a plain-text alternative, so word processors paste
+ * formatting and plain editors paste text. Falls back to the plain text alone when
+ * rich copying isn't available. Resolves to false if nothing could be copied.
+ */
+export async function copyRich(
+  html: string,
+  text: string,
+  clipboard: RichClipboardWriter | undefined = globalThis.navigator?.clipboard,
+  makeItem: ((data: Record<string, Blob>) => ClipboardItem) | undefined = typeof ClipboardItem === "undefined" ? undefined : (data) => new ClipboardItem(data),
+): Promise<boolean> {
+  if (clipboard?.write && makeItem) {
+    try {
+      await clipboard.write([makeItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([text], { type: "text/plain" }) })]);
+      return true;
+    } catch {
+      // Some browsers refuse rich items; plain text below still works.
+    }
+  }
+  return copyText(text, clipboard);
+}

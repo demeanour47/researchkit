@@ -11,7 +11,7 @@ export const announcements = {
   copyFailed: "It couldn't be copied automatically. Select it and copy it with Control+C, or Command+C on a Mac.",
   exported: (format: string) => `${format} downloaded.`,
   exportFailed: (format: string) => `The ${format} couldn't be created. Try another format, or a different browser.`,
-  exampleLoaded: (type: ChartType) => `Example data for the ${CHART_TYPE_INFO[type].label.toLowerCase()} loaded. It is fictional.`,
+  exampleLoaded: (type: ChartType) => `Example data loaded: ${CHART_TYPE_INFO[type].label}. It is fictional.`,
 } as const;
 
 /** The chart after a choice: drawn with its warnings counted, or the first problem stopping it. */

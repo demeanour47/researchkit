@@ -56,7 +56,7 @@ export function ChartFigure({ result, options, table, onAnnounce }: ChartFigureP
         <>
           <figure className="grid gap-3">
             {/* A white surface in both themes: the figure is what will print. */}
-            <div role="group" aria-label={steps.figureLabel} className="overflow-hidden rounded-panel border border-border bg-white p-2 [&>svg]:block [&>svg]:h-auto [&>svg]:w-full" style={{ maxWidth: scene.width + 18 }} dangerouslySetInnerHTML={{ __html: svg }} />
+            <div role="group" aria-label={steps.figureLabel} className="overflow-hidden rounded-panel border border-border bg-paper p-2 [&>svg]:block [&>svg]:h-auto [&>svg]:w-full" style={{ maxWidth: scene.width + 18 }} dangerouslySetInnerHTML={{ __html: svg }} />
             <figcaption className="grid gap-1">
               <span className="font-medium">{steps.caption}</span>
               <span id="chart-caption" className="whitespace-pre-line">{caption}</span>

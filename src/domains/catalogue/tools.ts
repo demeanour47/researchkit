@@ -24,6 +24,8 @@ import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_REC
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
 import { page as resultsInterpretation } from "@/tools/results-interpretation/copy";
 import { page as chartBuilder } from "@/tools/chart-builder/copy";
+import { page as tableBuilder } from "@/tools/table-builder/copy";
+import { TOOL_ID as TABLE_BUILDER_ID, TOOL_PATH as TABLE_BUILDER_PATH } from "@/tools/table-builder/path";
 import { TOOL_ID as CHART_BUILDER_ID, TOOL_PATH as CHART_BUILDER_PATH } from "@/tools/chart-builder/path";
 import { page as statisticalAssumptionChecker } from "@/tools/statistical-assumption-checker/copy";
 import { TOOL_ID as STATISTICAL_ASSUMPTION_CHECKER_ID, TOOL_PATH as STATISTICAL_ASSUMPTION_CHECKER_PATH } from "@/tools/statistical-assumption-checker/path";
@@ -274,6 +276,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "research",
     status: "available",
     href: CHART_BUILDER_PATH,
+  },
+  {
+    id: TABLE_BUILDER_ID,
+    name: tableBuilder.title,
+    description: tableBuilder.summary,
+    category: "statistics",
+    family: "research",
+    status: "available",
+    href: TABLE_BUILDER_PATH,
   },
 ];
 

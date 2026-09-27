@@ -49,7 +49,8 @@ export const steps = {
   suggestHeading: "Suggestions",
   purposeLabel: "What should the chart show?",
   purposeEmpty: "Choose a purpose",
-  useChart: (label: string) => `Use ${label.toLowerCase()}`,
+  // Names keep their capitals, as in “Likert scale chart”.
+  useChart: (label: string) => `Use ${label}`,
   projectToggle: "Suggestions from your project",
   projectIntro: "Enter what you already know about your research. Charts are suggested for each variable, for each predictor and outcome, for your planned analyses and for your objectives. Nothing here needs to be complete.",
   exampleProject: "Load an example project",

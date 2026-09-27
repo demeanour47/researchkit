@@ -14,6 +14,6 @@ export { SectionHeader, type SectionHeaderProps } from "./layout/section-header"
 
 export { SkipLink, type SkipLinkProps } from "./patterns/skip-link";
 export { CopyButton, type CopyButtonProps, type CopyResult } from "./patterns/copy-button";
-export { copyText, type ClipboardWriter } from "./patterns/clipboard";
+export { copyRich, copyText, type ClipboardWriter, type RichClipboardWriter } from "./patterns/clipboard";
 
 export { cx } from "./cx";
