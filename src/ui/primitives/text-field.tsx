@@ -51,9 +51,10 @@ export function TextField(props: TextFieldProps) {
     "aria-describedby": describedBy,
     "aria-invalid": error ? true : undefined,
     className: cx(
-      "block w-full rounded-control bg-background px-3 text-base text-foreground",
-      "placeholder:text-foreground/60 focus-ring",
-      error ? "border-2 border-foreground" : "border border-foreground/60",
+      "block w-full rounded-control bg-surface px-3 text-base text-text shadow-card",
+      "transition-[border-color] duration-(--duration-instant) ease-standard",
+      "placeholder:text-text-muted focus-ring",
+      error ? "border-2 border-danger" : "border border-border-control hover:border-text-muted",
       className,
     ),
   };
@@ -64,7 +65,7 @@ export function TextField(props: TextFieldProps) {
         {label}
       </label>
       {hint && (
-        <p id={hintId} className="text-sm text-foreground/75">
+        <p id={hintId} className="text-sm text-text-muted">
           {hint}
         </p>
       )}
@@ -86,7 +87,7 @@ export function TextField(props: TextFieldProps) {
       <p
         id={errorId}
         aria-live="polite"
-        className={cx("flex items-start gap-1.5 text-sm font-medium", !error && "sr-only")}
+        className={cx("flex items-start gap-1.5 text-sm font-medium text-danger", !error && "sr-only")}
       >
         {error && (
           <>

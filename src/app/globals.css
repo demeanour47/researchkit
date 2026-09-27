@@ -2,10 +2,42 @@
 @import "../ui/tokens/tokens.css";
 
 @layer base {
+  html {
+    /* Anchored headings land below the sticky header. */
+    scroll-padding-top: calc(var(--spacing-header) + 1rem);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html:focus-within {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     background-color: var(--color-canvas);
     color: var(--color-text);
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
+    font-feature-settings: "kern", "calt";
+  }
+
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+
+  p, li, dd {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-action-soft);
+    color: var(--color-text);
+  }
+
+  /* Native checkboxes, radios and ranges take the brand colour. */
+  input, progress {
+    accent-color: var(--color-action);
   }
 }

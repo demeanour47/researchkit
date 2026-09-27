@@ -1,4 +1,4 @@
-import { Link } from "@/ui";
+import { Link, cardClasses, cx } from "@/ui";
 import { getStyleProfile, stylePath, type GuideBlock } from "@/domains/publishing";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
 
@@ -18,7 +18,7 @@ export function ContentBlock({ block }: { block: GuideBlock }) {
     case "list": {
       const List = block.ordered ? "ol" : "ul";
       return (
-        <List className={`grid gap-2 ps-6 ${block.ordered ? "list-decimal" : "list-disc"}`}>
+        <List className={cx("grid gap-2.5 ps-6 marker:text-action", block.ordered ? "list-decimal marker:font-semibold" : "list-disc")}>
           {block.items.map((item) => (
             <li key={item}>{item}</li>
           ))}
@@ -27,11 +27,11 @@ export function ContentBlock({ block }: { block: GuideBlock }) {
     }
     case "styles":
       return (
-        <div className="grid gap-6">
+        <div className="grid gap-4">
           {block.styles.map((style) => {
             const profile = getStyleProfile(style);
             return (
-              <div key={style} className="grid gap-1">
+              <div key={style} className={cx(cardClasses(), "grid gap-1.5")}>
                 <h3 className="text-subheading font-semibold">
                   <Link href={stylePath(style)}>{styleTitle(style)}</Link>
                 </h3>

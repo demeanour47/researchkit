@@ -5,13 +5,9 @@
  */
 
 @media print {
+  /* Shadows and motion are switched off in theme.ts, beside their values. */
   :root {
     color-scheme: light;
-    --shadow-tint-soft: transparent;
-    --shadow-tint-strong: transparent;
-    --duration-instant: 0ms;
-    --duration-quick: 0ms;
-    --duration-moderate: 0ms;
   }
 
   @page {

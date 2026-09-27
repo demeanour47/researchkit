@@ -32,7 +32,7 @@ export function MobileMenu({ label = "Menu", children }: MobileMenuProps) {
 
   return (
     <details ref={detailsRef} onKeyDown={handleKeyDown} className="group">
-      <summary className="flex min-h-control cursor-pointer list-none items-center gap-2 rounded-control px-3 font-medium focus-ring hover:bg-foreground/5 [&::-webkit-details-marker]:hidden">
+      <summary className="flex min-h-control-sm cursor-pointer list-none items-center gap-2 rounded-control border border-border bg-surface px-3 text-small font-medium shadow-card focus-ring hover:bg-hover [&::-webkit-details-marker]:hidden">
         <span className="group-open:hidden">
           <Icon name="menu" />
         </span>
@@ -41,7 +41,7 @@ export function MobileMenu({ label = "Menu", children }: MobileMenuProps) {
         </span>
         {label}
       </summary>
-      <div className="absolute inset-x-0 top-full z-(--z-overlay) border-b border-foreground/15 bg-background px-gutter py-3 shadow-raised">
+      <div className="absolute inset-x-0 top-full z-(--z-overlay) grid max-h-[calc(100dvh-var(--spacing-header))] gap-4 overflow-y-auto border-b border-border bg-raised px-gutter py-4 shadow-overlay group-open:animate-rise-in">
         {children}
       </div>
     </details>

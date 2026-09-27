@@ -31,10 +31,6 @@ export const page = {
     "The instructions you've been given always take precedence over this recommendation.",
   reviewStatus:
     "This guidance has not yet been checked by a named reviewer.",
-  relatedGuide: "Related guide",
-  relatedGuides: "Related guides",
-  relatedTool: "Related tool",
-  relatedTools: "Related tools",
 } as const;
 
 export const questions = {

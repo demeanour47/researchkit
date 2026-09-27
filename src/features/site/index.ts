@@ -1,3 +1,4 @@
+export { BrandLink, BrandMark } from "./brand-link";
 export { Breadcrumbs, type BreadcrumbItem, type BreadcrumbsProps } from "./breadcrumbs";
 export { MobileMenu, type MobileMenuProps } from "./mobile-menu";
 export { PrimaryNav, type PrimaryNavProps } from "./primary-nav";

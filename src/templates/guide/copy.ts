@@ -1,5 +1,7 @@
 /** Labels shared by every guide. */
 export const guideLabels = {
+  eyebrow: "Guide",
+  guides: "Learn",
   contents: "On this page",
   faq: "Frequently asked questions",
   relatedTool: "Related tool",

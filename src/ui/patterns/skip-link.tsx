@@ -23,7 +23,7 @@ export function SkipLink({
       className={cx(
         "sr-only focus-ring",
         "focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-(--z-skip-link)",
-        "focus:rounded-control focus:bg-background focus:px-4 focus:py-3 focus:text-foreground focus:shadow-overlay",
+        "focus:rounded-control focus:bg-surface focus:px-4 focus:py-3 focus:font-medium focus:text-text focus:shadow-overlay",
         className,
       )}
       {...rest}

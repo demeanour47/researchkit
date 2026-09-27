@@ -1,75 +1,83 @@
-import { Link, PageContainer, Section, SectionHeader } from "@/ui";
+import type { ReactNode } from "react";
+import { Hero, Link, MetricCard, PageContainer, type IconName } from "@/ui";
 import { countByStatus, type CatalogueCategory, type CatalogueItem } from "@/domains/catalogue";
-import { CatalogueList } from "@/features/catalogue";
-import { statusSummary } from "./copy";
+import { CatalogueCard, CatalogueExplorer, type CatalogueKind } from "@/features/catalogue";
+import { Breadcrumbs } from "@/features/site";
+import { statsLabels } from "./copy";
 
 export interface CatalogueIndexSection extends CatalogueCategory {
   items: readonly CatalogueItem[];
+  icon: IconName;
 }
 
 export interface CatalogueIndexPageProps {
   title: string;
+  /** A few words above the title naming the area, such as “Tools”. */
+  eyebrow: string;
   intro: string;
   /** Explains what "Coming soon" means on this page. */
   plannedNote: string;
-  /** Accessible name of the category navigation. */
-  categoriesLabel: string;
+  /** What the items are called, in the plural, such as “tools”. */
+  plural: string;
+  /** What the items are, which chooses their icons and wording. */
+  kind: CatalogueKind;
   sections: readonly CatalogueIndexSection[];
   /** A pointer to a companion directory, e.g. from tools to guides. */
   crossLink?: { lead: string; label: string; href: string };
+  /** Featured and recommended items, shown above the categories while nothing is filtered. */
+  highlights?: ReactNode;
 }
 
-/** A directory page: introduction, links to each category, then each category's items. */
-export function CatalogueIndexPage({
-  title,
-  intro,
-  plannedNote,
-  categoriesLabel,
-  sections,
-  crossLink,
-}: CatalogueIndexPageProps) {
-  const categories = sections.map((section) => {
-    const counts = countByStatus(section.items);
-    return { ...section, summary: statusSummary(counts.available, counts["coming-soon"]) };
-  });
+/**
+ * A directory page: a hero with the directory's size, search and filters, then
+ * each category's items. Items are rendered here, on the server; the explorer
+ * only shows or hides them.
+ */
+export function CatalogueIndexPage({ title, eyebrow, intro, plannedNote, kind, sections, crossLink, highlights, plural }: CatalogueIndexPageProps) {
+  const counts = countByStatus(sections.flatMap((section) => section.items));
 
   return (
-    <PageContainer>
-      <Section labelledBy="index-title" spacing="compact">
-        <div className="grid max-w-reading gap-4">
-          <h1 id="index-title" className="font-display text-title font-semibold text-balance">
-            {title}
-          </h1>
-          <p className="text-lead text-text-muted">{intro}</p>
-          <p className="text-small text-text-muted">{plannedNote}</p>
+    <>
+      <Hero
+        titleId="index-title"
+        eyebrow={eyebrow}
+        title={title}
+        description={intro}
+        before={<Breadcrumbs items={[{ label: "Home", href: "/" }, { label: title }]} />}
+      >
+        <ul className="grid max-w-2xl grid-cols-3 gap-6 border-t border-border pt-6">
+          <MetricCard icon="circle-check" value={counts.available} label={statsLabels.available} />
+          <MetricCard icon="hourglass" value={counts["coming-soon"]} label={statsLabels.comingSoon} />
+          <MetricCard icon="layout-grid" value={sections.length} label={statsLabels.categories} />
+        </ul>
+        <div className="grid gap-1 text-small text-text-muted">
+          <p>{plannedNote}</p>
           {crossLink && (
-            <p className="text-small">
+            <p>
               {crossLink.lead} <Link href={crossLink.href}>{crossLink.label}</Link>.
             </p>
           )}
         </div>
+      </Hero>
 
-        <nav aria-label={categoriesLabel} className="mt-8">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {categories.map((category) => (
-              <li key={category.id}>
-                <Link href={`#${category.id}`} variant="standalone">
-                  {category.title}
-                </Link>
-                <span className="ms-2 text-small text-text-muted">{category.summary}</span>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </Section>
-
-      {categories.map((category) => (
-        <Section key={category.id} id={category.id} labelledBy={`${category.id}-title`} spacing="compact">
-          <SectionHeader id={`${category.id}-title`} title={category.title} note={category.summary} />
-          <p className="mb-6 max-w-reading text-text-muted">{category.description}</p>
-          <CatalogueList items={category.items} />
-        </Section>
-      ))}
-    </PageContainer>
+      <PageContainer className="pb-section">
+        <CatalogueExplorer
+          plural={plural}
+          highlights={highlights}
+          sections={sections.map((section) => ({
+            id: section.id,
+            title: section.title,
+            description: section.description,
+            icon: section.icon,
+            items: section.items.map((item) => ({
+              id: item.id,
+              text: `${item.name} ${item.description} ${section.title}`,
+              status: item.status,
+              card: <CatalogueCard item={item} kind={kind} />,
+            })),
+          }))}
+        />
+      </PageContainer>
+    </>
   );
 }
