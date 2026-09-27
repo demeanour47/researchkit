@@ -40,7 +40,7 @@ export function SelectField({
       <select
         id={selectId}
         aria-describedby={hint ? hintId : undefined}
-        className={cx("min-h-control w-full rounded-control border border-border-control bg-surface px-3 focus-ring sm:w-auto", className)}
+        className={cx("min-h-control w-full rounded-control border border-border-control bg-surface px-3 shadow-card transition-[border-color] duration-(--duration-instant) ease-standard hover:border-text-muted focus-ring sm:w-auto", className)}
         {...rest}
       >
         {emptyOption !== undefined && <option value="">{emptyOption}</option>}

@@ -25,6 +25,7 @@ import {
   moveVariable,
   nudgeVariable,
   parseList,
+  pngSize,
   renameVariable,
   resetLayout,
   setRelationshipLabel,
@@ -44,7 +45,7 @@ import { announcements, warningsAnnouncement } from "./announcements";
 import { steps } from "./copy";
 import { DiagramEditor } from "./diagram-editor";
 import { exampleProject } from "./example";
-import { copyFigure, download, svgToPng } from "./export-files";
+import { copyFigure, download, svgToPng } from "@/features/figure-export";
 import { RelationshipPanel } from "./relationship-panel";
 import { VariablePanel } from "./variable-panel";
 
@@ -192,7 +193,7 @@ export function FrameworkBuilderForm() {
     try {
       if (format === "SVG") download(new Blob([svg], { type: "image/svg+xml" }), "conceptual-framework.svg");
       if (format === "PDF") download(new Blob([toPdf(layout, { monochrome, title: steps.figureTitle })], { type: "application/pdf" }), "conceptual-framework.pdf");
-      if (format === "PNG") download(await svgToPng(svg, layout), "conceptual-framework.png");
+      if (format === "PNG") download(await svgToPng(svg, layout, pngSize(layout)), "conceptual-framework.png");
       announce(announcements.exported(format));
     } catch {
       announce(announcements.exportFailed(format));
@@ -399,7 +400,7 @@ export function FrameworkBuilderForm() {
         <div className="flex flex-wrap gap-3">
           <Button
             variant="secondary"
-            onClick={async () => announce((await copyFigure(svg, layout)) ? announcements.copied : announcements.copyFailed)}
+            onClick={async () => announce((await copyFigure(svg, layout, pngSize(layout))) ? announcements.copied : announcements.copyFailed)}
           >
             {steps.copyFigure}
           </Button>

@@ -20,9 +20,10 @@ export interface LinkProps extends Omit<ComponentPropsWithRef<"a">, "href"> {
 }
 
 const variantClasses: Record<LinkVariant, string> = {
-  inline: "underline decoration-1 underline-offset-4 hover:decoration-2",
+  inline:
+    "text-action underline decoration-action/40 decoration-1 underline-offset-4 transition-[text-decoration-color] duration-(--duration-instant) hover:decoration-action hover:decoration-2",
   standalone:
-    "inline-flex min-h-6 items-center gap-1 font-medium underline-offset-4 hover:underline",
+    "group/link inline-flex min-h-6 items-center gap-1 font-medium text-action underline-offset-4 hover:underline",
   quiet: "underline-offset-4 hover:underline",
 };
 
@@ -50,7 +51,9 @@ export function Link({
           <VisuallyHidden> {externalLabel}</VisuallyHidden>
         </>
       ) : (
-        variant === "standalone" && <Icon name="arrow-right" />
+        variant === "standalone" && (
+          <Icon name="arrow-right" className="transition-transform duration-(--duration-quick) ease-standard group-hover/link:translate-x-0.5" />
+        )
       )}
     </>
   );

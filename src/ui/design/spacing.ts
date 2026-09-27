@@ -1,8 +1,26 @@
 /**
- * The spacing scale, in spacing units (1 unit = 0.25rem, 4px at the default text size).
- * Layout uses SPACING_STEPS. FINE_SPACING_STEPS are for adjustments inside compact
- * controls only. Keep in step with spacing.css.
+ * Spacing: a 4px base unit. Numeric utilities are multiples of the unit
+ * (p-4 = 1rem). Layout uses SPACING_STEPS. FINE_SPACING_STEPS are for
+ * adjustments inside compact controls only; findOffScaleSpacing() reports any
+ * class that uses another value.
  */
+
+export const SPACING_UNIT = "0.25rem";
+
+/** Semantic spacing for layout rhythm and touch targets, used as `p-gutter`, `min-h-control` and so on. */
+export const SEMANTIC_SPACING = {
+  gutter: "1rem",
+  "gutter-wide": "2rem",
+  section: "3.5rem",
+  "section-wide": "5rem",
+  "section-compact": "2.5rem",
+  /** 44px: the minimum comfortable touch target. */
+  control: "2.75rem",
+  "control-sm": "2.25rem",
+  /** The sticky header's height, so anchored headings land below it. */
+  header: "4rem",
+} as const;
+
 export const SPACING_STEPS = [0, 1, 2, 3, 4, 6, 8, 12, 16, 24, 32] as const;
 export const FINE_SPACING_STEPS = [0.5, 1.5, 2.5] as const;
 

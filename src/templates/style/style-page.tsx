@@ -1,53 +1,61 @@
-import { Link, PageContainer, Tag } from "@/ui";
+import { Callout, Card, Hero, Link, PageContainer, Section, SectionHeader } from "@/ui";
 import { GUIDE_LISTINGS, TOOLS, type CatalogueItem } from "@/domains/catalogue";
 import { STYLES_INDEX_PATH, getStyleProfile, type ProfiledStyleId } from "@/domains/publishing";
-import { CatalogueList } from "@/features/catalogue";
+import { CatalogueCard } from "@/features/catalogue";
+import { Breadcrumbs } from "@/features/site";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
 import { stylePageCopy as copy, usefulNowIds } from "./copy";
 
-const usefulNow: CatalogueItem[] = [
-  TOOLS.find((tool) => tool.id === usefulNowIds.tool),
-  GUIDE_LISTINGS.find((guide) => guide.id === usefulNowIds.guide),
-].filter((item): item is NonNullable<typeof item> => item !== undefined);
+const usefulNowTool = TOOLS.find((tool) => tool.id === usefulNowIds.tool);
+const usefulNowGuide = GUIDE_LISTINGS.find((guide) => guide.id === usefulNowIds.guide);
 
 /** A citation style's page: what it is, where it's used, and what to use until its full guide is published. */
 export function StylePage({ style }: { style: ProfiledStyleId }) {
   const profile = getStyleProfile(style);
   const facts = CITATION_STYLES[style];
+  const usefulNow: [CatalogueItem, "tool" | "guide"][] = [
+    ...(usefulNowTool ? [[usefulNowTool, "tool"] as [CatalogueItem, "tool"]] : []),
+    ...(usefulNowGuide ? [[usefulNowGuide, "guide"] as [CatalogueItem, "guide"]] : []),
+  ];
 
   return (
-    <PageContainer width="reading">
-      <article className="grid gap-10 py-section-compact">
-        <header className="grid gap-4">
-          <h1 className="font-display text-title font-semibold text-balance">{styleTitle(style)}</h1>
-          <p className="text-lead">{profile.summary}</p>
-          <dl className="grid gap-3">
-            <div>
-              <dt className="text-small font-semibold">{copy.definedBy}</dt>
-              <dd className="text-text-muted">{facts.authority}</dd>
-            </div>
-            <div>
-              <dt className="text-small font-semibold">{copy.usedIn}</dt>
-              <dd className="text-text-muted">{profile.usedIn}</dd>
-            </div>
-          </dl>
-          <p className="text-small text-text-muted">{copy.reviewStatus}</p>
-        </header>
+    <>
+      <Hero
+        titleId="style-title"
+        width="reading"
+        eyebrow={copy.eyebrow}
+        title={styleTitle(style)}
+        description={profile.summary}
+        before={<Breadcrumbs items={[{ label: "Home", href: "/" }, { label: copy.allStyles, href: STYLES_INDEX_PATH }, { label: styleTitle(style) }]} />}
+      >
+        <p className="text-small text-text-muted">{copy.reviewStatus}</p>
+      </Hero>
 
-        <div className="grid gap-3 rounded-panel border border-border-control bg-surface p-6">
-          <div>
-            <Tag>{copy.status}</Tag>
+      <PageContainer width="reading" className="grid gap-8 py-section-compact">
+        <Card as="dl" padding="lg" className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-1">
+            <dt className="text-caption font-semibold tracking-wide text-text-muted uppercase">{copy.definedBy}</dt>
+            <dd>{facts.authority}</dd>
           </div>
-          <p>{copy.comingSoon(facts.name)}</p>
-        </div>
+          <div className="grid gap-1">
+            <dt className="text-caption font-semibold tracking-wide text-text-muted uppercase">{copy.usedIn}</dt>
+            <dd>{profile.usedIn}</dd>
+          </div>
+        </Card>
+
+        <Callout tone="info" icon="hourglass" title={copy.status}>
+          {copy.comingSoon(facts.name)}
+        </Callout>
 
         {usefulNow.length > 0 && (
-          <section aria-labelledby="useful-now-title" className="grid gap-4">
-            <h2 id="useful-now-title" className="text-heading font-semibold">
-              {copy.usefulNow}
-            </h2>
-            <CatalogueList items={usefulNow} layout="stack" />
-          </section>
+          <Section labelledBy="useful-now-title" spacing="compact">
+            <SectionHeader id="useful-now-title" title={copy.usefulNow} />
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {usefulNow.map(([item, kind]) => (
+                <CatalogueCard key={item.id} item={item} kind={kind} />
+              ))}
+            </ul>
+          </Section>
         )}
 
         <p>
@@ -55,7 +63,7 @@ export function StylePage({ style }: { style: ProfiledStyleId }) {
             {copy.allStyles}
           </Link>
         </p>
-      </article>
-    </PageContainer>
+      </PageContainer>
+    </>
   );
 }

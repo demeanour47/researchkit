@@ -1,0 +1,136 @@
+/** All wording for the Research Table Builder. Academic content lives in the knowledge layer. */
+
+import type { TableSource } from "@/knowledge/tables";
+
+export const page = {
+  title: "Research Table Builder",
+  /** One sentence, for listings such as the tools index. */
+  summary: "Builds publication-ready research tables in APA, IEEE, Harvard, Chicago or MLA style, from your data, your results or your project, ready to paste into Word.",
+  metaDescription:
+    "Make APA 7, IEEE, Harvard, Chicago and MLA tables for theses and journals: demographic profiles, descriptive statistics, correlation matrices, reliability, regression, ANOVA, chi-square and 18 more. Copy to Word or export DOCX, PDF, HTML, CSV and Excel.",
+  intro:
+    "Choose a table, paste your data or results, and get a formatted table with its caption and notes, ready for your thesis or article. Tables from raw data are calculated for you; project tables are filled from your research details, so nothing is typed twice.",
+  noScript:
+    "Building tables needs JavaScript. Turn on JavaScript to use the builder. The guide to every table type below works without it.",
+  howHeading: "How the builder works",
+  limitsHeading: "What this tool can't do",
+  reviewHeading: "Awaiting review",
+  privacyHeading: "Privacy",
+  privacy: "Your data stays in your browser. Nothing is sent anywhere or saved, and it is cleared when you leave the page.",
+} as const;
+
+export const how: readonly string[] = [
+  "Add your project details if you like. The builder suggests the tables your project needs, and fills the hypothesis summary, variable operationalisation, measurement scales, questionnaire summary and sample size tables from them.",
+  "Choose a table type. For tables summarised from data, paste one row per participant: frequencies, percentages, descriptive statistics, correlations, Cronbach's alpha and chi-square tests are calculated for you.",
+  "For results from statistics software, such as regression or ANOVA output, paste them with their column names; the builder recognises the names software prints.",
+  "Write the title and notes, choose a style, and adjust fonts, borders, alignment, decimals and orientation. Captions, numbering and notes follow the style.",
+  "Copy the table straight into Word, or download it as a Word document, PDF, HTML, Markdown, CSV or an Excel-ready file.",
+];
+
+export const SOURCE_TEXT: Readonly<Record<TableSource, string>> = {
+  data: "Paste raw data, one row per participant; the builder calculates the statistics.",
+  results: "Paste results from your statistics software, with their column names.",
+  project: "Built from your project details; there is nothing to paste.",
+  entries: "Type or paste the entries, one per row.",
+};
+
+export const steps = {
+  project: "Your project",
+  projectIntro: "Optional. Enter what you know about your research to see the tables it needs, and to fill tables built from the project.",
+  projectToggle: "Add your project details",
+  exampleProject: "Load an example project",
+  exampleProjectLoaded: "Example project loaded. It is fictional, for trying the builder.",
+  suggested: "Suggested tables",
+  suggestedIntro: "Tables your project is likely to need, from its variables, hypotheses, sampling and planned analyses.",
+  basedOn: "Based on",
+  moreSuggestions: (count: number) => `More tables your project may need (${count})`,
+  // Names keep their capitals, as in “ANOVA table” and “Cronbach's alpha”.
+  useTable: (label: string) => `Use ${label}`,
+
+  type: "Table type",
+  typeLabel: "Table type",
+  bestFor: "Best for",
+
+  data: "Your data",
+  dataLabel: "Data",
+  dataHint: (layout: string) => `Layout: ${layout}`,
+  pValuesLabel: "Results (optional)",
+  loadExample: "Load example data",
+  exampleNote: "Example data is fictional, for trying the builder.",
+  projectOnly: "This table is built from your project details above; there is nothing to paste.",
+  projectEmpty: "Add your project details in the first step to build this table.",
+
+  caption: "Caption and notes",
+  title: "Title",
+  titleHint: "Leave blank to use the suggested title. Use title case for APA.",
+  number: "Table number",
+  appendix: "Appendix letter",
+  note: "General note",
+  noteHint: "Added after any note the builder writes, such as the sample size.",
+  source: "Source",
+  sourceHint: "Where the table's content comes from, if it isn't your own data, such as “Adapted from …”.",
+  footnotes: "Notes on specific cells",
+  footnotesHint: "One per line; they are lettered a, b, c in order. Mark cells in your data with ^a, ^b and so on.",
+
+  style: "Style and layout",
+  styleLabel: "Style",
+  customLabel: "Label word",
+  customSeparator: "After the number",
+  separators: { "": "New line", ".": "Full stop (Table 1.)", ":": "Colon (Table 1:)", " –": "Dash (Table 1 –)" } as Record<string, string>,
+  customPosition: "Caption position",
+  positions: { above: "Above the table", below: "Below the table" } as Record<string, string>,
+  labelBold: "Bold label",
+  titleItalic: "Italic title",
+  font: "Font",
+  fontSize: "Font size",
+  points: (size: number) => `${size} pt`,
+  borders: "Borders",
+  borderOptions: { horizontal: "Horizontal rules (APA)", grid: "Full grid", outer: "Outer box", none: "None" } as Record<string, string>,
+  padding: "Cell padding",
+  paddingOptions: { compact: "Compact", normal: "Normal", relaxed: "Relaxed" } as Record<string, string>,
+  textAlign: "Text alignment",
+  textAlignOptions: { left: "Left", center: "Centre" } as Record<string, string>,
+  numberAlign: "Number alignment",
+  numberAlignOptions: { decimal: "Decimal point", right: "Right", center: "Centre" } as Record<string, string>,
+  decimals: "Decimal places",
+  decimalsHint: "For statistics. Counts are whole numbers, percentages take one decimal and p-values three.",
+  orientation: "Orientation",
+  orientationOptions: { portrait: "Portrait", landscape: "Landscape" } as Record<string, string>,
+  onOff: { on: "On", off: "Off" } as Record<string, string>,
+  boldHeaders: "Bold column headings",
+  alternatingRows: "Shade alternate rows",
+  repeatHeader: "Repeat headings on each page",
+  repeatHint: "Word repeats the heading rows; the PDF also marks the caption “(continued)”.",
+  more: "More options for this table",
+  percentBase: "Percentages",
+  percentOptions: { row: "Within rows", column: "Within columns", total: "Of the whole sample", none: "Counts only" } as Record<string, string>,
+  correlation: "Correlation",
+  correlationOptions: { pearson: "Pearson's r", spearman: "Spearman's rho" } as Record<string, string>,
+  stars: "Mark significance with asterisks",
+  pAsStars: "Significance",
+  pAsStarsOptions: { column: "p column", stars: "Asterisks" } as Record<string, string>,
+  suppress: "Hide loadings below",
+  suppressNone: "Show all",
+  itemDetails: "Item–total statistics",
+  alpha: "Significance level",
+
+  result: "Your table",
+  empty: "Choose a table and add its data to see it here.",
+  cannotBuild: "The table can't be built yet",
+  problemTag: "Problem",
+  warningTag: "Check",
+  previewLabel: "Table preview",
+  export: "Copy and export",
+  exportIntro: "Copy the table into Word with its formatting, or download it. Word and PDF files are A4 in the orientation you chose.",
+  copyTable: "Copy table",
+  downloads: { DOCX: "Word (.docx)", PDF: "PDF", HTML: "HTML", Markdown: "Markdown", CSV: "CSV", TSV: "Excel (.tsv)" } as Record<string, string>,
+  download: (format: string) => `Download ${format}`,
+  spreadsheetNote: "CSV and Excel files hold the table's cells only; the caption and notes are in the other formats.",
+
+  guide: "Table types",
+  guideIntro: "Every table the builder makes: what it shows, when to use it, and what to paste. Formatting follows each style's general guidance; references will be added after academic review.",
+  contents: "Tables",
+  contentFrom: "Content",
+  layout: "Layout",
+  example: "Example input",
+} as const;

@@ -2,11 +2,18 @@
 
 export const toolsIndex = {
   title: "Academic Tools",
+  eyebrow: "Tools",
   metaDescription:
     "Free academic tools for citation, writing, statistics and research. Every tool shows the reasoning behind its results.",
   intro:
     "Free tools for research, writing, citation and statistics. Every tool shows the reasoning behind its results, and none needs an account.",
   plannedNote: "Tools marked “Coming soon” are planned but not yet available.",
-  categoriesLabel: "Tool categories",
+  plural: "tools",
   crossLink: { lead: "Looking for explanations?", label: "Browse Research Guides" },
+  featured: { eyebrow: "Featured", action: "Open the builder" },
+  recommended: {
+    heading: "Recommended starting points",
+    description: "A good first tool for each stage of a project, chosen by the ResearchKit team.",
+  },
+  latest: { heading: "New", description: "The most recently published tools." },
 } as const;

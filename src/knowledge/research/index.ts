@@ -528,7 +528,7 @@ export {
   type DocumentBlock,
   type QuestionnaireCounts,
 } from "./questionnaire-summary";
-export { PDF_PAGE, layoutPdf, pageLabel, questionnaireDocx, questionnairePdf, utf8, xmlText, zip, type PdfItem, type PdfPage, type ZipEntry } from "./questionnaire-export";
+export { PDF_PAGE, WORD_NAMESPACES, docxPackage, layoutPdf, pageLabel, questionnaireDocx, questionnairePdf, utf8, xmlText, zip, type PdfItem, type PdfPage, type ZipEntry } from "./questionnaire-export";
 export {
   ANALYSIS_FAMILY_LABELS,
   ANALYSIS_METHODS,

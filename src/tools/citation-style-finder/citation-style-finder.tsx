@@ -1,7 +1,7 @@
-import { PageContainer, Section, VisuallyHidden } from "@/ui";
+import { Callout, Section, VisuallyHidden } from "@/ui";
 import { parseAnswers, recommendStyle } from "@/knowledge/citation/style-finder";
 import { guidesForTool, relatedTools } from "@/domains/catalogue";
-import { CatalogueList } from "@/features/catalogue";
+import { ToolPageLayout } from "@/features/tool";
 import { missingLabels, page, statusText } from "./copy";
 import { TOOL_ID } from "./path";
 import { StyleFinderForm } from "./style-finder-form";
@@ -23,16 +23,7 @@ export function CitationStyleFinder({ params }: CitationStyleFinderProps) {
   const tools = relatedTools(TOOL_ID);
 
   return (
-    <PageContainer width="reading">
-      <Section labelledBy="tool-title" spacing="compact">
-        <div className="grid gap-4">
-          <h1 id="tool-title" className="font-display text-title font-semibold text-balance">
-            {page.title}
-          </h1>
-          <p className="text-lead text-text-muted">{page.intro}</p>
-        </div>
-      </Section>
-
+    <ToolPageLayout title={page.title} intro={page.intro} relatedGuides={relatedGuides} relatedTools={tools}>
       <VisuallyHidden role="status">
         {recommendation
           ? statusText(recommendation)
@@ -53,14 +44,13 @@ export function CitationStyleFinder({ params }: CitationStyleFinderProps) {
       )}
 
       {submitted && missing.length > 0 && (
-        <div className="rounded-panel border border-border-control bg-surface p-4">
-          <p className="font-semibold">{page.missingIntro}</p>
-          <ul className="mt-2 list-disc ps-6">
+        <Callout tone="caution" title={page.missingIntro}>
+          <ul className="list-disc ps-6">
             {missing.map((key) => (
               <li key={key}>{missingLabels[key]}</li>
             ))}
           </ul>
-        </div>
+        </Callout>
       )}
 
       <Section labelledBy="form-title" spacing="compact">
@@ -69,24 +59,6 @@ export function CitationStyleFinder({ params }: CitationStyleFinderProps) {
         </h2>
         <StyleFinderForm answers={answers ?? {}} />
       </Section>
-
-      {relatedGuides.length > 0 && (
-        <Section labelledBy="related-guides-title" spacing="compact">
-          <h2 id="related-guides-title" className="mb-6 text-heading font-semibold">
-            {relatedGuides.length === 1 ? page.relatedGuide : page.relatedGuides}
-          </h2>
-          <CatalogueList items={relatedGuides} layout="stack" />
-        </Section>
-      )}
-
-      {tools.length > 0 && (
-        <Section labelledBy="related-tools-title" spacing="compact">
-          <h2 id="related-tools-title" className="mb-6 text-heading font-semibold">
-            {tools.length === 1 ? page.relatedTool : page.relatedTools}
-          </h2>
-          <CatalogueList items={tools} layout="stack" />
-        </Section>
-      )}
-    </PageContainer>
+    </ToolPageLayout>
   );
 }

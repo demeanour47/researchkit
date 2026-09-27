@@ -240,11 +240,22 @@ const FOOTER = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 export function questionnaireDocx(blocks: readonly DocumentBlock[], title: string): Uint8Array<ArrayBuffer> {
   const document = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:document ${W}><w:body>${wordBody(blocks)}<w:sectPr><w:footerReference w:type="default" r:id="rId2"/><w:pgSz w:w="${PAGE_TWIPS.width}" w:h="${PAGE_TWIPS.height}"/><w:pgMar w:top="${PAGE_TWIPS.margin}" w:right="${PAGE_TWIPS.margin}" w:bottom="${PAGE_TWIPS.margin}" w:left="${PAGE_TWIPS.margin}" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  return docxPackage({ document, styles: STYLES, footer: FOOTER, title });
+}
+
+/** The WordprocessingML namespaces a document part declares. */
+export const WORD_NAMESPACES = W;
+
+/**
+ * A Word package from its parts: the document, its styles and an optional footer
+ * (referenced from the document as rId2), with the title in the file properties.
+ */
+export function docxPackage({ document, styles, footer, title }: { document: string; styles: string; footer?: string; title: string }): Uint8Array<ArrayBuffer> {
   const files: [string, string][] = [
     [
       "[Content_Types].xml",
       `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`,
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>${footer ? '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>' : ""}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`,
     ],
     [
       "_rels/.rels",
@@ -260,10 +271,10 @@ export function questionnaireDocx(blocks: readonly DocumentBlock[], title: strin
     [
       "word/_rels/document.xml.rels",
       `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/></Relationships>`,
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>${footer ? '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>' : ""}</Relationships>`,
     ],
-    ["word/styles.xml", STYLES],
-    ["word/footer1.xml", FOOTER],
+    ["word/styles.xml", styles],
+    ...(footer ? [["word/footer1.xml", footer] as [string, string]] : []),
   ];
   return zip(files.map(([name, text]) => ({ name, data: utf8(text) })));
 }

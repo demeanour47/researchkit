@@ -1,8 +1,9 @@
-import { Link, PageContainer } from "@/ui";
-import { TOOLS } from "@/domains/catalogue";
+import { Badge, Hero, Icon, PageContainer } from "@/ui";
+import { GUIDES_INDEX_PATH, TOOLS } from "@/domains/catalogue";
 import type { Guide } from "@/domains/publishing";
 import { CatalogueList } from "@/features/catalogue";
 import { ContentBlock } from "@/features/reading";
+import { Breadcrumbs } from "@/features/site";
 import { guideLabels } from "./copy";
 
 const FAQ_ID = "faq";
@@ -12,11 +13,21 @@ function Credentials({ guide }: { guide: Guide }) {
   const updated = new Intl.DateTimeFormat("en", { dateStyle: "long", timeZone: "UTC" }).format(new Date(guide.updated));
 
   return (
-    <p className="text-small text-text-muted">
-      {guideLabels.updated} <time dateTime={guide.updated}>{updated}</time>
-      {" · "}
-      {guide.reviewedBy ? `${guideLabels.reviewedBy} ${guide.reviewedBy}` : guideLabels.notReviewed}
-    </p>
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-small text-text-muted">
+      <span className="inline-flex items-center gap-1.5">
+        <Icon name="clock" />
+        {guideLabels.updated} <time dateTime={guide.updated}>{updated}</time>
+      </span>
+      {guide.reviewedBy ? (
+        <Badge tone="success" icon="shield-check">
+          {guideLabels.reviewedBy} {guide.reviewedBy}
+        </Badge>
+      ) : (
+        <Badge tone="outline" icon="shield-check">
+          {guideLabels.notReviewed}
+        </Badge>
+      )}
+    </div>
   );
 }
 
@@ -30,22 +41,32 @@ export function GuidePage({ guide }: { guide: Guide }) {
   ];
 
   return (
-    <PageContainer width="reading">
-      <article className="grid gap-12 py-section-compact">
-        <header className="grid gap-4">
-          <h1 className="font-display text-title font-semibold text-balance">{guide.title}</h1>
-          <p className="text-lead">{guide.summary}</p>
-          <Credentials guide={guide} />
-        </header>
+    <article aria-labelledby="guide-title">
+      <Hero
+        titleId="guide-title"
+        width="reading"
+        eyebrow={guideLabels.eyebrow}
+        title={guide.title}
+        description={guide.summary}
+        before={<Breadcrumbs items={[{ label: "Home", href: "/" }, { label: guideLabels.guides, href: GUIDES_INDEX_PATH }, { label: guide.title }]} />}
+      >
+        <Credentials guide={guide} />
+      </Hero>
 
-        <nav aria-labelledby="contents-title" className="rounded-panel border border-border bg-surface p-6">
-          <h2 id="contents-title" className="mb-3 text-body font-semibold">
+      <PageContainer width="reading" className="grid gap-14 py-section-compact">
+        <nav aria-labelledby="contents-title" className="rounded-panel border border-border bg-sunken p-6">
+          <h2 id="contents-title" className="mb-3 text-caption font-semibold tracking-wide text-text-muted uppercase">
             {guideLabels.contents}
           </h2>
-          <ol className="grid list-decimal gap-1 ps-6">
-            {contents.map(({ id, heading }) => (
-              <li key={id}>
-                <Link href={`#${id}`}>{heading}</Link>
+          <ol className="grid gap-1.5">
+            {contents.map(({ id, heading }, index) => (
+              <li key={id} className="flex gap-3">
+                <span aria-hidden="true" className="w-5 shrink-0 text-small text-text-muted tabular-nums">
+                  {index + 1}
+                </span>
+                <a href={`#${id}`} className="rounded-sm text-action underline-offset-4 hover:underline focus-ring">
+                  {heading}
+                </a>
               </li>
             ))}
           </ol>
@@ -53,7 +74,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
 
         {guide.sections.map((section) => (
           <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className="grid gap-4">
-            <h2 id={`${section.id}-title`} className="text-heading font-semibold text-balance">
+            <h2 id={`${section.id}-title`} className="font-display text-heading font-semibold text-balance">
               {section.heading}
             </h2>
             {section.blocks.map((block, index) => (
@@ -63,28 +84,30 @@ export function GuidePage({ guide }: { guide: Guide }) {
         ))}
 
         {guide.faq.length > 0 && (
-          <section id={FAQ_ID} aria-labelledby={`${FAQ_ID}-title`} className="grid gap-6">
-            <h2 id={`${FAQ_ID}-title`} className="text-heading font-semibold">
+          <section id={FAQ_ID} aria-labelledby={`${FAQ_ID}-title`} className="grid gap-4">
+            <h2 id={`${FAQ_ID}-title`} className="font-display text-heading font-semibold">
               {guideLabels.faq}
             </h2>
-            {guide.faq.map(({ question, answer }) => (
-              <div key={question} className="grid gap-1">
-                <h3 className="text-subheading font-semibold">{question}</h3>
-                <p>{answer}</p>
-              </div>
-            ))}
+            <div className="grid divide-y divide-border rounded-panel border border-border bg-surface">
+              {guide.faq.map(({ question, answer }) => (
+                <div key={question} className="grid gap-1.5 p-6">
+                  <h3 className="text-heading-sm font-semibold">{question}</h3>
+                  <p className="text-text-muted">{answer}</p>
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
         {relatedTools.length > 0 && (
-          <section id={RELATED_ID} aria-labelledby={`${RELATED_ID}-title`} className="grid gap-4">
-            <h2 id={`${RELATED_ID}-title`} className="text-heading font-semibold">
+          <section id={RELATED_ID} aria-labelledby={`${RELATED_ID}-title`} className="grid gap-6">
+            <h2 id={`${RELATED_ID}-title`} className="font-display text-heading font-semibold">
               {relatedTools.length === 1 ? guideLabels.relatedTool : guideLabels.relatedTools}
             </h2>
-            <CatalogueList items={relatedTools} layout="stack" />
+            <CatalogueList items={relatedTools} layout="pair" />
           </section>
         )}
-      </article>
-    </PageContainer>
+      </PageContainer>
+    </article>
   );
 }

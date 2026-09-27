@@ -1,9 +1,11 @@
-import { Link, PageContainer } from "@/ui";
+import { ButtonLink, Hero, PageContainer } from "@/ui";
 import { GUIDES_INDEX_PATH, TOOLS_INDEX_PATH } from "@/domains/catalogue";
 import type { ContentPage } from "@/domains/publishing";
 import { ContentBlock } from "@/features/reading";
+import { Breadcrumbs } from "@/features/site";
 
 const labels = {
+  eyebrow: "About",
   next: "Get started",
   tools: "Browse Academic Tools",
   guides: "Browse Research Guides",
@@ -12,16 +14,20 @@ const labels = {
 /** A standalone content page: title, lead, then sections of content blocks. */
 export function AboutPage({ page }: { page: ContentPage }) {
   return (
-    <PageContainer width="reading">
-      <article className="grid gap-12 py-section-compact">
-        <header className="grid gap-4">
-          <h1 className="font-display text-title font-semibold text-balance">{page.title}</h1>
-          <p className="text-lead">{page.lead}</p>
-        </header>
+    <article aria-labelledby="page-title">
+      <Hero
+        titleId="page-title"
+        width="reading"
+        eyebrow={labels.eyebrow}
+        title={page.title}
+        description={page.lead}
+        before={<Breadcrumbs items={[{ label: "Home", href: "/" }, { label: page.title }]} />}
+      />
 
+      <PageContainer width="reading" className="grid gap-14 py-section-compact">
         {page.sections.map((section) => (
           <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className="grid gap-4">
-            <h2 id={`${section.id}-title`} className="text-heading font-semibold text-balance">
+            <h2 id={`${section.id}-title`} className="font-display text-heading font-semibold text-balance">
               {section.heading}
             </h2>
             {section.blocks.map((block, index) => (
@@ -30,24 +36,20 @@ export function AboutPage({ page }: { page: ContentPage }) {
           </section>
         ))}
 
-        <nav aria-labelledby="next-title" className="grid gap-3">
-          <h2 id="next-title" className="text-heading font-semibold">
+        <nav aria-labelledby="next-title" className="grid gap-4 rounded-panel border border-border bg-sunken p-6 sm:p-8">
+          <h2 id="next-title" className="font-display text-heading font-semibold">
             {labels.next}
           </h2>
-          <ul className="grid gap-2">
-            <li>
-              <Link href={TOOLS_INDEX_PATH} variant="standalone">
-                {labels.tools}
-              </Link>
-            </li>
-            <li>
-              <Link href={GUIDES_INDEX_PATH} variant="standalone">
-                {labels.guides}
-              </Link>
-            </li>
-          </ul>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink href={TOOLS_INDEX_PATH} trailingIcon="arrow-right">
+              {labels.tools}
+            </ButtonLink>
+            <ButtonLink href={GUIDES_INDEX_PATH} variant="secondary">
+              {labels.guides}
+            </ButtonLink>
+          </div>
         </nav>
-      </article>
-    </PageContainer>
+      </PageContainer>
+    </article>
   );
 }

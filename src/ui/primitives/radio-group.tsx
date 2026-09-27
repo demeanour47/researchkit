@@ -55,7 +55,12 @@ export function RadioGroup<T extends string>({
             className={cx(
               "flex min-h-control cursor-pointer items-center gap-3",
               question
-                ? "rounded-control border border-border bg-surface px-3 py-2 has-[:checked]:border-action has-[:checked]:font-medium"
+                ? cx(
+                    "rounded-control border border-border bg-surface px-3 py-2 shadow-card",
+                    "transition-[background-color,border-color] duration-(--duration-instant) ease-standard",
+                    "hover:border-border-strong hover:bg-hover",
+                    "has-[:checked]:border-action has-[:checked]:bg-action-soft has-[:checked]:font-medium",
+                  )
                 : "has-[:checked]:font-medium",
             )}
           >

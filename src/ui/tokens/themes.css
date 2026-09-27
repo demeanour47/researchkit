@@ -2,7 +2,8 @@
  * Theme selection. Colour roles resolve through light-dark(), so a theme is
  * chosen by setting color-scheme:
  *   - no attribute: follows the system preference
- *   - data-theme="light" or data-theme="dark" on the root: explicit choice
+ *   - data-theme="light" or data-theme="dark" on the root: the reader's choice,
+ *     applied before paint by THEME_SCRIPT in src/ui/design/theme.ts
  * Future themes (such as high contrast) redefine the roles under their own
  * data-theme value; nothing else needs to change.
  */

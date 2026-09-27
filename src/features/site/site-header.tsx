@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { Link, PageContainer } from "@/ui";
+import { PageContainer } from "@/ui";
+import { BrandLink } from "./brand-link";
 import { MobileMenu } from "./mobile-menu";
 import { PrimaryNav } from "./primary-nav";
 import type { Brand, NavItem } from "./types";
@@ -7,28 +8,35 @@ import type { Brand, NavItem } from "./types";
 export interface SiteHeaderProps {
   brand: Brand;
   navItems: readonly NavItem[];
-  /** Controls shown at every screen size, such as a search entry point. */
+  /** Controls shown at every screen size, such as search. */
   actions?: ReactNode;
+  /** Controls shown beside the actions from medium screens up, such as the theme switcher. */
+  secondaryActions?: ReactNode;
+  /** The same controls, laid out for the small-screen menu. */
+  menuActions?: ReactNode;
   /** Visible label of the small-screen menu toggle. */
   menuLabel?: string;
 }
 
-/** The banner at the top of every page: brand, main navigation and optional actions. */
-export function SiteHeader({ brand, navItems, actions, menuLabel }: SiteHeaderProps) {
+/**
+ * The banner at the top of every page: brand, main navigation and actions.
+ * It stays in view while the page scrolls, over a translucent backdrop.
+ */
+export function SiteHeader({ brand, navItems, actions, secondaryActions, menuActions, menuLabel }: SiteHeaderProps) {
   return (
-    <header className="border-b border-foreground/15">
-      <PageContainer className="relative flex min-h-16 items-center justify-between gap-6">
-        <Link href={brand.href} variant="quiet" className="font-semibold">
-          {brand.name}
-        </Link>
-        <div className="hidden md:block">
+    <header className="sticky top-0 z-(--z-sticky) border-b border-border bg-canvas/80 backdrop-blur-md print:static print:bg-canvas">
+      <PageContainer className="relative flex h-header items-center gap-4">
+        <BrandLink brand={brand} />
+        <div className="ms-4 hidden md:block print:hidden">
           <PrimaryNav items={navItems} />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="ms-auto flex items-center gap-2 print:hidden">
           {actions}
+          {secondaryActions && <div className="hidden items-center gap-2 md:flex">{secondaryActions}</div>}
           <div className="md:hidden">
             <MobileMenu label={menuLabel}>
               <PrimaryNav items={navItems} orientation="vertical" />
+              {menuActions && <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">{menuActions}</div>}
             </MobileMenu>
           </div>
         </div>

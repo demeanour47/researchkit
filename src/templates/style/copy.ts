@@ -2,6 +2,7 @@ import { TOOL_ID as CITATION_STYLE_FINDER_ID } from "@/tools/citation-style-find
 
 /** Wording shared by every style page. */
 export const stylePageCopy = {
+  eyebrow: "Citation style",
   definedBy: "Defined by",
   usedIn: "Commonly used in",
   status: "Coming soon",
