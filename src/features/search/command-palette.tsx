@@ -112,15 +112,15 @@ export function CommandPalette({ items }: { items: readonly SearchItem[] }) {
         className={cx(
           "inline-flex min-h-control-sm items-center gap-2 rounded-control border border-border bg-surface px-2.5 text-small text-text-muted shadow-card",
           "transition-[border-color,color] duration-(--duration-instant) ease-standard hover:border-border-strong hover:text-text focus-ring",
-          "lg:min-w-60 lg:justify-between",
+          "xl:min-w-60 xl:justify-between",
           !ready && "invisible",
         )}
       >
         <span className="flex items-center gap-2">
           <Icon name="search" className="size-4" />
-          <span className="hidden lg:inline">{labels.triggerHint}</span>
+          <span className="hidden xl:inline">{labels.triggerHint}</span>
         </span>
-        <span className="hidden lg:inline">
+        <span className="hidden xl:inline">
           <Kbd>{shortcut}</Kbd>
         </span>
       </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, RadioGroup, SelectField, Tag, TextField, VisuallyHidden } from "@/ui";
 import {
   CHECK_STATUS_LABELS,
@@ -42,6 +42,8 @@ import { announcements } from "./announcements";
 import { steps } from "./copy";
 import { exampleProject } from "./example";
 import { VariableEditor } from "./variable-editor";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 const HISTORY_LIMIT = 50;
 const tones: Record<CheckStatus, "info" | "neutral" | "caution"> = { aligned: "info", review: "neutral", "worth-checking": "caution", missing: "caution", clarify: "caution" };
@@ -88,17 +90,18 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * for one variable at a time, checks, and the updated project draft. All rules come
  * from the knowledge layer; this component holds what the researcher typed and edited.
  */
-export function VariablesBuilderForm({ guide }: { guide: ReactNode }) {
+function VariablesBuilderFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [inputs, setInputs] = useState<Inputs>(emptyInputs);
   const [withHypotheses, setWithHypotheses] = useState(true);
-  const [edited, setEdited] = useState<ProjectVariable[] | null>(null);
+  const [edited, setEdited] = useState<ProjectVariable[] | null>(() => (link.project?.variables ? [...link.project.variables] : null));
   const [history, setHistory] = useState<ProjectVariable[][]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
   const [newKind, setNewKind] = useState<VariableKind>("independent");
   const [announcement, setAnnouncement] = useState("");
 
-  const project = useMemo(() => {
+  const typedProject = useMemo(() => {
     let draft = createProjectDraft({
       researchQuestion: inputs.researchQuestion,
       researchAim: inputs.researchAim,
@@ -118,6 +121,7 @@ export function VariablesBuilderForm({ guide }: { guide: ReactNode }) {
     }
     return draft;
   }, [inputs, withHypotheses]);
+  const project = link.project ?? typedProject;
 
   const imported = useMemo(() => importVariables(project), [project]);
   const variables = edited ?? imported;
@@ -125,6 +129,7 @@ export function VariablesBuilderForm({ guide }: { guide: ReactNode }) {
   const selected = variables.find((variable) => variable.id === selectedId) ?? variables[0] ?? null;
   const setChecks = validateSet(variables);
   const updated = useMemo(() => applyVariables(project, variables), [project, variables]);
+  useEffect(() => link.save(updated), [link, updated]);
 
   const announce = (message: string) => {
     setAnnouncement("");
@@ -167,51 +172,57 @@ export function VariablesBuilderForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setInputs({ ...exampleProject });
-              announce(steps.exampleLoaded);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        {input("researchQuestion", steps.question)}
-        {input("researchAim", steps.aim)}
-        {input("researchObjectives", steps.objectives, steps.perLine)}
-        <div className="grid items-start gap-6 sm:grid-cols-2">
-          {input("independentVariables", steps.independent, steps.perLine)}
-          {input("dependentVariables", steps.dependent, steps.perLine)}
-          {input("mediatorVariables", steps.mediator, steps.perLine)}
-          {input("moderatorVariables", steps.moderator, steps.perLine)}
-          {input("controlVariables", steps.control, steps.perLine)}
-          <div className="grid gap-6">
-            {input("population", steps.population, undefined, false)}
-            <SelectField
-              id="project-methodology"
-              label={steps.methodology}
-              emptyOption={steps.notChosen}
-              options={METHODOLOGIES.map((id) => ({ value: id, label: findOption(id)?.name ?? id }))}
-              value={inputs.methodology}
-              onChange={(event) => setInputs((current) => ({ ...current, methodology: event.target.value }))}
+        {link.project ? (
+          <WorkspaceProjectSummary stage="variables" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setInputs({ ...exampleProject });
+                  announce(steps.exampleLoaded);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            {input("researchQuestion", steps.question)}
+            {input("researchAim", steps.aim)}
+            {input("researchObjectives", steps.objectives, steps.perLine)}
+            <div className="grid items-start gap-6 sm:grid-cols-2">
+              {input("independentVariables", steps.independent, steps.perLine)}
+              {input("dependentVariables", steps.dependent, steps.perLine)}
+              {input("mediatorVariables", steps.mediator, steps.perLine)}
+              {input("moderatorVariables", steps.moderator, steps.perLine)}
+              {input("controlVariables", steps.control, steps.perLine)}
+              <div className="grid gap-6">
+                {input("population", steps.population, undefined, false)}
+                <SelectField
+                  id="project-methodology"
+                  label={steps.methodology}
+                  emptyOption={steps.notChosen}
+                  options={METHODOLOGIES.map((id) => ({ value: id, label: findOption(id)?.name ?? id }))}
+                  value={inputs.methodology}
+                  onChange={(event) => setInputs((current) => ({ ...current, methodology: event.target.value }))}
+                />
+              </div>
+            </div>
+            <RadioGroup
+              name="variables-hypotheses"
+              legend={steps.hypothesesLegend}
+              hint={steps.hypothesesHint}
+              options={[
+                { value: "yes", label: steps.withHypotheses },
+                { value: "no", label: steps.withoutHypotheses },
+              ]}
+              value={withHypotheses ? "yes" : "no"}
+              onChange={(value) => setWithHypotheses(value === "yes")}
             />
-          </div>
-        </div>
-        <RadioGroup
-          name="variables-hypotheses"
-          legend={steps.hypothesesLegend}
-          hint={steps.hypothesesHint}
-          options={[
-            { value: "yes", label: steps.withHypotheses },
-            { value: "no", label: steps.withoutHypotheses },
-          ]}
-          value={withHypotheses ? "yes" : "no"}
-          onChange={(value) => setWithHypotheses(value === "yes")}
-        />
+          </>
+        )}
       </Step>
 
       <Step id="variables" heading={steps.variables}>
@@ -387,5 +398,14 @@ export function VariablesBuilderForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function VariablesBuilderForm(props: Parameters<typeof VariablesBuilderFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="variables">
+      <VariablesBuilderFormContent {...props} />
+    </WorkspaceScope>
   );
 }

@@ -5,6 +5,8 @@ import { guidesIndex } from "@/templates/guides-index/copy";
 import { stylesIndex } from "@/templates/styles-index/copy";
 import { toolsIndex } from "@/templates/tools-index/copy";
 import { site } from "@/config/site";
+import { WORKSPACE_PATH } from "@/features/workspace/stage-links";
+import { workspacePage } from "@/templates/workspace/copy";
 import type { SearchItem } from "./types";
 
 /**
@@ -25,6 +27,7 @@ export function buildSearchIndex(): SearchItem[] {
   );
   const pages: SearchItem[] = [
     { id: "page-home", title: "Home", description: site.description, href: "/", group: "Pages", icon: "home" },
+    { id: "page-workspace", title: workspacePage.title, description: workspacePage.metaDescription, href: WORKSPACE_PATH, group: "Pages", icon: "layers", keywords: "project dashboard progress" },
     { id: "page-tools", title: toolsIndex.title, description: toolsIndex.metaDescription, href: TOOLS_INDEX_PATH, group: "Pages", icon: "layout-grid" },
     { id: "page-learn", title: guidesIndex.title, description: guidesIndex.metaDescription, href: GUIDES_INDEX_PATH, group: "Pages", icon: "learning", keywords: "learn" },
     { id: "page-styles", title: stylesIndex.title, description: stylesIndex.metaDescription, href: STYLES_INDEX_PATH, group: "Pages", icon: "publishing" },

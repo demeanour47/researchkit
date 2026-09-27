@@ -25,6 +25,7 @@ export const how: readonly string[] = [
 ];
 
 export const steps = {
+  saveSubject: "this assumption checklist",
   project: "Your project",
   projectIntro: "Enter what you already know. The checklist follows from the analyses your project plans.",
   example: "Load an example project",

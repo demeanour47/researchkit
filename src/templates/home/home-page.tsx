@@ -16,6 +16,7 @@ import {
 } from "@/ui";
 import { TOOLS_INDEX_PATH, TOOL_CATEGORIES, toolsInCategory } from "@/domains/catalogue";
 import { CATEGORY_ICONS, CatalogueList, CategoryCard, availableTools, toolIcon } from "@/features/catalogue";
+import { WORKSPACE_PATH } from "@/features/workspace/stage-links";
 import { ESSENTIAL_TOOL_IDS, FEATURED_TOOL_ID, LATEST_TOOL_IDS } from "@/config/highlights";
 import { academicPrinciples, categories, essentials, featured, hero, latest, principles, roadmap, workflow } from "./copy";
 
@@ -23,7 +24,6 @@ const PLANNED_TOOLS_PATH = `${TOOLS_INDEX_PATH}?status=coming-soon`;
 
 function HomeHero() {
   const stages = workflow.flatMap((step) => availableTools([step.toolId]).map((tool) => ({ ...step, tool })));
-  const firstStage = stages[0]?.tool;
 
   return (
     <Hero
@@ -42,11 +42,9 @@ function HomeHero() {
           <ButtonLink href={TOOLS_INDEX_PATH} size="lg" trailingIcon="arrow-right">
             {hero.primaryAction}
           </ButtonLink>
-          {firstStage && (
-            <ButtonLink href={firstStage.href} size="lg" variant="secondary">
-              {hero.secondaryAction}
-            </ButtonLink>
-          )}
+          <ButtonLink href={WORKSPACE_PATH} size="lg" variant="secondary">
+            {hero.secondaryAction}
+          </ButtonLink>
         </>
       }
     >

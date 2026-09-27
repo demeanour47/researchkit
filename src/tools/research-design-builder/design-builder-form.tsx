@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, RadioGroup, SelectField, Tag, TextField, VisuallyHidden } from "@/ui";
 import {
   CHECK_STATUS_LABELS,
@@ -39,6 +39,8 @@ import { ComparisonView } from "./comparison-view";
 import { CompatibilityView, tones } from "./compatibility-view";
 import { steps } from "./copy";
 import { exampleProject } from "./example";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 type Inputs = Record<"researchQuestion" | "researchObjectives" | "independentVariables" | "dependentVariables" | "philosophy" | "approach" | "choice" | "strategy" | "timeHorizon", string>;
 const emptyInputs: Inputs = { researchQuestion: "", researchObjectives: "", independentVariables: "", dependentVariables: "", philosophy: "", approach: "", choice: "", strategy: "", timeHorizon: "" };
@@ -66,15 +68,16 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * checks, a comparison, the researcher's own choice and justification, and the updated
  * project draft. Every judgement comes from the knowledge layer.
  */
-export function DesignBuilderForm({ guide }: { guide: ReactNode }) {
+function DesignBuilderFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [inputs, setInputs] = useState<Inputs>(emptyInputs);
   const [withHypotheses, setWithHypotheses] = useState(true);
-  const [record, setRecord] = useState<ResearchDesignRecord>(EMPTY_DESIGN);
+  const [record, setRecord] = useState<ResearchDesignRecord>(() => link.project?.researchDesign ?? EMPTY_DESIGN);
   const [onlyConsistent, setOnlyConsistent] = useState(false);
   const [toAdd, setToAdd] = useState("");
   const [announcement, setAnnouncement] = useState("");
 
-  const project = useMemo(() => {
+  const typedProject = useMemo(() => {
     let draft = createProjectDraft({
       researchQuestion: inputs.researchQuestion,
       researchObjectives: parseList(inputs.researchObjectives),
@@ -88,12 +91,14 @@ export function DesignBuilderForm({ guide }: { guide: ReactNode }) {
     }
     return draft;
   }, [inputs, withHypotheses]);
+  const project = link.project ?? typedProject;
 
   const narrowing = useMemo(() => narrowDesigns(record.answers), [record.answers]);
   const consistent = useMemo(() => consistentDesigns(record.answers), [record.answers]);
   const answered = Object.keys(record.answers).length;
   const shown = narrowing.filter((entry) => !onlyConsistent || consistent.includes(entry.design));
   const updated = useMemo(() => applyDesign(project, record), [project, record]);
+  useEffect(() => link.save(updated), [link, updated]);
   const checks = validateDesign(record, project);
 
   const announce = (message: string) => {
@@ -125,55 +130,61 @@ export function DesignBuilderForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setInputs({ ...exampleProject });
-              announce(steps.exampleLoaded);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        {text("researchQuestion", steps.question)}
-        {text("researchObjectives", steps.objectives, steps.perLine)}
-        <div className="grid items-start gap-6 sm:grid-cols-2">
-          {text("independentVariables", steps.independent, steps.perLine)}
-          {text("dependentVariables", steps.dependent, steps.perLine)}
-        </div>
-        <fieldset className="grid gap-4" aria-describedby="onion-hint">
-          <legend className="mb-1 text-subheading font-semibold">{steps.onionHeading}</legend>
-          <p id="onion-hint" className="text-small text-text-muted">
-            {steps.onionHint}
-          </p>
-          <div className="grid items-start gap-4 sm:grid-cols-2">
-            {ONION_LAYERS.map(([layer, label]) => (
-              <SelectField
-                key={layer}
-                id={`design-${layer}`}
-                label={label}
-                emptyOption={steps.notChosen}
-                options={optionsFor(layer).map((option) => ({ value: option.id, label: option.name }))}
-                value={inputs[layer]}
-                onChange={(event) => setInputs((current) => ({ ...current, [layer]: event.target.value }))}
-              />
-            ))}
-          </div>
-        </fieldset>
-        <RadioGroup
-          name="design-hypotheses"
-          legend={steps.hypothesesLegend}
-          hint={steps.hypothesesHint}
-          options={[
-            { value: "yes", label: steps.withHypotheses },
-            { value: "no", label: steps.withoutHypotheses },
-          ]}
-          value={withHypotheses ? "yes" : "no"}
-          onChange={(value) => setWithHypotheses(value === "yes")}
-        />
+        {link.project ? (
+          <WorkspaceProjectSummary stage="design" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setInputs({ ...exampleProject });
+                  announce(steps.exampleLoaded);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            {text("researchQuestion", steps.question)}
+            {text("researchObjectives", steps.objectives, steps.perLine)}
+            <div className="grid items-start gap-6 sm:grid-cols-2">
+              {text("independentVariables", steps.independent, steps.perLine)}
+              {text("dependentVariables", steps.dependent, steps.perLine)}
+            </div>
+            <fieldset className="grid gap-4" aria-describedby="onion-hint">
+              <legend className="mb-1 text-subheading font-semibold">{steps.onionHeading}</legend>
+              <p id="onion-hint" className="text-small text-text-muted">
+                {steps.onionHint}
+              </p>
+              <div className="grid items-start gap-4 sm:grid-cols-2">
+                {ONION_LAYERS.map(([layer, label]) => (
+                  <SelectField
+                    key={layer}
+                    id={`design-${layer}`}
+                    label={label}
+                    emptyOption={steps.notChosen}
+                    options={optionsFor(layer).map((option) => ({ value: option.id, label: option.name }))}
+                    value={inputs[layer]}
+                    onChange={(event) => setInputs((current) => ({ ...current, [layer]: event.target.value }))}
+                  />
+                ))}
+              </div>
+            </fieldset>
+            <RadioGroup
+              name="design-hypotheses"
+              legend={steps.hypothesesLegend}
+              hint={steps.hypothesesHint}
+              options={[
+                { value: "yes", label: steps.withHypotheses },
+                { value: "no", label: steps.withoutHypotheses },
+              ]}
+              value={withHypotheses ? "yes" : "no"}
+              onChange={(value) => setWithHypotheses(value === "yes")}
+            />
+          </>
+        )}
       </Step>
 
       <Step id="decision" heading={steps.decision}>
@@ -357,3 +368,11 @@ export function DesignBuilderForm({ guide }: { guide: ReactNode }) {
   );
 }
 
+/** The tool, working in the workspace project when there is one. */
+export function DesignBuilderForm(props: Parameters<typeof DesignBuilderFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="design">
+      <DesignBuilderFormContent {...props} />
+    </WorkspaceScope>
+  );
+}

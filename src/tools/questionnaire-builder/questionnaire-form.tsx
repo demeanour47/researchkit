@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Button, CopyButton, RadioGroup, SelectField, Tag, TextField, VisuallyHidden } from "@/ui";
 import {
   CHECK_STATUS_LABELS,
@@ -37,6 +37,8 @@ import { FormPreview, PrintPreview, WordPreview } from "./preview";
 import { EMPTY_PROJECT_INPUTS, projectFromInputs, variablesFromInputs, type ProjectInputs } from "./project-input";
 import { QuestionItem, type Update } from "./question-editor";
 import { SectionEditor } from "./section-editor";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 const tones: Record<CheckStatus, "info" | "neutral" | "caution"> = { aligned: "info", review: "neutral", "worth-checking": "caution", missing: "caution", clarify: "caution" };
 type PreviewMode = "desktop" | "mobile" | "print" | "word";
@@ -57,11 +59,12 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * The builder: the project it reads, the questionnaire built from it, its sections and
  * questions, checks, previews and exports. Every rule comes from the knowledge layer.
  */
-export function QuestionnaireForm({ guide }: { guide: ReactNode }) {
+function QuestionnaireFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [inputs, setInputs] = useState<ProjectInputs>(EMPTY_PROJECT_INPUTS);
   const [levels, setLevels] = useState<Record<string, MeasurementLevel | "">>({});
   const [withHypotheses, setWithHypotheses] = useState(true);
-  const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(null);
+  const [questionnaire, setQuestionnaire] = useState<Questionnaire | null>(() => link.project?.questionnaire ?? null);
   // Remounts the editors after a rebuild, so no field keeps text from the replaced questionnaire.
   const [generation, setGeneration] = useState(0);
   const [confirmRebuild, setConfirmRebuild] = useState(false);
@@ -70,10 +73,12 @@ export function QuestionnaireForm({ guide }: { guide: ReactNode }) {
   const [mode, setMode] = useState<PreviewMode>("desktop");
   const [announcement, setAnnouncement] = useState("");
 
-  const project = useMemo(() => projectFromInputs(inputs, levels, withHypotheses), [inputs, levels, withHypotheses]);
+  const typedProject = useMemo(() => projectFromInputs(inputs, levels, withHypotheses), [inputs, levels, withHypotheses]);
+  const project = link.project ?? typedProject;
   const variables = useMemo(() => questionnaireVariables(project), [project]);
   const typedVariables = useMemo(() => variablesFromInputs(inputs), [inputs]);
   const updated = useMemo(() => (questionnaire ? applyQuestionnaire(project, questionnaire) : project), [project, questionnaire]);
+  useEffect(() => link.save(updated), [link, updated]);
   const blocks = useMemo(() => (questionnaire ? questionnaireDocument(questionnaire, project) : []), [questionnaire, project]);
   const pages = useMemo(() => (mode === "print" ? layoutPdf(blocks) : []), [mode, blocks]);
   const checks = questionnaire ? checkQuestionnaire(questionnaire, project) : [];
@@ -106,68 +111,74 @@ export function QuestionnaireForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setInputs({ ...exampleInputs });
-              setLevels({ ...exampleLevels });
-              setWithHypotheses(true);
-              build(projectFromInputs(exampleInputs, exampleLevels, true));
-              announce(steps.exampleLoaded);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        <TextField id="q-input-topic" label={steps.topic} hint={steps.topicHint} autoComplete="off" value={inputs.topic} onChange={(event) => setInput("topic", event.target.value)} />
-        {text("researchAim", steps.aim)}
-        {text("researchQuestion", steps.question)}
-        {text("researchObjectives", steps.objectives, steps.perLine, 3)}
-        <p id="q-variables-hint" className="text-small text-text-muted">
-          {steps.variablesHint}
-        </p>
-        <div className="grid items-start gap-6 sm:grid-cols-2">
-          {text("independent", steps.independent, undefined, 3, "q-variables-hint")}
-          {text("dependent", steps.dependent, undefined, 3, "q-variables-hint")}
-          {text("control", steps.control, steps.controlHint, 3, "q-variables-hint")}
-          <TextField id="q-input-targetPopulation" label={steps.population} hint={steps.populationHint} autoComplete="off" value={inputs.targetPopulation} onChange={(event) => setInput("targetPopulation", event.target.value)} />
-        </div>
-        {typedVariables.length > 0 && (
-          <fieldset className="grid gap-4" aria-describedby="q-levels-hint">
-            <legend className="mb-1 text-subheading font-semibold">{steps.levelsLegend}</legend>
-            <p id="q-levels-hint" className="text-small text-text-muted">
-              {steps.levelsHint}
-            </p>
-            <div className="grid items-start gap-4 sm:grid-cols-2">
-              {typedVariables.map((variable) => (
-                <SelectField
-                  key={variable.id}
-                  id={`q-level-${variable.id}`}
-                  label={steps.levelLabel(variable.name)}
-                  emptyOption={steps.notSet}
-                  options={MEASUREMENT_LEVELS.map((level) => ({ value: level, label: MEASUREMENT_LEVEL_INFO[level].label }))}
-                  value={levels[variable.id] ?? ""}
-                  onChange={(event) => setLevels((current) => ({ ...current, [variable.id]: event.target.value as MeasurementLevel | "" }))}
-                />
-              ))}
+        {link.project ? (
+          <WorkspaceProjectSummary stage="questionnaire" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setInputs({ ...exampleInputs });
+                  setLevels({ ...exampleLevels });
+                  setWithHypotheses(true);
+                  build(projectFromInputs(exampleInputs, exampleLevels, true));
+                  announce(steps.exampleLoaded);
+                }}
+              >
+                {steps.example}
+              </Button>
             </div>
-          </fieldset>
+            <TextField id="q-input-topic" label={steps.topic} hint={steps.topicHint} autoComplete="off" value={inputs.topic} onChange={(event) => setInput("topic", event.target.value)} />
+            {text("researchAim", steps.aim)}
+            {text("researchQuestion", steps.question)}
+            {text("researchObjectives", steps.objectives, steps.perLine, 3)}
+            <p id="q-variables-hint" className="text-small text-text-muted">
+              {steps.variablesHint}
+            </p>
+            <div className="grid items-start gap-6 sm:grid-cols-2">
+              {text("independent", steps.independent, undefined, 3, "q-variables-hint")}
+              {text("dependent", steps.dependent, undefined, 3, "q-variables-hint")}
+              {text("control", steps.control, steps.controlHint, 3, "q-variables-hint")}
+              <TextField id="q-input-targetPopulation" label={steps.population} hint={steps.populationHint} autoComplete="off" value={inputs.targetPopulation} onChange={(event) => setInput("targetPopulation", event.target.value)} />
+            </div>
+            {typedVariables.length > 0 && (
+              <fieldset className="grid gap-4" aria-describedby="q-levels-hint">
+                <legend className="mb-1 text-subheading font-semibold">{steps.levelsLegend}</legend>
+                <p id="q-levels-hint" className="text-small text-text-muted">
+                  {steps.levelsHint}
+                </p>
+                <div className="grid items-start gap-4 sm:grid-cols-2">
+                  {typedVariables.map((variable) => (
+                    <SelectField
+                      key={variable.id}
+                      id={`q-level-${variable.id}`}
+                      label={steps.levelLabel(variable.name)}
+                      emptyOption={steps.notSet}
+                      options={MEASUREMENT_LEVELS.map((level) => ({ value: level, label: MEASUREMENT_LEVEL_INFO[level].label }))}
+                      value={levels[variable.id] ?? ""}
+                      onChange={(event) => setLevels((current) => ({ ...current, [variable.id]: event.target.value as MeasurementLevel | "" }))}
+                    />
+                  ))}
+                </div>
+              </fieldset>
+            )}
+            <RadioGroup
+              name="q-hypotheses"
+              legend={steps.hypothesesLegend}
+              hint={steps.hypothesesHint}
+              variant="inline"
+              options={[
+                { value: "yes", label: steps.withHypotheses },
+                { value: "no", label: steps.withoutHypotheses },
+              ]}
+              value={withHypotheses ? "yes" : "no"}
+              onChange={(value) => setWithHypotheses(value === "yes")}
+            />
+          </>
         )}
-        <RadioGroup
-          name="q-hypotheses"
-          legend={steps.hypothesesLegend}
-          hint={steps.hypothesesHint}
-          variant="inline"
-          options={[
-            { value: "yes", label: steps.withHypotheses },
-            { value: "no", label: steps.withoutHypotheses },
-          ]}
-          value={withHypotheses ? "yes" : "no"}
-          onChange={(value) => setWithHypotheses(value === "yes")}
-        />
       </Step>
 
       <Step id="build" heading={steps.build}>
@@ -415,5 +426,14 @@ export function QuestionnaireForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function QuestionnaireForm(props: Parameters<typeof QuestionnaireFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="questionnaire">
+      <QuestionnaireFormContent {...props} />
+    </WorkspaceScope>
   );
 }

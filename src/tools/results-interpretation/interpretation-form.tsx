@@ -14,6 +14,7 @@ import {
   formatAlpha,
   levelPercent,
   projectFromTyped,
+  updateProjectDraft,
   resultProblems,
   questionnaireVariables,
   type MeasurementLevel,
@@ -27,6 +28,12 @@ import { steps } from "./copy";
 import { exampleLevels, exampleProject, exampleResult } from "./example";
 import { InterpretationView } from "./interpretation-view";
 import { resultFromEntries, type ResultEntries } from "./result-input";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { SaveToProject } from "@/features/workspace/save-to-project";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
+
+/** An interpretation as kept in the project: its text as one paragraph, as the project stores notes. */
+const interpretationNote = (interpretation: ResultInterpretation) => interpretationText(interpretation).replace(/\s+/g, " ").trim();
 
 /** Option labels are cut at a word so long hypotheses don't stretch the page; the full wording appears in the interpretation. */
 const shorten = (text: string, length = 80) => (text.length <= length ? text : `${text.slice(0, text.lastIndexOf(" ", length))}…`);
@@ -44,7 +51,8 @@ function Step({ id, heading, children }: { id: string; heading: string; children
 }
 
 /** The project, a result's numbers, and the interpretation of what was last submitted. */
-export function InterpretationForm({ guide }: { guide: ReactNode }) {
+function InterpretationFormContent({ guide }: { guide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [project, setProject] = useState<TypedProject>(EMPTY_TYPED_PROJECT);
   const [levels, setLevels] = useState<Record<string, MeasurementLevel | "">>({});
   const [entries, setEntries] = useState<ResultEntries>({ kind: "pearson", texts: {}, variables: ["", ""], hypothesisId: "", alpha: 0.05 });
@@ -52,7 +60,8 @@ export function InterpretationForm({ guide }: { guide: ReactNode }) {
   const [submitted, setSubmitted] = useState<{ interpretation: ResultInterpretation; entries: ResultEntries; project: TypedProject } | null>(null);
   const [announcement, setAnnouncement] = useState("");
 
-  const draft = useMemo(() => projectFromTyped(project, levels), [project, levels]);
+  // In the workspace, results are read against the saved project; on its own, against the details typed here.
+  const draft = useMemo(() => link.project ?? projectFromTyped(project, levels), [link.project, project, levels]);
   const variables = useMemo(() => questionnaireVariables(draft), [draft]);
   const hypotheses = (draft.hypotheses ?? []).filter((hypothesis) => hypothesis.role === "alternative");
   const fields = getFields(entries.kind);
@@ -70,7 +79,7 @@ export function InterpretationForm({ guide }: { guide: ReactNode }) {
     const { input, unreadable } = resultFromEntries(SINGLE_VARIABLE.has(current.kind) ? { ...current, variables: current.variables.slice(0, 1) } : current);
     // Unreadable text is reported with every other problem, so all can be fixed at once.
     const unreadableFields = new Set(unreadable.map((problem) => problem.field));
-    const outcome = unreadable.length > 0 ? { ok: false as const, problems: [...unreadable, ...resultProblems(input).filter((problem) => !unreadableFields.has(problem.field ?? ""))] } : interpretResult(input, projectFromTyped(currentProject, currentLevels));
+    const outcome = unreadable.length > 0 ? { ok: false as const, problems: [...unreadable, ...resultProblems(input).filter((problem) => !unreadableFields.has(problem.field ?? ""))] } : interpretResult(input, link.project ?? projectFromTyped(currentProject, currentLevels));
     if (!outcome.ok) {
       setErrors(Object.fromEntries(outcome.problems.map((problem) => [problem.field ?? "", problem.message])));
       announce(problemsAnnouncement(outcome.problems.map((problem) => problem.message)));
@@ -87,27 +96,33 @@ export function InterpretationForm({ guide }: { guide: ReactNode }) {
   return (
     <div className="grid gap-10">
       <Step id="project" heading={steps.project}>
-        <p className="text-text-muted">{steps.projectIntro}</p>
-        <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              const next: ResultEntries = { kind: exampleResult.kind, texts: { ...exampleResult.values }, variables: [...exampleResult.variables], hypothesisId: "", alpha: 0.05 };
-              setProject({ ...exampleProject });
-              setLevels({ ...exampleLevels });
-              setEntries(next);
-              announce(steps.exampleLoaded);
-              setTimeout(() => interpret(next, exampleProject, { ...exampleLevels }), 90);
-            }}
-          >
-            {steps.example}
-          </Button>
-        </div>
-        <ProjectFields prefix="ri" value={project} levels={levels} onType={(field, text) => setProject((current) => ({ ...current, [field]: text }))} onChoose={(value, nextLevels) => {
-          setProject(value);
-          setLevels(nextLevels);
-        }} />
+        {link.project ? (
+          <WorkspaceProjectSummary stage="interpretation" project={link.project} />
+        ) : (
+          <>
+            <p className="text-text-muted">{steps.projectIntro}</p>
+            <div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  const next: ResultEntries = { kind: exampleResult.kind, texts: { ...exampleResult.values }, variables: [...exampleResult.variables], hypothesisId: "", alpha: 0.05 };
+                  setProject({ ...exampleProject });
+                  setLevels({ ...exampleLevels });
+                  setEntries(next);
+                  announce(steps.exampleLoaded);
+                  setTimeout(() => interpret(next, exampleProject, { ...exampleLevels }), 90);
+                }}
+              >
+                {steps.example}
+              </Button>
+            </div>
+            <ProjectFields prefix="ri" value={project} levels={levels} onType={(field, text) => setProject((current) => ({ ...current, [field]: text }))} onChoose={(value, nextLevels) => {
+              setProject(value);
+              setLevels(nextLevels);
+            }} />
+          </>
+        )}
       </Step>
 
       <Step id="result" heading={steps.result}>
@@ -199,6 +214,13 @@ export function InterpretationForm({ guide }: { guide: ReactNode }) {
           <div>
             <CopyButton text={interpretationText(submitted.interpretation)} subject={steps.copySubject} copyLabel={steps.copyLabel} copiedLabel={steps.copiedLabel} onResult={(result) => announce(result === "copied" ? announcements.copied : announcements.copyFailed)} />
           </div>
+          {link.project && !stale && (
+            <SaveToProject
+              subject={steps.saveSubject}
+              state={(link.project.interpretationNotes ?? []).includes(interpretationNote(submitted.interpretation)) ? "saved" : "unsaved"}
+              onSave={() => link.save(updateProjectDraft(draft, { interpretationNotes: [...(link.project?.interpretationNotes ?? []), interpretationNote(submitted.interpretation)] }))}
+            />
+          )}
         </section>
       )}
 
@@ -210,5 +232,14 @@ export function InterpretationForm({ guide }: { guide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function InterpretationForm(props: Parameters<typeof InterpretationFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="interpretation">
+      <InterpretationFormContent {...props} />
+    </WorkspaceScope>
   );
 }

@@ -4,12 +4,15 @@ import { TOOLS, TOOLS_INDEX_PATH, TOOL_CATEGORIES, type CatalogueItem } from "@/
 import { CatalogueList, toolIcon } from "@/features/catalogue";
 import { Breadcrumbs } from "@/features/site";
 import { LATEST_TOOL_IDS } from "@/config/highlights";
+import { NextStage, StageNav } from "@/features/workspace/stage-nav";
+import { moduleForTool } from "@/knowledge/workspace/modules";
 
 const labels = {
   home: "Home",
   tools: "Tools",
   onThisPage: "On this page",
   free: "Free, no account",
+  workspacePrivacy: "If you start a project in your research workspace, your work is also saved in this browser, and only this browser, until you delete the project.",
   new: "New",
   relatedGuide: "Related guide",
   relatedGuides: "Related guides",
@@ -113,6 +116,8 @@ function ExplanationSection({ section }: { section: ToolPageSection }) {
 export function ToolPageLayout({ title, intro, noScript, children, sections = [], relatedGuides = [], browseGuides, relatedTools = [] }: ToolPageLayoutProps) {
   const tool = TOOLS.find((entry) => entry.name === title);
   const category = tool && TOOL_CATEGORIES.find((entry) => entry.id === tool.category);
+  const stage = tool ? moduleForTool(tool.id) : null;
+  const shownSections = stage ? sections.map((section) => (section.id === "privacy" && section.text ? { ...section, text: `${section.text} ${labels.workspacePrivacy}` } : section)) : sections;
   const isNew = tool !== undefined && (LATEST_TOOL_IDS as readonly string[]).includes(tool.id);
   const relatedToolsHeading = relatedTools.length === 1 ? labels.relatedTool : labels.relatedTools;
   const relatedGuidesHeading = relatedGuides.length === 1 ? labels.relatedGuide : labels.relatedGuides;
@@ -158,6 +163,7 @@ export function ToolPageLayout({ title, intro, noScript, children, sections = []
             </Badge>
           )}
         </div>
+        {stage && <StageNav stage={stage.id} />}
         {contents.length > 0 && (
           <nav aria-label={labels.onThisPage} className="print:hidden">
             <ul className="flex flex-wrap gap-x-5 gap-y-2 text-small">
@@ -182,7 +188,13 @@ export function ToolPageLayout({ title, intro, noScript, children, sections = []
           </noscript>
         )}
 
-        {sections.length > 0 && <div className="grid gap-6 py-section-compact">{sections.map((section) => <ExplanationSection key={section.id} section={section} />)}</div>}
+        {stage && (
+          <div className="pt-section-compact print:hidden">
+            <NextStage stage={stage.id} />
+          </div>
+        )}
+
+        {shownSections.length > 0 && <div className="grid gap-6 py-section-compact">{shownSections.map((section) => <ExplanationSection key={section.id} section={section} />)}</div>}
 
         {relatedTools.length > 0 && (
           <Section id="related-tools" labelledBy="related-tools-title" spacing="compact" divided>

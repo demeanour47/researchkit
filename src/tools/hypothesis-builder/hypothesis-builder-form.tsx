@@ -25,6 +25,8 @@ import { steps } from "./copy";
 import { HypothesisEvaluationView } from "./hypothesis-evaluation";
 import { HypothesisPairs } from "./hypothesis-pairs";
 import { Field, VariableInputs, emptyInput, type HypothesisInput } from "./project-inputs";
+import { WorkspaceProjectSummary } from "@/features/workspace/project-summary";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 /** How long typing must pause before the evaluation summary is announced. */
 const ANNOUNCE_AFTER_MS = 1200;
@@ -45,11 +47,13 @@ function Step({ id, heading, children }: { id: string; heading: string; children
  * their evaluation and the updated project draft. All academic logic comes from the
  * knowledge layer; this component only holds what the researcher typed.
  */
-export function HypothesisBuilderForm({ typeGuide }: { typeGuide: ReactNode }) {
+function HypothesisBuilderFormContent({ typeGuide }: { typeGuide: ReactNode }) {
+  const link = useWorkspaceLink();
   const [input, setInput] = useState<HypothesisInput>(emptyInput);
-  const [form, setForm] = useState<HypothesisForm>("relationship");
-  const [direction, setDirection] = useState<Direction>("non-directional");
-  const [edits, setEdits] = useState<HypothesisEdits>({});
+  const [form, setForm] = useState<HypothesisForm>(() => link.project?.hypotheses?.[0]?.relationship.form ?? "relationship");
+  const [direction, setDirection] = useState<Direction>(() => link.project?.hypotheses?.[0]?.relationship.direction ?? "non-directional");
+  // Saved wording is kept as edits, so regenerated drafts keep the researcher's words.
+  const [edits, setEdits] = useState<HypothesisEdits>(() => Object.fromEntries((link.project?.hypotheses ?? []).map((hypothesis) => [hypothesis.id, hypothesis.text])));
   const [announcement, setAnnouncement] = useState("");
   const changed = useRef(false);
 
@@ -58,7 +62,7 @@ export function HypothesisBuilderForm({ typeGuide }: { typeGuide: ReactNode }) {
     setInput((current) => ({ ...current, ...changes }));
   };
 
-  const project = useMemo(
+  const typedProject = useMemo(
     () =>
       createProjectDraft({
         researchQuestion: input.researchQuestion,
@@ -77,9 +81,11 @@ export function HypothesisBuilderForm({ typeGuide }: { typeGuide: ReactNode }) {
       }),
     [input],
   );
+  const project = link.project ?? typedProject;
   const set = useMemo(() => generateHypotheses(project, { form, direction }), [project, form, direction]);
   const evaluation = useMemo(() => evaluateHypotheses(set, edits, project), [set, edits, project]);
   const updated = useMemo(() => applyHypotheses(project, toProjectHypotheses(set, edits)), [project, set, edits]);
+  useEffect(() => link.save(updated), [link, updated]);
 
   const summary = evaluationAnnouncement(evaluation.pairs.flatMap((pair) => pair.checks.map((check) => check.status)));
   useEffect(() => {
@@ -113,19 +119,27 @@ export function HypothesisBuilderForm({ typeGuide }: { typeGuide: ReactNode }) {
 
   return (
     <div className="grid gap-10">
-      <Step id="question" heading={steps.question}>
-        {field("researchQuestion", steps.questionLabel, steps.questionHint, true)}
-        {field("researchAim", steps.aimLabel, steps.aimHint, true)}
-      </Step>
+      {link.project ? (
+        <Step id="from-project" heading={steps.fromProject}>
+          <WorkspaceProjectSummary stage="hypotheses" project={link.project} />
+        </Step>
+      ) : (
+        <>
+          <Step id="question" heading={steps.question}>
+            {field("researchQuestion", steps.questionLabel, steps.questionHint, true)}
+            {field("researchAim", steps.aimLabel, steps.aimHint, true)}
+          </Step>
 
-      <Step id="objectives" heading={steps.objectives}>
-        {field("researchObjectives", steps.objectivesLabel, steps.objectivesHint, true)}
-      </Step>
+          <Step id="objectives" heading={steps.objectives}>
+            {field("researchObjectives", steps.objectivesLabel, steps.objectivesHint, true)}
+          </Step>
 
-      <Step id="variables" heading={steps.variables}>
-        <p className="text-text-muted">{steps.variablesIntro}</p>
-        <VariableInputs input={input} onChange={change} />
-      </Step>
+          <Step id="variables" heading={steps.variables}>
+            <p className="text-text-muted">{steps.variablesIntro}</p>
+            <VariableInputs input={input} onChange={change} />
+          </Step>
+        </>
+      )}
 
       <Step id="type" heading={steps.type}>
         <p className="text-text-muted">{steps.typeIntro}</p>
@@ -183,5 +197,14 @@ export function HypothesisBuilderForm({ typeGuide }: { typeGuide: ReactNode }) {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function HypothesisBuilderForm(props: Parameters<typeof HypothesisBuilderFormContent>[0]) {
+  return (
+    <WorkspaceScope stage="hypotheses">
+      <HypothesisBuilderFormContent {...props} />
+    </WorkspaceScope>
   );
 }

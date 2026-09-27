@@ -48,7 +48,30 @@ import type { LayerId, OnionSelection } from "./types";
 export const METHODOLOGIES = ["quantitative", "qualitative", "mixed-methods", "multi-method"] as const;
 export type MethodologyId = (typeof METHODOLOGIES)[number];
 
+/**
+ * What the researcher accepted from a tool whose output is worked out from the rest of
+ * the project, such as the analysis plan. Only the method ids are kept: the details are
+ * recalculated from the project, so a saved record can be compared with a fresh one to
+ * see whether the project has changed since.
+ */
+export interface AcceptedMethods {
+  /** Method ids, sorted and without repeats. */
+  methods: readonly string[];
+  /** The researcher's own notes. */
+  notes: string;
+}
+
 export interface ResearchProjectDraft {
+  /** The project's working title. */
+  projectTitle?: string;
+  /** The problem the research responds to, in the researcher's words. */
+  researchProblem?: string;
+  /** What is already known: the context the problem sits in. */
+  background?: string;
+  /** What is not yet known or done, which this project addresses. */
+  researchGap?: string;
+  /** Sources the researcher has cited or means to cite, one per entry, as written. */
+  references?: readonly string[];
   /** The broad field, such as "Public health". */
   researchArea?: string;
   /** The specific subject within the area, such as "sleep and academic performance". */
@@ -90,6 +113,12 @@ export interface ResearchProjectDraft {
   methodology?: MethodologyId;
   /** Choices made in the Research Onion Explorer. */
   researchOnionSelection?: OnionSelection;
+  /** The analyses accepted from the Data Analysis Recommender. */
+  dataAnalysisPlan?: AcceptedMethods;
+  /** The analyses whose assumptions were reviewed in the Statistical Assumption Checker. */
+  statisticalAssumptions?: AcceptedMethods;
+  /** Interpretations of results kept from the Results Interpretation Assistant, in the order saved. */
+  interpretationNotes?: readonly string[];
   notes?: string;
 }
 
@@ -101,7 +130,7 @@ export type ResearchProjectChanges = {
   [Field in keyof ResearchProjectDraft]?: ResearchProjectDraft[Field] | null;
 };
 
-/** Every field, in the order a project is usually described. */
+/** The fields the research methodology tools share, in the order a project is usually described. */
 export const PROJECT_FIELDS = [
   "researchArea",
   "topic",
@@ -128,9 +157,26 @@ export const PROJECT_FIELDS = [
   "notes",
 ] as const satisfies readonly (keyof ResearchProjectDraft)[];
 
-export type ProjectField = (typeof PROJECT_FIELDS)[number];
+/** The project's framing: what it is called, the problem, what is known and not known, and its sources. */
+export const PROJECT_CONTEXT_FIELDS = ["projectTitle", "researchProblem", "background", "researchGap", "references"] as const satisfies readonly (keyof ResearchProjectDraft)[];
+
+/** What the analysis tools recorded, which is otherwise worked out from the project. */
+export const PROJECT_RECORD_FIELDS = ["dataAnalysisPlan", "statisticalAssumptions", "interpretationNotes"] as const satisfies readonly (keyof ResearchProjectDraft)[];
+
+/** Every field, in the order a whole project is described: its framing, the shared fields, then the records. */
+export const ALL_PROJECT_FIELDS = [...PROJECT_CONTEXT_FIELDS, ...PROJECT_FIELDS, ...PROJECT_RECORD_FIELDS] as const;
+
+export type ProjectField = (typeof ALL_PROJECT_FIELDS)[number];
 
 export const PROJECT_FIELD_LABELS: Readonly<Record<ProjectField, string>> = {
+  projectTitle: "Project title",
+  researchProblem: "Research problem",
+  background: "Background",
+  researchGap: "Research gap",
+  references: "References",
+  dataAnalysisPlan: "Data analysis plan",
+  statisticalAssumptions: "Statistical assumptions",
+  interpretationNotes: "Results interpretation notes",
   researchArea: "Research area",
   topic: "Topic",
   researchAim: "Research aim",
@@ -157,6 +203,10 @@ export const PROJECT_FIELD_LABELS: Readonly<Record<ProjectField, string>> = {
 };
 
 const TEXT_FIELDS = [
+  "projectTitle",
+  "researchProblem",
+  "background",
+  "researchGap",
   "researchArea",
   "topic",
   "researchAim",
@@ -167,6 +217,8 @@ const TEXT_FIELDS = [
   "notes",
 ] as const;
 const LIST_FIELDS = [
+  "references",
+  "interpretationNotes",
   "researchObjectives",
   "independentVariables",
   "dependentVariables",
@@ -178,6 +230,25 @@ const LIST_FIELDS = [
 function cleanText(value: string): string | undefined {
   const trimmed = value.replace(/\s+/g, " ").trim();
   return trimmed.length > 0 ? trimmed : undefined;
+}
+
+/** Long text keeps its paragraphs: spaces are tidied within lines, and blank lines collapse to one. */
+function cleanParagraphs(value: string): string | undefined {
+  const text = value
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .join("\n\n");
+  return text.length > 0 ? text : undefined;
+}
+
+const PARAGRAPH_FIELDS: ReadonlySet<string> = new Set(["researchProblem", "background", "researchGap"]);
+
+/** Sorted method ids without repeats, and trimmed notes. Empty when there is neither. */
+function cleanAccepted(record: AcceptedMethods): AcceptedMethods | undefined {
+  const methods = [...new Set(record.methods.map((method) => method.trim()).filter(Boolean))].sort();
+  const notes = cleanParagraphs(record.notes) ?? "";
+  return methods.length > 0 || notes ? { methods, notes } : undefined;
 }
 
 /** Trims each item, drops empty ones and removes repeats, ignoring case. Order is kept. */
@@ -345,7 +416,7 @@ export function updateProjectDraft(draft: ResearchProjectDraft, changes: Researc
   for (const field of TEXT_FIELDS) {
     if (!(field in changes)) continue;
     const value = changes[field];
-    set(field, typeof value === "string" ? cleanText(value) : undefined);
+    set(field, typeof value === "string" ? (PARAGRAPH_FIELDS.has(field) ? cleanParagraphs(value) : cleanText(value)) : undefined);
   }
   for (const field of LIST_FIELDS) {
     if (!(field in changes)) continue;
@@ -389,6 +460,11 @@ export function updateProjectDraft(draft: ResearchProjectDraft, changes: Researc
     const value = changes.researchOnionSelection;
     set("researchOnionSelection", value ? cleanSelection(value) : undefined);
   }
+  for (const field of ["dataAnalysisPlan", "statisticalAssumptions"] as const) {
+    if (!(field in changes)) continue;
+    const value = changes[field];
+    set(field, value ? cleanAccepted(value) : undefined);
+  }
   return next as ResearchProjectDraft;
 }
 
@@ -407,7 +483,7 @@ export function parseList(text: string): string[] {
 
 /** The fields that hold information, in the standard order. */
 export function filledFields(draft: ResearchProjectDraft): ProjectField[] {
-  return PROJECT_FIELDS.filter((field) => draft[field] !== undefined);
+  return ALL_PROJECT_FIELDS.filter((field) => draft[field] !== undefined);
 }
 
 /** A readable value for each filled field, for showing the draft to the researcher. */
@@ -452,6 +528,15 @@ function describeField(draft: ResearchProjectDraft, field: ProjectField): string
   if (field === "conceptualFramework") {
     const { variables, relationships } = draft.conceptualFramework!;
     return `${variables.length} ${variables.length === 1 ? "variable" : "variables"} and ${relationships.length} ${relationships.length === 1 ? "relationship" : "relationships"}`;
+  }
+  if (field === "dataAnalysisPlan" || field === "statisticalAssumptions") {
+    const { methods, notes } = draft[field]!;
+    const count = `${methods.length} ${methods.length === 1 ? "analysis" : "analyses"}`;
+    return notes ? `${count}. ${notes}` : `${count}.`;
+  }
+  if (field === "interpretationNotes") {
+    const notes = draft.interpretationNotes!;
+    return `${notes.length} ${notes.length === 1 ? "interpretation" : "interpretations"} kept.`;
   }
   if (field === "hypotheses") {
     return draft.hypotheses!.map((hypothesis) => `${hypothesis.role === "null" ? "H₀" : "H₁"}: ${hypothesis.text}`).join(" ");

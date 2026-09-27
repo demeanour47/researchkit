@@ -25,6 +25,7 @@ export const how: readonly string[] = [
 ];
 
 export const steps = {
+  saveSubject: "this interpretation",
   project: "Your project",
   projectIntro: "Enter what you already know, so each result can be linked to your hypotheses and objectives.",
   example: "Load an example project and result",

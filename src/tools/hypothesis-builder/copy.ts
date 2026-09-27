@@ -25,6 +25,7 @@ export const how: readonly string[] = [
 ];
 
 export const steps = {
+  fromProject: "From your project",
   question: "Research question",
   questionLabel: "Your research question",
   questionHint: "Paste the question from the Research Question Builder, or write it here.",

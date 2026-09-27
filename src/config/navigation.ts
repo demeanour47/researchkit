@@ -1,6 +1,7 @@
 import { GUIDES_INDEX_PATH, TOOLS_INDEX_PATH, TOOL_CATEGORIES } from "@/domains/catalogue";
 import { ABOUT_PATH, STYLES_INDEX_PATH } from "@/domains/publishing";
 import type { NavGroup, NavItem } from "@/features/site";
+import { WORKSPACE_PATH } from "@/features/workspace/stage-links";
 import { site } from "./site";
 
 /**
@@ -11,6 +12,7 @@ export const primaryNavigation: readonly NavItem[] = [
   { label: "Tools", href: TOOLS_INDEX_PATH, icon: "layout-grid" },
   { label: "Learn", href: GUIDES_INDEX_PATH, icon: "learning" },
   { label: "Styles", href: STYLES_INDEX_PATH, icon: "publishing" },
+  { label: "Workspace", href: WORKSPACE_PATH, icon: "layers" },
 ];
 
 /** Where the homepage lists what is planned. */
@@ -20,6 +22,7 @@ export const footerNavigation: readonly NavGroup[] = [
   {
     heading: "Resources",
     items: [
+      { label: "Research workspace", href: WORKSPACE_PATH },
       { label: "Academic tools", href: TOOLS_INDEX_PATH },
       { label: "Research guides", href: GUIDES_INDEX_PATH },
       { label: "Citation styles", href: STYLES_INDEX_PATH },

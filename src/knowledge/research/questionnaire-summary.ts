@@ -248,7 +248,7 @@ export const QUESTIONNAIRE_LIMITATIONS: readonly string[] = [
   "Word and PDF files are built without Microsoft Word. Word lays out pages itself, so its page breaks may differ from the printed preview, which matches the PDF.",
   "PDF export uses the standard Helvetica font, which can't show some characters, such as non-Latin scripts; they appear as question marks. Use the Word file for those.",
   "File upload questions are placeholders: they can't be answered on paper, and online forms need a survey platform.",
-  "Nothing is saved. Export or copy your questionnaire before leaving the page.",
+  "Nothing is saved unless you start a project in your research workspace, which keeps it in this browser only. Otherwise, export or copy your questionnaire before leaving the page.",
 ];
 
 /** Reviews still to come before the tool's guidance is final. */

@@ -21,14 +21,18 @@ export {
   type Reference,
 } from "./types";
 export {
+  ALL_PROJECT_FIELDS,
   METHODOLOGIES,
+  PROJECT_CONTEXT_FIELDS,
   PROJECT_FIELDS,
   PROJECT_FIELD_LABELS,
+  PROJECT_RECORD_FIELDS,
   createProjectDraft,
   describeProject,
   filledFields,
   parseList,
   updateProjectDraft,
+  type AcceptedMethods,
   type MethodologyId,
   type ProjectField,
   type ResearchProjectChanges,

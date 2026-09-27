@@ -10,7 +10,7 @@ export interface SiteHeaderProps {
   navItems: readonly NavItem[];
   /** Controls shown at every screen size, such as search. */
   actions?: ReactNode;
-  /** Controls shown beside the actions from medium screens up, such as the theme switcher. */
+  /** Controls shown beside the actions on wide screens, and in the menu below that, such as the theme switcher. */
   secondaryActions?: ReactNode;
   /** The same controls, laid out for the small-screen menu. */
   menuActions?: ReactNode;
@@ -27,13 +27,13 @@ export function SiteHeader({ brand, navItems, actions, secondaryActions, menuAct
     <header className="sticky top-0 z-(--z-sticky) border-b border-border bg-canvas/80 backdrop-blur-md print:static print:bg-canvas">
       <PageContainer className="relative flex h-header items-center gap-4">
         <BrandLink brand={brand} />
-        <div className="ms-4 hidden md:block print:hidden">
+        <div className="ms-4 hidden lg:block print:hidden">
           <PrimaryNav items={navItems} />
         </div>
         <div className="ms-auto flex items-center gap-2 print:hidden">
           {actions}
-          {secondaryActions && <div className="hidden items-center gap-2 md:flex">{secondaryActions}</div>}
-          <div className="md:hidden">
+          {secondaryActions && <div className="hidden items-center gap-2 lg:flex">{secondaryActions}</div>}
+          <div className="lg:hidden">
             <MobileMenu label={menuLabel}>
               <PrimaryNav items={navItems} orientation="vertical" />
               {menuActions && <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">{menuActions}</div>}

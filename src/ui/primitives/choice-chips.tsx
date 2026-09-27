@@ -35,7 +35,7 @@ export function ChoiceChips<T extends string>({ name, legend, hideLegend = false
   return (
     <fieldset className={cx("min-w-0", className)}>
       <legend className={cx("mb-2 text-small font-medium text-text-muted", hideLegend && "sr-only")}>{legend}</legend>
-      <div className={cx("flex flex-wrap", segmented ? "gap-0.5 rounded-control border border-border bg-sunken p-0.5" : "gap-2")}>
+      <div className={cx("flex", segmented ? "flex-nowrap gap-0.5 rounded-control border border-border bg-sunken p-0.5" : "flex-wrap gap-2")}>
         {options.map((option) => (
           <label
             key={option.value}

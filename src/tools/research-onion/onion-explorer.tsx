@@ -7,6 +7,7 @@ import {
   FIT_LABELS,
   LAYERS,
   findOption,
+  createProjectDraft,
   judgementsFor,
   optionsFor,
   summarise,
@@ -17,6 +18,7 @@ import { OnionDiagram } from "./onion-diagram";
 import { OnionProgress } from "./onion-progress";
 import { OnionSummaryView } from "./onion-summary";
 import { OptionDetails } from "./option-details";
+import { useWorkspaceLink, WorkspaceScope } from "@/features/workspace/workspace-scope";
 
 /** The step index that shows the summary, after the last layer. */
 const SUMMARY_STEP = LAYERS.length;
@@ -25,10 +27,12 @@ const SUMMARY_STEP = LAYERS.length;
  * The explorer: one layer at a time, then a summary. It only presents the knowledge
  * layer's explanations and judgements; it never chooses anything for the researcher.
  */
-export function OnionExplorer() {
-  const [selection, setSelection] = useState<OnionSelection>({});
+function OnionExplorerContent() {
+  const link = useWorkspaceLink();
+  const [selection, setSelection] = useState<OnionSelection>(() => link.project?.researchOnionSelection ?? {});
   const [step, setStep] = useState(0);
-  const [reached, setReached] = useState(0);
+  // Layers already chosen in the project can be revisited straight away.
+  const [reached, setReached] = useState(() => LAYERS.filter((layer) => selection[layer.id]).length);
   const [announcement, setAnnouncement] = useState("");
   const heading = useRef<HTMLHeadingElement>(null);
   /** Whether the step changed through the controls, so focus should move to its heading. */
@@ -45,6 +49,8 @@ export function OnionExplorer() {
     setStep(index);
     setReached((furthest) => Math.max(furthest, index));
   };
+
+  useEffect(() => link.save(createProjectDraft({ researchOnionSelection: selection })), [link, selection]);
 
   const summary = useMemo(() => (step === SUMMARY_STEP ? summarise(selection) : null), [step, selection]);
 
@@ -134,5 +140,14 @@ export function OnionExplorer() {
         {announcement}
       </VisuallyHidden>
     </div>
+  );
+}
+
+/** The tool, working in the workspace project when there is one. */
+export function OnionExplorer() {
+  return (
+    <WorkspaceScope stage="onion">
+      <OnionExplorerContent />
+    </WorkspaceScope>
   );
 }
