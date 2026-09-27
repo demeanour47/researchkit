@@ -260,9 +260,53 @@ export const REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * Research methods textbooks first cited by the Research Title Builder. Kept beside
+ * REFERENCES until its usage check (references.test.ts) lists the title module's
+ * sources; getReference finds both, and title.test.ts checks their format and use.
+ */
+export const TEXTBOOK_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Open Library: Sekaran and Bougie, Wiley, 2013. The 7th edition (2016) may be preferred at review.
+    id: "sekaran-bougie-2013",
+    cite: "Sekaran & Bougie, 2013",
+    year: 2013,
+    apa: "Sekaran, U., & Bougie, R. (2013). *Research methods for business: A skill-building approach* (6th ed.). Wiley.",
+  },
+  {
+    // Checked against Open Library: Keith F. Punch, SAGE, 2005. A 3rd edition (2014) exists and may be preferred at review.
+    id: "punch-2005",
+    cite: "Punch, 2005",
+    year: 2005,
+    apa: "Punch, K. F. (2005). *Introduction to social research: Quantitative and qualitative approaches* (2nd ed.). SAGE.",
+  },
+  {
+    // Checked against Open Library: C. R. Kothari, New Age International, 2004.
+    id: "kothari-2004",
+    cite: "Kothari, 2004",
+    year: 2004,
+    apa: "Kothari, C. R. (2004). *Research methodology: Methods and techniques* (2nd rev. ed.). New Age International.",
+  },
+];
+
+/**
+ * Works by an organisation rather than people. They are kept apart because their
+ * in-text citation is the organisation's name, not a list of surnames.
+ */
+export const GROUP_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Crossref (DOI 10.1037/0000165-000): title, publisher and 2020 issue date.
+    id: "apa-2020",
+    cite: "American Psychological Association, 2020",
+    year: 2020,
+    apa: "American Psychological Association. (2020). *Publication manual of the American Psychological Association* (7th ed.).",
+    doi: "10.1037/0000165-000",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = REFERENCES.find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...GROUP_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }

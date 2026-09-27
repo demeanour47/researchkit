@@ -53,9 +53,8 @@ function assessModule(id: ModuleId, draft: ResearchProjectDraft): Assessment {
   switch (id) {
     case "problem":
       return assess(
-        [has(draft.projectTitle), has(draft.researchProblem), has(draft.background), has(draft.researchGap)],
+        [has(draft.researchProblem), has(draft.background), has(draft.researchGap)],
         [
-          [has(draft.projectTitle), "a working title"],
           [has(draft.researchProblem), "the research problem"],
           [has(draft.researchGap), "the research gap"],
         ],
@@ -73,6 +72,8 @@ function assessModule(id: ModuleId, draft: ResearchProjectDraft): Assessment {
           [has(draft.researchObjectives), "at least one specific objective"],
         ],
       );
+    case "title":
+      return assess([has(draft.projectTitle)], []);
     case "hypotheses": {
       const alternatives = (draft.hypotheses ?? []).filter((hypothesis) => hypothesis.role === "alternative");
       return assess([has(draft.hypotheses)], [[alternatives.length > 0, "an alternative hypothesis"]]);

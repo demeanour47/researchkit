@@ -16,6 +16,7 @@ import {
   VisuallyHidden,
   cx,
 } from "@/ui";
+import { download } from "@/features/figure-export";
 import { getModule } from "@/knowledge/workspace/modules";
 import { nextStage, projectProgress, type ProjectProgress } from "@/knowledge/workspace/progress";
 import { validateProject, type ProjectIssue } from "@/knowledge/workspace/validation";
@@ -176,14 +177,9 @@ function ProjectActions({ workspace, onMessage }: { workspace: Workspace | null;
   const [importError, setImportError] = useState<string | null>(null);
   const deleteButton = useRef<HTMLButtonElement>(null);
 
-  const download = () => {
+  const downloadFile = () => {
     if (!workspace) return;
-    const url = URL.createObjectURL(new Blob([serializeWorkspace(workspace)], { type: "application/json" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = fileName(workspace);
-    link.click();
-    URL.revokeObjectURL(url);
+    download(new Blob([serializeWorkspace(workspace)], { type: "application/json" }), fileName(workspace));
     onMessage(copy.actions.exported);
   };
 
@@ -203,7 +199,7 @@ function ProjectActions({ workspace, onMessage }: { workspace: Workspace | null;
       <div className="grid gap-3">
         {workspace && (
           <div>
-            <Button variant="secondary" size="sm" onClick={download}>
+            <Button variant="secondary" size="sm" onClick={downloadFile}>
               <Icon name="download" />
               {copy.actions.export}
             </Button>

@@ -46,6 +46,8 @@ import { page as variablesBuilder } from "@/tools/variables-builder/copy";
 import { TOOL_ID as VARIABLES_BUILDER_ID, TOOL_PATH as VARIABLES_BUILDER_PATH } from "@/tools/variables-builder/path";
 import { TOOL_ID as HYPOTHESIS_BUILDER_ID, TOOL_PATH as HYPOTHESIS_BUILDER_PATH } from "@/tools/hypothesis-builder/path";
 import { page as readingTime } from "@/tools/reading-time/copy";
+import { page as researchTitleBuilder } from "@/tools/research-title-builder/copy";
+import { TOOL_ID as RESEARCH_TITLE_BUILDER_ID, TOOL_PATH as RESEARCH_TITLE_BUILDER_PATH } from "@/tools/research-title-builder/path";
 import { page as researchOnion } from "@/tools/research-onion/copy";
 import { TOOL_ID as RESEARCH_ONION_ID, TOOL_PATH as RESEARCH_ONION_PATH } from "@/tools/research-onion/path";
 import { page as researchQuestionBuilder } from "@/tools/research-question-builder/copy";
@@ -217,7 +219,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: CONCEPTUAL_FRAMEWORK_BUILDER_PATH,
   },
-  comingSoon("research-title-generator", "Research Title Generator", "Suggests title structures for your topic and method, for you to refine.", "research"),
+  {
+    id: RESEARCH_TITLE_BUILDER_ID,
+    name: researchTitleBuilder.title,
+    description: researchTitleBuilder.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: RESEARCH_TITLE_BUILDER_PATH,
+  },
   {
     id: RESEARCH_DESIGN_BUILDER_ID,
     name: researchDesignBuilder.title,

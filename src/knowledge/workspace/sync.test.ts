@@ -49,6 +49,9 @@ function buildProject() {
   record("question");
   workspace = editModule(workspace, "objectives", { researchAim: "To examine screen time and sleep", researchObjectives: ["To measure screen time", "To relate it to sleep quality"] }, tick());
   record("objectives");
+  // The Research Title Builder saves only the working title.
+  workspace = step(workspace, "title", (project) => updateProjectDraft(project, { projectTitle: "Screen Time and Sleep Quality among First-Year Students", researchQuestion: "Changed by mistake?" }));
+  record("title");
   // The Hypothesis Builder drafts from the variables the question named.
   workspace = step(workspace, "hypotheses", (project) => applyHypotheses(project, toProjectHypotheses(generateHypotheses(project, { form: "relationship", direction: "non-directional" }), {})));
   record("hypotheses");
@@ -134,7 +137,7 @@ describe("a project built through the workspace", () => {
     const order = Object.entries(workspace.saved)
       .sort(([, a], [, b]) => a! - b!)
       .map(([id]) => id);
-    assert.deepEqual(order, ["problem", "question", "objectives", "hypotheses", "variables", "framework", "onion", "design", "sampling", "sample-size", "questionnaire", "analysis", "assumptions", "interpretation", "references"]);
+    assert.deepEqual(order, ["problem", "question", "objectives", "title", "hypotheses", "variables", "framework", "onion", "design", "sampling", "sample-size", "questionnaire", "analysis", "assumptions", "interpretation", "references"]);
   });
 });
 

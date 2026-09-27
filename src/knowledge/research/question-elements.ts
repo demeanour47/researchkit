@@ -61,16 +61,18 @@ const VARIABLE_PATTERNS: { pattern: RegExp; order: "iv-dv" | "dv-iv"; wording: s
   { pattern: new RegExp(`\\b(?:does|do|did) (.+?) (?:differ|vary) (?:by|with|according to|across) (.+?)${BOUNDARY}`, "i"), order: "dv-iv", wording: "does … differ by …" },
 ];
 
-const POPULATION_PATTERNS: { pattern: RegExp; wording: (match: string) => string }[] = [
+/** Wordings that name who is studied. Shared with the title engine. */
+export const POPULATION_PATTERNS: { pattern: RegExp; wording: (match: string) => string }[] = [
   { pattern: new RegExp(`\\bamong (.+?)${BOUNDARY}`, "i"), wording: (match) => `among ${match}` },
   {
     pattern: /\bhow do (.+?) (?:experience|describe|perceive|understand|view|explain|make sense of)\b/i,
     wording: (match) => `how do ${match} experience…`,
   },
 ]
-/** A place name: one or more capitalised words after "in" or "at". */
-const PLACE_PATTERN = new RegExp("\\b(?:in|at) ((?:the )?\\p{Lu}[\\p{L}'’-]*(?: (?:of )?\\p{Lu}[\\p{L}'’-]*)*)", "u");
-const TIME_PATTERN =
+/** A place name: one or more capitalised words after "in" or "at". Shared with the title engine. */
+export const PLACE_PATTERN = new RegExp("\\b(?:in|at) ((?:the )?\\p{Lu}[\\p{L}'’-]*(?: (?:of )?\\p{Lu}[\\p{L}'’-]*)*)", "u");
+/** A year, a range of years or a named period. Shared with the title engine. */
+export const TIME_PATTERN =
   /\b(?:(?:in|during|between|from|since|before|after) )?(?:(?:1[89]|20)\d{2}(?:\s*(?:–|-|and|to)\s*(?:1[89]|20)\d{2})?|the (?:past|last|next) (?:\w+ )?(?:days?|weeks?|months?|years?|decades?)|(?:the )?(?:\w+ )?(?:academic year|semester|school year|pandemic|lockdown))\b/i;
 
 /** Types that ask about variables, and so need both an independent and a dependent variable. */
@@ -79,7 +81,8 @@ const needsFor = (types: readonly QuestionTypeId[]) => new Set(types.flatMap((ty
 /** An outcome on its own, as in a descriptive question. */
 const OUTCOME_PATTERN = new RegExp(`\\b(?:level|levels|rate|rates|prevalence|frequency|proportion|incidence) of (.+?)${BOUNDARY}`, "i");
 
-function detectVariables(question: string): { iv: string | null; dv: string | null; wording: string } | null {
+/** The independent and dependent variables a sentence names, read from common wordings. Shared with the title engine. */
+export function detectVariables(question: string): { iv: string | null; dv: string | null; wording: string } | null {
   for (const { pattern, order, wording } of VARIABLE_PATTERNS) {
     const match = pattern.exec(question);
     if (!match) continue;

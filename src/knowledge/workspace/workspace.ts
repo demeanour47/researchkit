@@ -25,7 +25,7 @@ export interface Workspace {
 
 export function createWorkspace(id: string, now: number, title = ""): Workspace {
   const draft = createProjectDraft({ projectTitle: title });
-  return { version: WORKSPACE_VERSION, id, createdAt: now, updatedAt: now, draft, saved: title.trim() ? { problem: now } : {} };
+  return { version: WORKSPACE_VERSION, id, createdAt: now, updatedAt: now, draft, saved: title.trim() ? { title: now } : {} };
 }
 
 /**

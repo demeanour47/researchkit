@@ -37,6 +37,7 @@ export function completeProject(): ResearchProjectDraft {
   project = applyVariables(project, variables);
   project = updateProjectDraft(project, {
     projectTitle: "Screen time and sleep in first-year students",
+    population: "first-year students",
     researchProblem: "Students report poor sleep.",
     background: "Screens are used late at night.",
     researchGap: "Little is known about first-year students in Nepal.",
