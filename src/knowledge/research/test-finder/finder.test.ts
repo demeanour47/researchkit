@@ -313,7 +313,7 @@ describe("candidate details", () => {
 
   it("knows which results the Results Interpretation Assistant can read", () => {
     assert.equal(interpreterCovers("one-way-anova"), true);
-    assert.equal(interpreterCovers("ancova"), false);
+    assert.equal(interpreterCovers("ancova"), true);
   });
 
   it("labels fit in methodological terms, never as right or wrong", () => {

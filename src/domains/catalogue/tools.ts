@@ -23,6 +23,10 @@ import { page as sampleSizeCalculator } from "@/tools/sample-size-calculator/cop
 import { TOOL_ID as SAMPLE_SIZE_CALCULATOR_ID, TOOL_PATH as SAMPLE_SIZE_CALCULATOR_PATH } from "@/tools/sample-size-calculator/path";
 import { page as statisticalTestFinder } from "@/tools/statistical-test-finder/copy";
 import { TOOL_ID as STATISTICAL_TEST_FINDER_ID, TOOL_PATH as STATISTICAL_TEST_FINDER_PATH } from "@/tools/statistical-test-finder/path";
+import { page as effectSizeCalculator } from "@/tools/effect-size-calculator/copy";
+import { TOOL_ID as EFFECT_SIZE_CALCULATOR_ID, TOOL_PATH as EFFECT_SIZE_CALCULATOR_PATH } from "@/tools/effect-size-calculator/path";
+import { page as spssResearchLab } from "@/tools/spss-research-lab/copy";
+import { TOOL_ID as SPSS_RESEARCH_LAB_ID, TOOL_PATH as SPSS_RESEARCH_LAB_PATH } from "@/tools/spss-research-lab/path";
 import { page as dataAnalysisRecommender } from "@/tools/data-analysis-recommender/copy";
 import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
@@ -101,7 +105,7 @@ export type ToolCategory = (typeof TOOL_CATEGORIES)[number];
 export type ToolCategoryId = ToolCategory["id"];
 
 /** Tools that work on the same material and point to one another. */
-export type ToolFamily = "citation" | "text-analysis" | "research";
+export type ToolFamily = "citation" | "text-analysis" | "research" | "statistics";
 
 export type ToolEntry = CatalogueItem & {
   category: ToolCategoryId;
@@ -181,7 +185,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: sampleSizeCalculator.title,
     description: sampleSizeCalculator.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: SAMPLE_SIZE_CALCULATOR_PATH,
   },
@@ -190,11 +194,28 @@ export const TOOLS: readonly ToolEntry[] = [
     name: statisticalTestFinder.title,
     description: statisticalTestFinder.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: STATISTICAL_TEST_FINDER_PATH,
   },
-  comingSoon("effect-size-calculator", "Effect Size Calculator", "Calculates common effect sizes, such as Cohen's d, from your results.", "statistics"),
+  {
+    id: EFFECT_SIZE_CALCULATOR_ID,
+    name: effectSizeCalculator.title,
+    description: effectSizeCalculator.summary,
+    category: "statistics",
+    family: "statistics",
+    status: "available",
+    href: EFFECT_SIZE_CALCULATOR_PATH,
+  },
+  {
+    id: SPSS_RESEARCH_LAB_ID,
+    name: spssResearchLab.title,
+    description: spssResearchLab.summary,
+    category: "statistics",
+    family: "statistics",
+    status: "available",
+    href: SPSS_RESEARCH_LAB_PATH,
+  },
   comingSoon("power-analysis", "Power Analysis", "Estimates a study's statistical power, or the sample size needed to reach it.", "statistics"),
   comingSoon("confidence-interval-calculator", "Confidence Interval Calculator", "Calculates confidence intervals for means and proportions.", "statistics"),
 
@@ -293,7 +314,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: dataAnalysisRecommender.title,
     description: dataAnalysisRecommender.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: DATA_ANALYSIS_RECOMMENDER_PATH,
   },
@@ -302,7 +323,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: resultsInterpretation.title,
     description: resultsInterpretation.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: RESULTS_INTERPRETATION_PATH,
   },
@@ -311,7 +332,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: statisticalAssumptionChecker.title,
     description: statisticalAssumptionChecker.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: STATISTICAL_ASSUMPTION_CHECKER_PATH,
   },
@@ -320,7 +341,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: chartBuilder.title,
     description: chartBuilder.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: CHART_BUILDER_PATH,
   },
@@ -329,7 +350,7 @@ export const TOOLS: readonly ToolEntry[] = [
     name: tableBuilder.title,
     description: tableBuilder.summary,
     category: "statistics",
-    family: "research",
+    family: "statistics",
     status: "available",
     href: TABLE_BUILDER_PATH,
   },

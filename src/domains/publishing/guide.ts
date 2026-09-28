@@ -3,6 +3,7 @@
  * separate from layout and every guide renders with the same structure.
  */
 
+import type { AnalysisMethodId } from "@/knowledge/research/data-analysis-types";
 import type { FigureId, FormulaId, ProfiledTest, StructureDiagramId, WorkedExampleId } from "@/knowledge/research/test-finder";
 import type { ProfiledStyleId } from "./style-profile";
 
@@ -36,7 +37,9 @@ export type GuideBlock =
   /** A teaching figure: independent and paired observations, or what an assumption looks like. */
   | { type: "figure"; figure: FigureId }
   /** The mean, median, mode and standard deviation of a small example, with the working. */
-  | { type: "descriptive-example" };
+  | { type: "descriptive-example" }
+  | { type: "spss-procedures"; methods: readonly AnalysisMethodId[] }
+  | { type: "spss-workflow"; steps: readonly string[] };
 
 export interface GuideSection {
   /** Stable anchor for linking to the section. */

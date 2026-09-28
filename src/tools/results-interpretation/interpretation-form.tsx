@@ -37,7 +37,7 @@ const interpretationNote = (interpretation: ResultInterpretation) => interpretat
 
 /** Option labels are cut at a word so long hypotheses don't stretch the page; the full wording appears in the interpretation. */
 const shorten = (text: string, length = 80) => (text.length <= length ? text : `${text.slice(0, text.lastIndexOf(" ", length))}…`);
-const SINGLE_VARIABLE = new Set<ResultKind>(["descriptive-statistics", "frequency", "percentage", "mean", "median", "standard-deviation", "cronbach-alpha", "factor-analysis"]);
+const SINGLE_VARIABLE = new Set<ResultKind>(["descriptive-statistics", "frequency", "percentage", "mean", "median", "standard-deviation", "cronbach-alpha", "one-sample-t-test", "chi-square-goodness-of-fit", "factor-analysis"]);
 
 function Step({ id, heading, children }: { id: string; heading: string; children: ReactNode }) {
   return (

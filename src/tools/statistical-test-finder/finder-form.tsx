@@ -19,6 +19,7 @@ import {
 import { TOOL_PATH as RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { TOOL_PATH as CHECKER_PATH } from "@/tools/statistical-assumption-checker/path";
 import { TOOL_PATH as INTERPRETER_PATH } from "@/tools/results-interpretation/path";
+import { TOOL_PATH as SPSS_LAB_PATH } from "@/tools/spss-research-lab/path";
 import { resultAnnouncement, resultKey } from "./announcements";
 import { CandidateCard } from "./candidate-card";
 import { form, nextSteps, results as copy } from "./copy";
@@ -236,6 +237,11 @@ export function TestFinderForm() {
           <li>
             <Link href={INTERPRETER_PATH} variant="standalone">
               {nextSteps.interpreter}
+            </Link>
+          </li>
+          <li>
+            <Link href={SPSS_LAB_PATH} variant="standalone">
+              {nextSteps.spssLab}
             </Link>
           </li>
           <li>

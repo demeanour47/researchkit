@@ -596,3 +596,4 @@ export * from "./results";
 export { EMPTY_TYPED_PROJECT, TYPED_MARGINS, TYPED_VARIABLE_FIELDS, projectFromTyped, variablesFromTyped, type TypedProject } from "./typed-project";
 export * from "./assumptions";
 export * from "./test-finder";
+export { getSpssProcedure, SPSS_PROCEDURES, SPSS_PROCEDURE_METHODS, SPSS_WORKFLOW_STEPS, type SpssProcedure } from "./spss-procedures";

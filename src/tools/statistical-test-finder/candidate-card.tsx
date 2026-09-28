@@ -15,8 +15,10 @@ import {
   type CandidateTest,
   type FinderFit,
 } from "@/knowledge/research/test-finder";
+import { SPSS_PROCEDURE_METHODS } from "@/knowledge/research/spss-procedures";
 import { TOOL_PATH as CHECKER_PATH } from "@/tools/statistical-assumption-checker/path";
 import { TOOL_PATH as INTERPRETER_PATH } from "@/tools/results-interpretation/path";
+import { TOOL_PATH as SPSS_LAB_PATH } from "@/tools/spss-research-lab/path";
 import { GUIDE_SLUGS, results as copy } from "./copy";
 
 /** Visual emphasis only; the fit is always written out in words. */
@@ -134,6 +136,13 @@ export function CandidateCard({ candidate }: { candidate: CandidateTest }) {
       )}
 
       <ul className="grid gap-2 border-t border-border pt-4 text-small">
+        {SPSS_PROCEDURE_METHODS.includes(candidate.method) && (
+          <li>
+            <Link href={SPSS_LAB_PATH} variant="standalone">
+              {copy.spssProcedure(method.name)}
+            </Link>
+          </li>
+        )}
         <li>
           {profile ? (
             <Link href={`${guidePath(GUIDE_SLUGS.choosing)}#test-${candidate.method}`} variant="standalone">

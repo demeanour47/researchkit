@@ -5,8 +5,8 @@ import { VALID } from "./test-helpers";
 import { RESULT_FIELDS, RESULT_KINDS, SIGNIFICANCE_LEVELS, getFields, type ResultKind } from "./types";
 
 describe("RESULT_KINDS", () => {
-  it("supports the 22 results the assistant interprets, all analysis methods the recommender knows", () => {
-    assert.equal(RESULT_KINDS.length, 22);
+  it("supports the 25 results the assistant interprets, all analysis methods the recommender knows", () => {
+    assert.equal(RESULT_KINDS.length, 25);
     for (const kind of RESULT_KINDS) assert.ok(ANALYSIS_METHOD_IDS.includes(kind), kind);
   });
 

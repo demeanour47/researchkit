@@ -133,7 +133,7 @@ export const howToChooseAStatisticalTest: Guide = {
       blocks: [
         {
           type: "paragraph",
-          text: "A test statistic expresses how the observed pattern compares with variation expected under a null hypothesis. The formulas below show the ideas behind means, t statistics, expected counts, chi-square, regression and the F ratio; every symbol is defined. Software can calculate these quantities, but the researcher still has to select a defensible method and explain the result.",
+          text: "A test statistic expresses how the observed pattern compares with variation expected under a null hypothesis. The formulas below show the ideas behind means, t statistics, expected counts, chi-square, regression and the F ratio; every symbol is defined. Software can calculate these quantities, but the researcher still has to select a defensible method and explain the result. Standardized mean differences and effect-size reporting conventions are described by Hedges (1981) and Lakens (2013).",
         },
         { type: "formulas", formulas: FORMULA_IDS },
         {
@@ -168,7 +168,7 @@ export const howToChooseAStatisticalTest: Guide = {
     {
       id: "references",
       heading: "References",
-      blocks: [{ type: "references", ids: ["field-2018", "howell-2013", "cohen-1988", "wasserstein-lazar-2016"] }],
+      blocks: [{ type: "references", ids: ["field-2018", "howell-2013", "cohen-1988", "wasserstein-lazar-2016", "hedges-1981", "lakens-2013"] }],
     },
   ],
   faq: [
