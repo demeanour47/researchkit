@@ -21,7 +21,7 @@ interface FieldSpec {
   kind: "line" | "text" | "list";
 }
 
-const EDITED_STAGES: { id: ModuleId; icon: "research" | "target" | "library"; fields: FieldSpec[] }[] = [
+const EDITED_STAGES: { id: ModuleId; icon: "research" | "library"; fields: FieldSpec[] }[] = [
   {
     id: "problem",
     icon: "research",
@@ -29,14 +29,6 @@ const EDITED_STAGES: { id: ModuleId; icon: "research" | "target" | "library"; fi
       { field: "researchProblem", kind: "text" },
       { field: "background", kind: "text" },
       { field: "researchGap", kind: "text" },
-    ],
-  },
-  {
-    id: "objectives",
-    icon: "target",
-    fields: [
-      { field: "researchAim", kind: "text" },
-      { field: "researchObjectives", kind: "list" },
     ],
   },
   { id: "references", icon: "library", fields: [{ field: "references", kind: "list" }] },
@@ -50,7 +42,7 @@ const hintOf = (field: EditorField) => (copy as Record<string, string>)[`${field
  * spaces and blank lines aren't tidied away mid-word, and saved after a pause or when
  * the field is left.
  */
-function StageEditor({ id, icon, fields, draft, progress }: { id: ModuleId; icon: "research" | "target" | "library"; fields: FieldSpec[]; draft: ResearchProjectDraft; progress: StageProgress | undefined }) {
+function StageEditor({ id, icon, fields, draft, progress }: { id: ModuleId; icon: "research" | "library"; fields: FieldSpec[]; draft: ResearchProjectDraft; progress: StageProgress | undefined }) {
   const stage = getModule(id);
   const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(fields.map(({ field }) => [field, asText(draft[field])])));
   const pending = useRef(false);
@@ -103,7 +95,7 @@ function StageEditor({ id, icon, fields, draft, progress }: { id: ModuleId; icon
   );
 }
 
-/** The stages that have no tool of their own: the problem, the objectives and the references. */
+/** The stages that have no tool of their own: the problem and the references. */
 export function StageEditors({ draft, progress }: { draft: ResearchProjectDraft; progress: readonly StageProgress[] }) {
   return (
     <div className="grid gap-6">

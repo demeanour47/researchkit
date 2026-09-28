@@ -27,6 +27,7 @@ const TOOL_ICONS: Record<string, IconName> = {
   "table-builder": "tables",
   "research-onion": "layers",
   "research-question-builder": "target",
+  "research-objectives-generator": "list-checks",
   "hypothesis-builder": "flask",
   "variables-builder": "variable",
   "conceptual-framework-builder": "network",

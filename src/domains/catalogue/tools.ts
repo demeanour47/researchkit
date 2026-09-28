@@ -57,6 +57,11 @@ import {
   TOOL_ID as RESEARCH_QUESTION_BUILDER_ID,
   TOOL_PATH as RESEARCH_QUESTION_BUILDER_PATH,
 } from "@/tools/research-question-builder/path";
+import { page as researchObjectivesGenerator } from "@/tools/research-objectives-generator/copy";
+import {
+  TOOL_ID as RESEARCH_OBJECTIVES_GENERATOR_ID,
+  TOOL_PATH as RESEARCH_OBJECTIVES_GENERATOR_PATH,
+} from "@/tools/research-objectives-generator/path";
 import { page as textStatistics } from "@/tools/text-statistics/copy";
 import { TOOL_ID as TEXT_STATISTICS_ID, TOOL_PATH as TEXT_STATISTICS_PATH } from "@/tools/text-statistics/path";
 import { TOOL_ID as READING_TIME_ID, TOOL_PATH as READING_TIME_PATH } from "@/tools/reading-time/path";
@@ -201,7 +206,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: RESEARCH_QUESTION_BUILDER_PATH,
   },
-  comingSoon("research-objectives-generator", "Research Objectives Generator", "Helps you turn a research question into clear, measurable objectives.", "research"),
+  {
+    id: RESEARCH_OBJECTIVES_GENERATOR_ID,
+    name: researchObjectivesGenerator.title,
+    description: researchObjectivesGenerator.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: RESEARCH_OBJECTIVES_GENERATOR_PATH,
+  },
   {
     id: HYPOTHESIS_BUILDER_ID,
     name: hypothesisBuilder.title,

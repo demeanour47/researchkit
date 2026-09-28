@@ -58,7 +58,31 @@ export {
   type ElementStatus,
   type QuestionElementId,
 } from "./question-elements";
-export { PLACEHOLDERS, buildDraftQuestion, contextPhrase, suggestQuestionTypes, type DraftQuestion, type TypeSuggestion } from "./question-builder";
+export { PLACEHOLDERS, buildDraftQuestion, contextPhrase, suggestQuestionTypes, type DraftQuestion, type PlaceholderId, type TypeSuggestion } from "./question-builder";
+export {
+  OBJECTIVE_VERB_CATEGORIES,
+  OBJECTIVE_VERB_CATEGORY_IDS,
+  RESEARCH_ACTION_VERBS,
+  getVerbCategory,
+  suggestVerbCategories,
+  type ObjectiveVerbCategory,
+  type ObjectiveVerbCategoryId,
+  type VerbCategorySuggestion,
+} from "./objective-verbs";
+export { buildDraftGeneralObjective, suggestSpecificObjectiveOutlines, type DraftObjective } from "./objective-builder";
+export { addObjective, duplicateObjective, editObjective, moveObjective, removeObjective } from "./objective-list";
+export {
+  OBJECTIVE_CHECK_IDS,
+  OBJECTIVE_CHECK_LABELS,
+  OBJECTIVES_GENERATOR_LIMITATIONS,
+  checkGeneralObjective,
+  checkSpecificObjective,
+  checkSpecificObjectivesOverall,
+  evaluateObjectives,
+  type ObjectiveCheck,
+  type ObjectiveCheckId,
+  type ObjectiveEvaluation,
+} from "./objective-checks";
 export {
   FINER_CRITERIA,
   FINER_JUDGEMENT_LABELS,

@@ -6,6 +6,7 @@ import { TOOL_PATH as DATA_ANALYSIS } from "@/tools/data-analysis-recommender/pa
 import { TOOL_PATH as HYPOTHESES } from "@/tools/hypothesis-builder/path";
 import { TOOL_PATH as QUESTIONNAIRE } from "@/tools/questionnaire-builder/path";
 import { TOOL_PATH as DESIGN } from "@/tools/research-design-builder/path";
+import { TOOL_PATH as OBJECTIVES } from "@/tools/research-objectives-generator/path";
 import { TOOL_PATH as ONION } from "@/tools/research-onion/path";
 import { TOOL_PATH as QUESTION } from "@/tools/research-question-builder/path";
 import { TOOL_PATH as TITLE } from "@/tools/research-title-builder/path";
@@ -24,7 +25,7 @@ export const stageAnchor = (id: ModuleId) => `stage-${id}`;
 export const STAGE_LINKS: Readonly<Record<ModuleId, string>> = {
   problem: `${WORKSPACE_PATH}#${stageAnchor("problem")}`,
   question: QUESTION,
-  objectives: `${WORKSPACE_PATH}#${stageAnchor("objectives")}`,
+  objectives: OBJECTIVES,
   title: TITLE,
   hypotheses: HYPOTHESES,
   variables: VARIABLES,
