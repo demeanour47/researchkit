@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { howToChooseAStatisticalTest } from "../../../../content/guides/how-to-choose-a-statistical-test";
+import { spssFromDataPreparationToReporting } from "../../../../content/guides/spss-from-data-preparation-to-reporting";
 import { getReference, STATISTICS_REFERENCES } from "../references";
 
 describe("Statistical Test Finder references", () => {
@@ -14,7 +15,8 @@ describe("Statistical Test Finder references", () => {
   });
 
   it("cites every registered statistics source in the guide and lists it under references", () => {
-    const blocks = howToChooseAStatisticalTest.sections.flatMap((section) => section.blocks);
+    const guides = [howToChooseAStatisticalTest, spssFromDataPreparationToReporting];
+    const blocks = guides.flatMap((guide) => guide.sections.flatMap((section) => section.blocks));
     const paragraphs = blocks.filter((block) => block.type === "paragraph").map((block) => block.text);
     const cited = new Set(paragraphs.flatMap((paragraph) => STATISTICS_REFERENCES.filter((reference) => paragraph.includes(reference.cite)).map((reference) => reference.id)));
     const listed = new Set(blocks.filter((block) => block.type === "references").flatMap((block) => block.ids));

@@ -1,0 +1,28 @@
+export const page = {
+  title: "Effect Size Calculator",
+  summary: "Calculate selected standardized effects from reported summary statistics, with formulas and assumptions shown.",
+  metaDescription: "Calculate Cohen's d, Hedges' g, paired standardized differences, eta squared, phi, Cramér's V, r squared and adjusted R squared with transparent formulas and validation.",
+  intro: "Choose an effect-size measure that matches your design and enter the statistics from your analysis. The calculator shows the formula and substitution; it does not test significance or decide whether an effect matters in practice.",
+  method: "Effect-size method",
+  calculate: "Calculate effect size",
+  formula: "Formula",
+  steps: "Calculation",
+  result: "Result",
+  note: "How to use this result",
+  limitationsHeading: "What this calculator cannot determine",
+  privacyHeading: "Privacy",
+  privacy: "Values are calculated in your browser and are not sent or saved.",
+  learnHeading: "Learn about effect size",
+  reviewHeading: "Method choices",
+  review: [
+    "Paired standardized mean differences depend on the denominator convention. This tool labels d_z (SD of paired differences) and d_av (average marginal SD) separately.",
+    "Magnitude labels are not universal thresholds. This calculator reports numbers and formulas; discuss practical importance in your field and design.",
+    "Cohen's w magnitude conventions are context-dependent and not shown as universal classifications.",
+  ],
+  limitations: [
+    "The calculator does not determine which statistical test or effect-size measure is appropriate for your design.",
+    "It does not calculate p-values, confidence intervals, power or raw-data analyses.",
+    "A numerical effect size does not by itself show statistical significance, causal impact or practical importance.",
+    "For paired data, choose the standardizer that matches the research question and report it explicitly.",
+  ],
+} as const;

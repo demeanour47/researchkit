@@ -2,7 +2,7 @@ import { Link, cardClasses, cx } from "@/ui";
 import { getStyleProfile, stylePath, type GuideBlock } from "@/domains/publishing";
 import { ReferenceList } from "@/features/research/reference-list";
 import { TitleExamples } from "@/features/research/title-examples";
-import { ComparisonMatrix, DataTable, DecisionTreeView, DescriptiveExample, FormulaList, StructureDiagramView, TeachingFigure, TestProfileView, WorkedExampleView } from "@/features/statistics";
+import { ComparisonMatrix, DataTable, DecisionTreeView, DescriptiveExample, FormulaList, SpssProcedureView, SpssWorkflow, StructureDiagramView, TeachingFigure, TestProfileView, WorkedExampleView } from "@/features/statistics";
 import { STRUCTURE_DIAGRAMS, getWorkedExample } from "@/knowledge/research/test-finder";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
 import { getReference } from "@/knowledge/research/references";
@@ -118,5 +118,13 @@ export function ContentBlock({ block }: { block: GuideBlock }) {
       return <TeachingFigure figure={block.figure} />;
     case "descriptive-example":
       return <DescriptiveExample />;
+    case "spss-procedures":
+      return (
+        <div className="grid gap-5">
+          {block.methods.map((method) => <SpssProcedureView key={method} method={method} />)}
+        </div>
+      );
+    case "spss-workflow":
+      return <SpssWorkflow steps={block.steps} />;
   }
 }

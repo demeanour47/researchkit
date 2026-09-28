@@ -40,6 +40,15 @@ export const dMagnitude = (d: number): Magnitude => ({
   convention: `${COHEN} for d: .20 small, .50 medium, .80 large`,
 });
 
+export const wMagnitude = (w: number): Magnitude => ({
+  label: band(Math.abs(w), "negligible", [
+    [0.1, "small"],
+    [0.3, "medium"],
+    [0.5, "large"],
+  ]),
+  convention: `${COHEN}'s conventions for w: .10 small, .30 medium, .50 large`,
+});
+
 export const etaMagnitude = (eta: number): Magnitude => ({
   label: band(eta, "negligible", [
     [0.01, "small"],

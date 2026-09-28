@@ -20,6 +20,8 @@ const TOOL_ICONS: Record<string, IconName> = {
   "reading-time-calculator": "clock",
   "text-statistics": "type",
   "sample-size-calculator": "statistics",
+  "effect-size-calculator": "scale",
+  "spss-research-lab": "workflow",
   "data-analysis-recommender": "analysis",
   "results-interpretation": "lightbulb",
   "statistical-assumption-checker": "list-checks",

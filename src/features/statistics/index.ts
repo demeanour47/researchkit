@@ -6,3 +6,5 @@ export { StructureDiagramView, TeachingFigure } from "./figures";
 export { FormulaList } from "./formula-list";
 export { TestProfileView } from "./test-profile";
 export { WorkedExampleView } from "./worked-example";
+export { SpssProcedureView } from "./spss-procedure";
+export { SpssWorkflow } from "./spss-workflow";

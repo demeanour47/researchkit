@@ -53,8 +53,8 @@ export function GuidePage({ guide }: { guide: Guide }) {
         <Credentials guide={guide} />
       </Hero>
 
-      <PageContainer width="reading" className="grid gap-14 py-section-compact">
-        <nav aria-labelledby="contents-title" className="rounded-panel border border-border bg-sunken p-6">
+      <PageContainer width="reading" className="grid grid-cols-1 gap-14 py-section-compact">
+        <nav aria-labelledby="contents-title" className="w-full max-w-full min-w-0 rounded-panel border border-border bg-sunken p-6">
           <h2 id="contents-title" className="mb-3 text-caption font-semibold tracking-wide text-text-muted uppercase">
             {guideLabels.contents}
           </h2>

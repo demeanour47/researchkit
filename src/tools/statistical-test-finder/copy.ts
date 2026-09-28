@@ -78,6 +78,7 @@ export const results = {
   checkAssumptions: (name: string) => `Check assumptions: ${name}`,
   interpret: (name: string) => `Interpret results: ${name}`,
   checkerMissing: "The Statistical Assumption Checker doesn't cover this test yet.",
+  spssProcedure: (name: string) => `Run ${name} in SPSS`,
 } as const;
 
 export const nextSteps = {
@@ -86,6 +87,7 @@ export const nextSteps = {
   recommender: "Build your analysis plan in the Data Analysis Recommender",
   checker: "Plan your assumption checks in the Statistical Assumption Checker",
   interpreter: "Interpret your results in the Results Interpretation Assistant",
+  spssLab: "Follow the SPSS procedure in the SPSS Research Lab",
   workspace: "Open your research workspace",
 } as const;
 

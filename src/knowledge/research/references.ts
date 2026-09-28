@@ -5,7 +5,6 @@
  * checked against Crossref; books without a DOI were checked against library catalogue
  * records (Open Library). See each entry's comment where a detail needs a reviewer's check.
  */
-
 import type { Reference } from "./types";
 
 export const REFERENCES: readonly Reference[] = [
@@ -324,6 +323,22 @@ export const STATISTICS_REFERENCES: readonly Reference[] = [
     year: 2016,
     apa: "Wasserstein, R. L., & Lazar, N. A. (2016). The ASA statement on p-values: Context, process, and purpose. *The American Statistician, 70*(2), 129–133.",
     doi: "10.1080/00031305.2016.1154108",
+  },
+  {
+    // Crossref DOI 10.3102/10769986006002107 confirms article metadata and pages.
+    id: "hedges-1981",
+    cite: "Hedges, 1981",
+    year: 1981,
+    apa: "Hedges, L. V. (1981). Distribution theory for Glass's estimator of effect size and related estimators. *Journal of Educational Statistics, 6*(2), 107–128.",
+    doi: "10.3102/10769986006002107",
+  },
+  {
+    // Crossref DOI 10.3389/fpsyg.2013.00863 confirms title, author and journal metadata.
+    id: "lakens-2013",
+    cite: "Lakens, 2013",
+    year: 2013,
+    apa: "Lakens, D. (2013). Calculating and reporting effect sizes to facilitate cumulative science: A practical primer for t-tests and ANOVAs. *Frontiers in Psychology, 4*, Article 863.",
+    doi: "10.3389/fpsyg.2013.00863",
   },
 ];
 

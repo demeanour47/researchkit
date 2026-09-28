@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { alphaMagnitude, correlationMagnitude, cramersVMagnitude, dMagnitude, etaMagnitude, fitIndices, kmoMagnitude, plsR2Magnitude, r2Magnitude, type Magnitude } from "./effect-size";
+import { alphaMagnitude, correlationMagnitude, cramersVMagnitude, dMagnitude, etaMagnitude, fitIndices, kmoMagnitude, plsR2Magnitude, r2Magnitude, wMagnitude, type Magnitude } from "./effect-size";
 
 function table(name: string, judge: (value: number) => Magnitude, cases: [number, string][]) {
   describe(name, () => {
@@ -33,6 +33,14 @@ table("dMagnitude", dMagnitude, [
   [0.79, "medium"],
   [0.8, "large"],
   [-1.4, "large"],
+]);
+
+table("wMagnitude", wMagnitude, [
+  [0.09, "negligible"],
+  [0.1, "small"],
+  [0.3, "medium"],
+  [0.5, "large"],
+  [-0.3, "medium"],
 ]);
 
 table("etaMagnitude", etaMagnitude, [

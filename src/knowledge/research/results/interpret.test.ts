@@ -206,6 +206,13 @@ describe("regression", () => {
 });
 
 describe("t-tests", () => {
+  it("interprets a one-sample t-test against a value stated in advance", () => {
+    const result = read("one-sample-t-test", { t: 2.1, df: 29, p: 0.045, mean: 4.2, testValue: 3.5, d: 0.4 });
+    assert.equal(result.academic, "The sample mean differed significantly from the stated value (M = 4.20, μ₀ = 3.50), t(29) = 2.10, p = .045, d = 0.40.");
+    assert.match(result.meaning, /value specified in advance/);
+    assert.deepEqual(result.warnings, []);
+  });
+
   it("interprets an independent t-test with group means and d", () => {
     const result = read("independent-t-test", { t: 2.1, df: 58, p: 0.04, mean1: 3.9, mean2: 3.4, d: 0.54 });
     assert.equal(result.plain, "Sleep quality was higher in the first screen time group (M = 3.90) than in the second group (M = 3.40); the difference is unlikely to be chance and is medium in size.");
@@ -260,9 +267,22 @@ describe("ANOVA", () => {
     assert.equal(result.magnitude?.label, "small");
     assert.match(read("two-way-anova", { fInteraction: 0.4, pInteraction: 0.6 }).implication, /Each factor's effect can be described on its own/);
   });
+
+  it("interprets ANCOVA as an adjusted effect and reports partial eta squared", () => {
+    const result = read("ancova", { f: 4.2, df1: 1, df2: 57, p: 0.045, partialEta: 0.07 });
+    assert.equal(result.academic, "After adjusting for the covariate, the effect of screen time on sleep quality was statistically significant, F(1, 57) = 4.20, p = .045, ηp² = .07.");
+    assert.match(result.meaning, /adjusting for one or more quantitative covariates/);
+  });
 });
 
 describe("chi-square", () => {
+  it("interprets goodness-of-fit separately from association between two variables", () => {
+    const result = read("chi-square-goodness-of-fit", { chi2: 8.1, df: 3, p: 0.044, n: 120, w: 0.26 });
+    assert.equal(result.academic, "Observed counts for screen time differed significantly from the expected proportions, χ²(3, N = 120) = 8.10, p = .044, w = .26.");
+    assert.match(result.meaning, /one categorical variable/);
+    assert.equal(result.magnitude?.label, "small");
+  });
+
   it("interprets an association with Cramér's V for a 2 × 2 table", () => {
     const result = read("chi-square", { chi2: 5.12, df: 1, p: 0.024, n: 200, cramersV: 0.16 });
     assert.equal(result.academic, "There was a statistically significant association between screen time and sleep quality, χ²(1, N = 200) = 5.12, p = .024, V = .16.");

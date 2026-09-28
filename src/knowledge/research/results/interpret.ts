@@ -5,7 +5,7 @@
  */
 
 import { getAnalysisMethod } from "../data-analysis-types";
-import { alphaMagnitude, correlationMagnitude, cramersVMagnitude, dMagnitude, etaMagnitude, fitIndices, kmoMagnitude, plsR2Magnitude, r2Magnitude, type Magnitude } from "./effect-size";
+import { alphaMagnitude, correlationMagnitude, cramersVMagnitude, dMagnitude, etaMagnitude, fitIndices, kmoMagnitude, plsR2Magnitude, r2Magnitude, wMagnitude, type Magnitude } from "./effect-size";
 import { formatBounded, formatP, formatPValue, formatPlain, formatStat } from "./format";
 import { COMMON_MISTAKES } from "./mistakes";
 import { significance, type Significance } from "./significance";
@@ -348,6 +348,36 @@ const logistic: Interpreter = (v, input, { predictor, outcome }) => {
   };
 };
 
+const oneSampleT: Interpreter = (v, input, { subject }) => {
+  const sig = significance(v.p, input.alpha);
+  const magnitude = v.d !== undefined ? dMagnitude(v.d) : null;
+  const direction = v.mean !== undefined && v.testValue !== undefined ? signOf(v.mean - v.testValue) : signOf(v.t);
+  const difference = v.mean !== undefined && v.testValue !== undefined ? v.mean - v.testValue : undefined;
+  const comparison = difference === undefined ? "the sample mean differed from the value specified in advance" : `${subject} had a mean of ${formatStat(v.mean)}${difference === 0 ? `, equal to the comparison value ${formatStat(v.testValue!)}` : `, ${difference > 0 ? "above" : "below"} the comparison value ${formatStat(v.testValue!)}`}`;
+  const warnings: string[] = [];
+  if (v.d === undefined) warnings.push("Report a standardized mean difference with the one-sample t-test so readers can judge its size.");
+  if (sig.status === "significant" && magnitude?.label === "negligible") warnings.push("The result is statistically significant but negligible by this convention; statistical significance is not practical importance.");
+  return {
+    meaning: "A one-sample t-test compares one sample mean with a value specified in advance. The t statistic measures the difference in standard errors; it does not compare two independent groups.",
+    statistics: [
+      { symbol: "t", value: formatStat(v.t), meaning: "The sample mean's difference from the stated value, relative to its standard error" },
+      { symbol: "df", value: formatPlain(v.df), meaning: "The sample size minus one" },
+      ...(v.mean !== undefined ? [{ symbol: "M", value: formatStat(v.mean), meaning: `The sample mean of ${subject}` }] : []),
+      ...(v.testValue !== undefined ? [{ symbol: "μ₀", value: formatStat(v.testValue), meaning: "The comparison value specified before the test" }] : []),
+      ...(difference !== undefined ? [{ symbol: "M − μ₀", value: formatStat(difference), meaning: "The observed mean difference from the comparison value" }] : []),
+      ...(v.d !== undefined ? [{ symbol: "d", value: formatStat(v.d), meaning: `A ${magnitude!.label} standardized mean difference` }] : []),
+    ],
+    significance: sig,
+    magnitude,
+    direction,
+    plain: sig.status === "significant" ? `${capital(comparison)}; the difference is unlikely to be chance${magnitude ? ` and is ${magnitude.label} in size by a conventional guide` : ""}.` : `This sample doesn't show a statistically significant difference between its mean and the stated value. That isn't evidence that the values are exactly equal.`,
+    academic: `The sample mean ${sig.status === "significant" ? "differed significantly" : "did not differ significantly"} from the stated value${v.mean !== undefined && v.testValue !== undefined ? ` (M = ${formatStat(v.mean)}, μ₀ = ${formatStat(v.testValue)})` : ` for ${subject}`}, t(${formatPlain(v.df)}) = ${formatStat(v.t)}, ${formatP(v.p)}${v.d !== undefined ? `, d = ${formatStat(v.d)}` : ""}.`,
+    implication: sig.status === "significant" ? `The sample provides evidence that the population mean of ${subject} differs from the value specified in advance. The design and context determine whether that difference matters.` : `The data do not provide strong evidence that the population mean differs from the specified value; this does not prove equality.`,
+    warnings,
+    testsHypothesis: true,
+  };
+};
+
 // Differences.
 
 function tTestInterpreter(paired: boolean): Interpreter {
@@ -415,6 +445,28 @@ const oneWayAnova: Interpreter = (v, input, { predictor, outcome }) => {
   };
 };
 
+const ancova: Interpreter = (v, input, { predictor, outcome }) => {
+  const sig = significance(v.p, input.alpha);
+  const magnitude = v.partialEta !== undefined ? { ...etaMagnitude(v.partialEta), convention: "Cohen's conventions commonly applied to partial eta squared: .01 small, .06 medium, .14 large" } : null;
+  const warnings = v.partialEta === undefined ? ["Report an effect size such as partial eta squared with the adjusted group effect."] : [];
+  return {
+    meaning: "ANCOVA compares group means on a quantitative outcome while adjusting for one or more quantitative covariates. The adjusted group effect is conditional on the model and its assumptions; adjustment alone does not establish causation.",
+    statistics: [
+      { symbol: "F", value: formatStat(v.f), meaning: `The adjusted effect of ${predictor} on ${outcome}` },
+      { symbol: "df", value: `${formatPlain(v.df1)}, ${formatPlain(v.df2)}`, meaning: "Numerator and residual degrees of freedom" },
+      ...(v.partialEta !== undefined ? [{ symbol: "ηp²", value: formatBounded(v.partialEta), meaning: "The adjusted effect's share of variance under this model" }] : []),
+    ],
+    significance: sig,
+    magnitude,
+    direction: null,
+    plain: sig.status === "significant" ? `After adjustment for the covariate, the groups differ in ${outcome}${magnitude ? `; the adjusted effect is ${magnitude.label} by a conventional guide` : ""}.` : `This sample doesn't show a statistically significant adjusted difference in ${outcome} between the ${predictor} groups.`,
+    academic: `After adjusting for the covariate, the effect of ${predictor} on ${outcome} was ${sig.status === "significant" ? "statistically significant" : "not statistically significant"}, F(${formatPlain(v.df1)}, ${formatPlain(v.df2)}) = ${formatStat(v.f)}, ${formatP(v.p)}${v.partialEta !== undefined ? `, ηp² = ${formatBounded(v.partialEta)}` : ""}.`,
+    implication: sig.status === "significant" ? `The adjusted group means differ in this model. Report the covariate, estimated marginal means and relevant follow-up comparisons; this result is conditional on the model assumptions.` : `The model does not provide strong evidence of an adjusted group difference. That does not prove the adjusted means are equal.`,
+    warnings,
+    testsHypothesis: true,
+  };
+};
+
 const twoWayAnova: Interpreter = (v, input, { predictor, outcome }) => {
   const interaction = significance(v.pInteraction, input.alpha);
   const magnitude = v.partialEta !== undefined ? { ...etaMagnitude(v.partialEta), convention: "Cohen's conventions for eta squared, commonly applied to partial eta squared: .01 small, .06 medium, .14 large" } : null;
@@ -468,6 +520,30 @@ const chiSquare: Interpreter = (v, input, { predictor, outcome }) => {
     plain: sig.status === "significant" ? `${capital(predictor)} and ${outcome} are associated: the pattern of ${outcome} differs across the categories of ${predictor}${magnitude ? `, and the association is ${magnitude.label}` : ""}.` : `This sample doesn't show an association between ${predictor} and ${outcome}.`,
     academic: `${sig.status === "significant" ? "There was a statistically significant association" : "There was no statistically significant association"} between ${predictor} and ${outcome}, χ²(${v.df}${v.n !== undefined ? `, N = ${v.n}` : ""}) = ${formatStat(v.chi2)}, ${formatP(v.p)}${v.cramersV !== undefined ? `, V = ${formatBounded(v.cramersV)}` : ""}.`,
     implication: sig.status === "significant" ? "Look at the cross-tabulation's percentages to describe which categories go together; the test alone doesn't say." : `This study doesn't give evidence that ${predictor} and ${outcome} are associated.`,
+    warnings,
+    testsHypothesis: true,
+  };
+};
+
+const chiSquareGoodnessOfFit: Interpreter = (v, input, { subject }) => {
+  const sig = significance(v.p, input.alpha);
+  const magnitude = v.w !== undefined ? wMagnitude(v.w) : null;
+  const warnings: string[] = [];
+  if (v.w === undefined) warnings.push("Consider reporting Cohen's w for the discrepancy between observed and expected proportions; its interpretation depends on the question and context.");
+  return {
+    meaning: "A chi-square goodness-of-fit test compares observed counts for one categorical variable with expected counts from proportions specified in advance. It is different from the chi-square test of independence, which examines two categorical variables.",
+    statistics: [
+      { symbol: "χ²", value: formatStat(v.chi2), meaning: "How far observed counts differ from expected counts" },
+      { symbol: "df", value: String(v.df), meaning: "Categories minus one, adjusted if model parameters were estimated" },
+      ...(v.n !== undefined ? [{ symbol: "N", value: String(v.n), meaning: "Cases included in the test" }] : []),
+      ...(v.w !== undefined ? [{ symbol: "w", value: formatBounded(v.w), meaning: `A ${magnitude!.label} discrepancy from the expected proportions by a conventional guide` }] : []),
+    ],
+    significance: sig,
+    magnitude,
+    direction: null,
+    plain: sig.status === "significant" ? `The observed counts for ${subject} differ from the expected proportions more than chance variation alone would usually explain${magnitude ? `; Cohen's w is ${magnitude.label} by a conventional guide` : ""}.` : `This sample doesn't show a statistically significant difference between the observed counts for ${subject} and the expected proportions.`,
+    academic: `Observed counts for ${subject} ${sig.status === "significant" ? "differed significantly" : "did not differ significantly"} from the expected proportions, χ²(${v.df}${v.n !== undefined ? `, N = ${v.n}` : ""}) = ${formatStat(v.chi2)}, ${formatP(v.p)}${v.w !== undefined ? `, w = ${formatBounded(v.w)}` : ""}.`,
+    implication: "Compare observed and expected counts to identify which categories contribute to any discrepancy. State where the expected proportions came from; the test does not explain why counts differ.",
     warnings,
     testsHypothesis: true,
   };
@@ -576,11 +652,14 @@ const INTERPRETERS: Readonly<Record<ResultKind, Interpreter>> = {
   "multiple-regression": multipleRegression,
   "hierarchical-regression": hierarchical,
   "logistic-regression": logistic,
+  "one-sample-t-test": oneSampleT,
   "independent-t-test": tTestInterpreter(false),
   "paired-t-test": tTestInterpreter(true),
   "one-way-anova": oneWayAnova,
   "two-way-anova": twoWayAnova,
+  ancova,
   "chi-square": chiSquare,
+  "chi-square-goodness-of-fit": chiSquareGoodnessOfFit,
   "factor-analysis": factorAnalysis,
   sem,
   "pls-sem": plsSem,
