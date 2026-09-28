@@ -74,7 +74,7 @@ export const MODULES: readonly WorkspaceModule[] = [
     name: "Objectives",
     summary: "The general objective and the specific objectives that answer the question.",
     owns: ["researchAim", "researchObjectives"],
-    toolId: null,
+    toolId: "research-objectives-generator",
     dependsOn: ["question"],
     reads: ["problem", "question"],
     applies: always,

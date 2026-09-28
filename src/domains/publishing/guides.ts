@@ -6,9 +6,10 @@
 import { howToChooseACitationStyle } from "../../../content/guides/how-to-choose-a-citation-style";
 import { howToCountCharactersInAcademicWriting } from "../../../content/guides/how-to-count-characters-in-academic-writing";
 import { howToWriteAGoodResearchTitle } from "../../../content/guides/how-to-write-a-good-research-title";
+import { howToWriteResearchObjectives } from "../../../content/guides/how-to-write-research-objectives";
 import type { Guide } from "./guide";
 
-const GUIDES: readonly Guide[] = [howToChooseACitationStyle, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting];
+const GUIDES: readonly Guide[] = [howToChooseACitationStyle, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, howToWriteResearchObjectives];
 
 /** A guide's address. Provisional until the URL strategy (ADR-0005) is accepted. */
 export const guidePath = (slug: string) => `/learn/${slug}`;
