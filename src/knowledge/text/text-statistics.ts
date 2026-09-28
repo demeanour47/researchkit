@@ -25,6 +25,10 @@
  * - Languages written without spaces between words (such as Chinese, Japanese or
  *   Thai) are counted as one word per unbroken run of text.
  * - Abbreviations such as "e.g." or "Dr." are counted as sentence endings.
+ * - Devanagari's own sentence-ending mark, the danda (U+0964, "।"), is not
+ *   recognised as a sentence ending; only . ! ? and … are. Word, paragraph and
+ *   character counts are unaffected, since none of them depend on sentence
+ *   punctuation.
  */
 
 export const READING_WORDS_PER_MINUTE = 200;

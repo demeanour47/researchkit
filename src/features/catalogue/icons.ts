@@ -16,6 +16,7 @@ const TOOL_ICONS: Record<string, IconName> = {
   "citation-style-finder": "library",
   "apa-citation-generator": "citation",
   "word-counter": "hash",
+  "character-counter": "keyboard",
   "reading-time-calculator": "clock",
   "text-statistics": "type",
   "sample-size-calculator": "statistics",

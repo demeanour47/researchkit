@@ -34,6 +34,7 @@ describe("countWords", () => {
     ["Greek and Cyrillic", "Ωmega привет мир", 3],
     ["Arabic", "مرحبا بالعالم", 2],
     ["Devanagari", "नमस्ते दुनिया", 2],
+    ["mixed Nepali and English words", "नेपाल is a beautiful देश.", 5],
     ["emoji alone are not words", "🎉 👍🏽 👨‍👩‍👧", 0],
     ["emoji next to words", "Great work 🎉", 2],
     ["emoji attached to a word", "done✅", 1],
@@ -127,6 +128,12 @@ describe("countCharacters agrees with full grapheme segmentation", () => {
       assert.deepEqual(countCharacters(text), reference(text), JSON.stringify(text));
     }
   });
+
+  it("for text mixing Devanagari, accented Latin and emoji", () => {
+    for (const text of ["नेपाल and café 🎉!", "म काठमाडौं मा गएँ।", "अनुसन्धान (research) is important in नेपाल."]) {
+      assert.deepEqual(countCharacters(text), reference(text), JSON.stringify(text));
+    }
+  });
 });
 
 describe("countParagraphs", () => {
@@ -167,6 +174,8 @@ describe("countSentences", () => {
     ["abbreviations are counted as endings (known limit)", "Use e.g. this one.", 2],
     ["emoji do not make a sentence on their own", "🎉🎉", 0],
     ["sentences in other scripts", "Привет. Как дела?", 2],
+    ["mixed Nepali and English sentences, full stops recognised in both", "म बजार जान्छु. She goes to the market.", 2],
+    ["the Devanagari danda “।” is not a recognised sentence ending (known limit)", "म घर जान्छु। ऊ स्कुल जान्छ।", 1],
   ];
   for (const [name, text, expected] of cases) {
     it(name, () => assert.equal(countSentences(text), expected));

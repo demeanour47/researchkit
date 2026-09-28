@@ -5,6 +5,8 @@
  */
 
 import { page as apaGenerator } from "@/tools/apa-citation-generator/copy";
+import { page as characterCounter } from "@/tools/character-counter/copy";
+import { TOOL_ID as CHARACTER_COUNTER_ID, TOOL_PATH as CHARACTER_COUNTER_PATH } from "@/tools/character-counter/path";
 import { TOOL_ID as APA_GENERATOR_ID, TOOL_PATH as APA_GENERATOR_PATH } from "@/tools/apa-citation-generator/path";
 import { page as citationStyleFinder } from "@/tools/citation-style-finder/copy";
 import {
@@ -136,7 +138,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: WORD_COUNTER_PATH,
   },
-  comingSoon("character-counter", "Character Counter", "Counts characters, with and without spaces.", "writing"),
+  {
+    id: CHARACTER_COUNTER_ID,
+    name: characterCounter.title,
+    description: characterCounter.summary,
+    category: "writing",
+    family: "text-analysis",
+    status: "available",
+    href: CHARACTER_COUNTER_PATH,
+  },
   {
     id: READING_TIME_ID,
     name: readingTime.title,
