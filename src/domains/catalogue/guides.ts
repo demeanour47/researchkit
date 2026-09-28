@@ -90,6 +90,7 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
     "writing",
     [WORD_COUNTER_ID],
   ),
+  published("how-to-count-characters-in-academic-writing", "writing"),
 
   comingSoon("how-to-choose-a-statistical-test", "How to choose a statistical test", "How your data and research question point to the right test.", "statistics"),
   comingSoon("what-a-p-value-tells-you", "What a p-value tells you", "What a p-value means, and the common ways it is misread.", "statistics"),
