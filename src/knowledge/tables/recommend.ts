@@ -49,6 +49,7 @@ export const METHOD_TABLES: Readonly<Record<AnalysisMethodId, readonly [TableTyp
   percentage: [["percentage", "strong", "A percentage table compares the share of responses in each category across items."]],
   mean: [["descriptive-statistics", "strong", "Means are reported with their standard deviations in a descriptive statistics table."]],
   median: [["descriptive-statistics", "possible", "Medians can be added to a descriptive statistics table; build it as a custom table if you report medians instead of means."]],
+  mode: [["frequency", "strong", "The mode is the category with the highest count, which a frequency table shows directly."]],
   "standard-deviation": [["descriptive-statistics", "strong", "Standard deviations are reported beside the means in a descriptive statistics table."]],
   reliability: [["reliability", "strong", "A reliability table reports the internal consistency of each scale."]],
   "cronbach-alpha": [["reliability", "strong", "Cronbach's alpha for each scale is usually reported in one table."]],
@@ -75,6 +76,7 @@ export const METHOD_TABLES: Readonly<Record<AnalysisMethodId, readonly [TableTyp
   "logistic-regression": [["coefficients", "possible", "Coefficients can be reported in a coefficient table; add odds ratios, Exp(B), as a custom table if your software gives them."]],
   moderation: [["coefficients", "possible", "The interaction term and its components are reported in a coefficient table."]],
   mediation: [["coefficients", "possible", "The paths of a mediation model can be reported in a coefficient table, with the indirect effect's interval in the note."]],
+  "one-sample-t-test": [["descriptive-statistics", "strong", "The sample's mean and standard deviation are reported alongside the test, with the comparison value in the note."]],
   "independent-t-test": [["descriptive-statistics", "strong", "Each group's mean and standard deviation are reported alongside the t-test."]],
   "paired-t-test": [["descriptive-statistics", "strong", "The mean and standard deviation at each time are reported alongside the t-test."]],
   "one-way-anova": [
@@ -89,6 +91,7 @@ export const METHOD_TABLES: Readonly<Record<AnalysisMethodId, readonly [TableTyp
     ["chi-square", "strong", "A chi-square table reports the counts in each group with the test of association."],
     ["cross-tabulation", "possible", "A cross-tabulation shows the counts and percentages behind the test."],
   ],
+  "chi-square-goodness-of-fit": [["frequency", "strong", "A frequency table shows the observed count in each category beside the expected count or proportion."]],
   "fisher-exact": [["cross-tabulation", "strong", "A cross-tabulation shows the counts Fisher's exact test compares; report its p in the note."]],
   wilcoxon: [["descriptive-statistics", "possible", "Report medians with the Wilcoxon test; a custom table suits if you report medians and ranges."]],
   "mann-whitney": [["descriptive-statistics", "possible", "Report each group's median with the Mann–Whitney test; a custom table suits medians and ranges."]],

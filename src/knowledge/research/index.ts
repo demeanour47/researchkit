@@ -595,3 +595,4 @@ export { parseVariableLines, variablesFromLines, type VariableLine } from "./var
 export * from "./results";
 export { EMPTY_TYPED_PROJECT, TYPED_MARGINS, TYPED_VARIABLE_FIELDS, projectFromTyped, variablesFromTyped, type TypedProject } from "./typed-project";
 export * from "./assumptions";
+export * from "./test-finder";

@@ -290,6 +290,44 @@ export const TEXTBOOK_REFERENCES: readonly Reference[] = [
 ];
 
 /**
+ * Statistics sources first cited by the Statistics guides and the Statistical Test
+ * Finder. getReference finds them; test-finder/references.test.ts checks their format,
+ * registration and citations in the guide.
+ */
+export const STATISTICS_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Open Library (ISBN 9781526419521): Andy Field, SAGE. Open Library records the 2017 printing;
+    // the 5th edition carries a 2018 copyright date, which APA uses. Reviewer: confirm the copyright year.
+    id: "field-2018",
+    cite: "Field, 2018",
+    year: 2018,
+    apa: "Field, A. (2018). *Discovering statistics using IBM SPSS statistics* (5th ed.). SAGE.",
+  },
+  {
+    // Checked against Open Library (ISBN 9781111835484): 8th edition, Wadsworth Cengage Learning, 2013.
+    id: "howell-2013",
+    cite: "Howell, 2013",
+    year: 2013,
+    apa: "Howell, D. C. (2013). *Statistical methods for psychology* (8th ed.). Wadsworth, Cengage Learning.",
+  },
+  {
+    // Checked against Open Library (ISBN 9780805802832): 2nd edition, Lawrence Erlbaum Associates, 1988.
+    id: "cohen-1988",
+    cite: "Cohen, 1988",
+    year: 1988,
+    apa: "Cohen, J. (1988). *Statistical power analysis for the behavioral sciences* (2nd ed.). Lawrence Erlbaum Associates.",
+  },
+  {
+    // Checked against Crossref (DOI 10.1080/00031305.2016.1154108): authors, title, volume 70, issue 2, pages 129–133.
+    id: "wasserstein-lazar-2016",
+    cite: "Wasserstein & Lazar, 2016",
+    year: 2016,
+    apa: "Wasserstein, R. L., & Lazar, N. A. (2016). The ASA statement on p-values: Context, process, and purpose. *The American Statistician, 70*(2), 129–133.",
+    doi: "10.1080/00031305.2016.1154108",
+  },
+];
+
+/**
  * Works by an organisation rather than people. They are kept apart because their
  * in-text citation is the organisation's name, not a list of surnames.
  */
@@ -306,7 +344,7 @@ export const GROUP_REFERENCES: readonly Reference[] = [
 
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...GROUP_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }

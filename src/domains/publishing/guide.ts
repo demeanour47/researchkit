@@ -3,6 +3,7 @@
  * separate from layout and every guide renders with the same structure.
  */
 
+import type { FigureId, FormulaId, ProfiledTest, StructureDiagramId, WorkedExampleId } from "@/knowledge/research/test-finder";
 import type { ProfiledStyleId } from "./style-profile";
 
 export type GuideBlock =
@@ -17,7 +18,25 @@ export type GuideBlock =
   /** The academic title patterns the Research Title Builder recognises, with what each promises. */
   | { type: "title-patterns" }
   /** Links to places that aren't catalogued tools or guides, such as the research workspace. */
-  | { type: "links"; items: readonly { label: string; href: string }[] };
+  | { type: "links"; items: readonly { label: string; href: string }[] }
+  /** A small table of text, for comparisons written in the guide itself. */
+  | { type: "table"; caption: string; columns: readonly string[]; rows: readonly (readonly string[])[] }
+  /** The Statistical Test Finder's decision tree, whose leaves the finder itself computes. */
+  | { type: "test-decision-tree" }
+  /** The core statistical tests side by side, read from the knowledge layer. */
+  | { type: "test-matrix" }
+  /** A full explanation of each named test, from the knowledge layer. */
+  | { type: "test-profiles"; tests: readonly ProfiledTest[] }
+  /** Worked examples taken from question to candidate test, with small datasets. */
+  | { type: "worked-examples"; examples: readonly WorkedExampleId[] }
+  /** Formulas with every symbol defined. */
+  | { type: "formulas"; formulas: readonly FormulaId[] }
+  /** Diagrams of how the variables are arranged for kinds of test. */
+  | { type: "structure-diagrams"; diagrams: readonly StructureDiagramId[] }
+  /** A teaching figure: independent and paired observations, or what an assumption looks like. */
+  | { type: "figure"; figure: FigureId }
+  /** The mean, median, mode and standard deviation of a small example, with the working. */
+  | { type: "descriptive-example" };
 
 export interface GuideSection {
   /** Stable anchor for linking to the section. */

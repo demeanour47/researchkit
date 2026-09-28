@@ -1,0 +1,8 @@
+export { ComparisonMatrix } from "./comparison-matrix";
+export { DataTable } from "./data-table";
+export { DecisionTreeView } from "./decision-tree";
+export { DescriptiveExample } from "./descriptive-example";
+export { StructureDiagramView, TeachingFigure } from "./figures";
+export { FormulaList } from "./formula-list";
+export { TestProfileView } from "./test-profile";
+export { WorkedExampleView } from "./worked-example";

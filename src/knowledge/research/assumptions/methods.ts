@@ -18,6 +18,7 @@ export const ASSUMPTION_METHODS = [
   "multiple-regression",
   "hierarchical-regression",
   "logistic-regression",
+  "one-sample-t-test",
   "independent-t-test",
   "paired-t-test",
   "one-way-anova",
@@ -137,6 +138,14 @@ export const METHOD_GUIDES: Readonly<Record<AssumptionMethod, MethodGuide>> = {
     nonParametric: [covered("chi-square", "When the predictors are categorical and only an association is needed.")],
     reporting: "Example: The Box–Tidwell procedure showed a linear relationship between each numeric predictor and the logit (all p > .05), VIF values were below 2, and the smaller outcome group had 14 cases per predictor.",
     mistakes: ["Testing normality, which logistic regression doesn't assume.", "Using many predictors with few cases in the smaller outcome group."],
+  },
+  "one-sample-t-test": {
+    method: "one-sample-t-test",
+    assumptions: ["numeric-measurement", "independence", "normality", "outliers"],
+    alternatives: [other("Bootstrapped confidence interval for the mean", "When the outcome isn't normal but the mean is still the value of interest.")],
+    nonParametric: [other("One-sample Wilcoxon signed-rank test", "When the outcome is ordinal, or not normal in a small sample; it compares the median with the stated value.")],
+    reporting: "Example: [Outcome] was approximately normal (Shapiro–Wilk p = .27), with no outliers beyond ±3 standard deviations, so a one-sample t-test compared the mean with the stated value of [value].",
+    mistakes: ["Choosing the comparison value after seeing the data.", "Using it to compare two groups, which needs an independent-samples or paired-samples test."],
   },
   "independent-t-test": {
     method: "independent-t-test",

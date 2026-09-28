@@ -5,8 +5,8 @@ import { ASSUMPTION_IDS, type AssumptionId } from "./catalogue";
 import { ASSUMPTION_METHODS, METHOD_GUIDES, getMethodGuide, isAssumptionMethod, type AssumptionMethod } from "./methods";
 
 describe("ASSUMPTION_METHODS", () => {
-  it("covers the 19 analyses the checker supports, all known to the analysis catalogue", () => {
-    assert.equal(ASSUMPTION_METHODS.length, 19);
+  it("covers the 20 analyses the checker supports, all known to the analysis catalogue", () => {
+    assert.equal(ASSUMPTION_METHODS.length, 20);
     for (const method of ASSUMPTION_METHODS) assert.ok(ANALYSIS_METHOD_IDS.includes(method), method);
     assert.deepEqual(Object.keys(METHOD_GUIDES), [...ASSUMPTION_METHODS]);
   });
@@ -46,6 +46,7 @@ describe("METHOD_GUIDES", () => {
     "multiple-regression": ["numeric-measurement", "independence", "linearity", "normality-of-residuals", "homoscedasticity", "independent-errors", "outliers", "multicollinearity"],
     "hierarchical-regression": ["numeric-measurement", "independence", "linearity", "normality-of-residuals", "homoscedasticity", "independent-errors", "outliers", "multicollinearity"],
     "logistic-regression": ["binary-outcome", "independence", "linearity-of-logit", "multicollinearity", "events-per-predictor", "outliers"],
+    "one-sample-t-test": ["numeric-measurement", "independence", "normality", "outliers"],
     "independent-t-test": ["numeric-measurement", "independence", "normality", "homogeneity-of-variance", "outliers"],
     "paired-t-test": ["numeric-measurement", "paired-observations", "normality-of-differences", "outliers"],
     "one-way-anova": ["numeric-measurement", "independence", "normality", "homogeneity-of-variance", "outliers", "group-sizes"],

@@ -4,7 +4,7 @@ import { ANALYSIS_FAMILY_LABELS, ANALYSIS_METHODS, ANALYSIS_METHOD_IDS, NON_PARA
 
 describe("ANALYSIS_METHODS", () => {
   it("covers every method the recommender names, once each, in catalogue order", () => {
-    assert.equal(ANALYSIS_METHODS.length, 37);
+    assert.equal(ANALYSIS_METHODS.length, 40);
     assert.deepEqual(
       ANALYSIS_METHODS.map((method) => method.id),
       [...ANALYSIS_METHOD_IDS],
@@ -17,6 +17,7 @@ describe("ANALYSIS_METHODS", () => {
         "Percentage",
         "Mean",
         "Median",
+        "Mode",
         "Standard deviation",
         "Reliability",
         "Cronbach's alpha",
@@ -34,6 +35,7 @@ describe("ANALYSIS_METHODS", () => {
         "Logistic regression",
         "Moderation analysis",
         "Mediation analysis",
+        "One-sample t-test",
         "Independent-samples t-test",
         "Paired-samples t-test",
         "One-way ANOVA",
@@ -42,6 +44,7 @@ describe("ANALYSIS_METHODS", () => {
         "ANCOVA",
         "Repeated measures ANOVA",
         "Chi-square test of independence",
+        "Chi-square goodness-of-fit test",
         "Fisher's exact test",
         "Wilcoxon signed-rank test",
         "Mann–Whitney U test",
