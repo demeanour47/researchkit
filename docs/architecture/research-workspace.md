@@ -15,6 +15,7 @@ How the research methodology tools share one project. The storage decision is AD
 ## Rules
 
 - **One owner per field.** A stage saves only the fields in its `owns` list; `commitModule` ignores everything else. The named independent and dependent variable lists are the one overlap: the question names them, and the Variables Builder keeps all the lists in step with the defined variables.
+- **The title has one home.** The project's title (`projectTitle`) belongs to the Research title stage, between Objectives and Hypotheses. The Research Title Builder saves only the working title; alternatives and their history stay on its page. Starting a project with a title counts as saving that stage.
 - **Tools read the project, not retyped details.** In the workspace, a tool's project step becomes a summary of the stages it `reads`, each linking to where it is edited. The Research Question Builder is the exception: its project details are its own stage.
 - **Results worked out from the project are accepted, not stored.** The analysis plan and assumption checklist keep only the accepted method ids; comparing them with a fresh calculation shows when the project has moved on.
 - **Nothing changes until the researcher does something.** A tool offers its draft on every render, but it is saved only after an interaction, and saving identical fields records nothing.
@@ -24,6 +25,8 @@ How the research methodology tools share one project. The storage decision is AD
 Each stage is Not started, In progress (with what is missing), Completed, Needs review (with why) or Not needed (statistical stages in qualitative projects). A completed stage needs review when a stage it `dependsOn` was saved after it, when accepted analyses no longer match the project, or when a project check finds a problem in it. The percentage counts completed stages among those that apply.
 
 ## Bundle size
+
+Tools save only when their own stage's fields change, not whenever the project does, so a tool left open in another tab never writes its older state over newer work.
 
 `src/features/workspace` has no barrel file on purpose: import each module by file. The dashboard carries the analysis engine for progress and checks, and a barrel import from a shared layout put it in every tool's bundle (about 100 KB gzipped).
 

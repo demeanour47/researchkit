@@ -1,10 +1,16 @@
 import { Link, cardClasses, cx } from "@/ui";
 import { getStyleProfile, stylePath, type GuideBlock } from "@/domains/publishing";
+import { ReferenceList } from "@/features/research/reference-list";
+import { TitleExamples } from "@/features/research/title-examples";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
+import { getReference } from "@/knowledge/research/references";
+import { TITLE_EXAMPLES } from "@/knowledge/research/title/examples";
+import { TITLE_PATTERNS } from "@/knowledge/research/title/patterns";
 
 const labels = {
   definedBy: "Defined by:",
   usedIn: "Commonly used in:",
+  examples: { weak: "Weak title", whyWeak: "Why it is weak", stronger: "What a stronger title has", academic: "Academic explanation", example: "A stronger example", nepal: "Nepal", global: "Global" },
 } as const;
 
 /**
@@ -46,6 +52,33 @@ export function ContentBlock({ block }: { block: GuideBlock }) {
             );
           })}
         </div>
+      );
+    case "references":
+      return <ReferenceList references={block.ids.map(getReference).sort((a, b) => a.apa.localeCompare(b.apa))} />;
+    case "title-examples":
+      return <TitleExamples examples={TITLE_EXAMPLES.filter((example) => !block.region || example.region === block.region)} showStronger labels={labels.examples} />;
+    case "title-patterns":
+      return (
+        <dl className="grid gap-3">
+          {TITLE_PATTERNS.map((pattern) => (
+            <div key={pattern.id} className={cx(cardClasses({ padding: "sm" }), "grid gap-1")}>
+              <dt className="font-semibold">{pattern.name}</dt>
+              <dd className="text-small text-text-muted">{pattern.explanation}</dd>
+            </div>
+          ))}
+        </dl>
+      );
+    case "links":
+      return (
+        <ul className="grid gap-2">
+          {block.items.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} variant="standalone">
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
       );
   }
 }

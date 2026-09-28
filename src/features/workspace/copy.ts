@@ -83,7 +83,6 @@ export const dashboardCopy = {
   },
   editors: {
     saved: "Saved in this browser as you type.",
-    projectTitle: "Working title",
     researchProblem: "Research problem",
     researchProblemHint: "What isn't working, or isn't understood, and for whom.",
     background: "Background",

@@ -114,10 +114,10 @@ describe("committing a stage", () => {
 });
 
 describe("the workspace", () => {
-  it("starts with a title, marking the problem stage as saved", () => {
+  it("starts with a title, marking the title stage as saved", () => {
     const workspace = createWorkspace("p1", NOW, "  Sleep study ");
     assert.equal(workspace.draft.projectTitle, "Sleep study");
-    assert.deepEqual(workspace.saved, { problem: NOW });
+    assert.deepEqual(workspace.saved, { title: NOW });
     assert.deepEqual(createWorkspace("p2", NOW).saved, {});
   });
 
@@ -156,7 +156,7 @@ describe("the workspace", () => {
     let workspace = createWorkspace("p", NOW, "T");
     workspace = saveModule(workspace, "question", createProjectDraft({ researchQuestion: "Q?" }), NOW + 10);
     workspace = saveModule(workspace, "references", createProjectDraft({ references: ["A"] }), NOW + 5);
-    assert.deepEqual(recentModules(workspace).map((entry) => entry.stage.id), ["question", "references", "problem"]);
+    assert.deepEqual(recentModules(workspace).map((entry) => entry.stage.id), ["question", "references", "title"]);
     assert.deepEqual(recentModules(workspace, 1).map((entry) => entry.stage.id), ["question"]);
   });
 });
@@ -225,9 +225,11 @@ describe("progress", () => {
   });
 
   it("says what an in-progress stage still needs", () => {
-    const stage = statusOf(createProjectDraft({ projectTitle: "T" }), "problem");
+    const stage = statusOf(createProjectDraft({ background: "Known." }), "problem");
     assert.equal(stage.status, "in-progress");
     assert.deepEqual(stage.missing, ["the research problem", "the research gap"]);
+    assert.equal(statusOf(createProjectDraft({ projectTitle: "T" }), "problem").status, "not-started");
+    assert.equal(statusOf(createProjectDraft({ projectTitle: "T" }), "title").status, "completed");
   });
 
   it("requires definitions and a level for every variable", () => {
@@ -283,7 +285,7 @@ describe("progress", () => {
   });
 
   it("counts every status", () => {
-    const progress = projectProgress(createProjectDraft({ projectTitle: "T", researchQuestion: "Q?" }));
+    const progress = projectProgress(createProjectDraft({ background: "Known.", researchQuestion: "Q?" }));
     assert.equal(Object.values(progress.counts).reduce((total, count) => total + count, 0), MODULES.length);
     assert.equal(progress.counts.completed, 1);
     assert.equal(progress.counts["in-progress"], 1);
@@ -350,6 +352,17 @@ describe("project checks", () => {
     assert.ok(issueIds(updateProjectDraft(project, { dataAnalysisPlan: null })).includes("interpretation-without-plan"));
   });
 
+  it("finds a title that names neither the main variables nor the population", () => {
+    const project = completeProject();
+    assert.ok(!issueIds(project).some((id) => id.startsWith("title-")), "the complete project's title names both");
+    const vague = updateProjectDraft(project, { projectTitle: "Evening habits of young people" });
+    assert.ok(issueIds(vague).includes("title-without-variables"));
+    assert.ok(issueIds(vague).includes("title-without-population"));
+    const issue = validateProject(vague).find((entry) => entry.id === "title-without-population")!;
+    assert.equal(issue.severity, "suggestion");
+    assert.equal(issue.fixIn, "title");
+  });
+
   it("finds hypotheses in qualitative research", () => {
     assert.ok(issueIds(updateProjectDraft(completeProject(), { researchOnionSelection: { ...FULL_ONION, choice: "qualitative" }, methodology: "qualitative" })).includes("hypotheses-in-qualitative"));
   });
@@ -371,9 +384,9 @@ describe("project checks", () => {
 describe("navigation", () => {
   it("knows the stages before and after each one", () => {
     const position = stagePosition("hypotheses");
-    assert.equal(position.previous?.id, "objectives");
+    assert.equal(position.previous?.id, "title");
     assert.equal(position.next?.id, "variables");
-    assert.equal(position.number, 4);
+    assert.equal(position.number, 5);
     assert.equal(position.total, MODULES.length);
   });
 
@@ -382,23 +395,23 @@ describe("navigation", () => {
     assert.equal(stagePosition("references").next, null);
   });
 
-  it("follows the order question, objectives, hypotheses, variables, framework, onion, design, sampling, questionnaire, analysis", () => {
-    const order = ["question", "objectives", "hypotheses", "variables", "framework", "onion", "design", "sampling"] as const;
+  it("follows the order question, objectives, title, hypotheses, variables, framework, onion, design, sampling, questionnaire, analysis", () => {
+    const order = ["question", "objectives", "title", "hypotheses", "variables", "framework", "onion", "design", "sampling"] as const;
     for (let index = 1; index < order.length; index++) assert.equal(stagePosition(order[index]).previous?.id, order[index - 1]);
     assert.equal(stagePosition("questionnaire").next?.id, "analysis");
   });
 
   it("skips stages that don't apply to the project", () => {
     const qualitative = createProjectDraft({ methodology: "qualitative" });
-    assert.equal(stagePosition("objectives", qualitative).next?.id, "variables");
-    assert.equal(stagePosition("variables", qualitative).previous?.id, "objectives");
+    assert.equal(stagePosition("title", qualitative).next?.id, "variables");
+    assert.equal(stagePosition("variables", qualitative).previous?.id, "title");
     assert.equal(stagePosition("sampling", qualitative).next?.id, "questionnaire");
     assert.equal(stagePosition("variables", qualitative).total, MODULES.length - 3);
   });
 
   it("still places a stage that doesn't apply, for a tool opened anyway", () => {
     const position = stagePosition("hypotheses", createProjectDraft({ methodology: "qualitative" }));
-    assert.equal(position.previous?.id, "objectives");
+    assert.equal(position.previous?.id, "title");
     assert.equal(position.next?.id, "variables");
   });
 });

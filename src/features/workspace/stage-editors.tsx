@@ -26,7 +26,6 @@ const EDITED_STAGES: { id: ModuleId; icon: "research" | "target" | "library"; fi
     id: "problem",
     icon: "research",
     fields: [
-      { field: "projectTitle", kind: "line" },
       { field: "researchProblem", kind: "text" },
       { field: "background", kind: "text" },
       { field: "researchGap", kind: "text" },

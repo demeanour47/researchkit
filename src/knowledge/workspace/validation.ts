@@ -11,6 +11,7 @@ import { pairVariables } from "../research/hypothesis-alignment";
 import { checkCompatibility } from "../research/design-compatibility";
 import type { ResearchProjectDraft } from "../research/research-project";
 import { checkSamplingCompatibility } from "../research/sampling-compatibility";
+import { projectPopulation, projectVariables, titleNames } from "../research/title/keywords";
 import type { ModuleId } from "./modules";
 
 export type IssueSeverity = "problem" | "suggestion";
@@ -46,6 +47,17 @@ export function validateProject(draft: ResearchProjectDraft): ProjectIssue[] {
     add("objectives-without-aim", "objectives", "suggestion", "Add a general objective: one sentence your specific objectives work towards together.");
   if (hypotheses.length > 0 && !draft.researchQuestion)
     add("hypotheses-without-question", "hypotheses", "problem", "Your hypotheses have no research question. A hypothesis is a testable answer to a question, so write the question first.", "question");
+
+  // The title: whether it names what the rest of the project has settled.
+  const title = draft.projectTitle;
+  if (title) {
+    const core = [...projectVariables(draft, "independent"), ...projectVariables(draft, "dependent")];
+    if (core.length > 0 && !core.some((name) => titleNames(title, name)))
+      add("title-without-variables", "title", "suggestion", `Your title doesn't name any of your main variables (${listNames(core)}). Readers find studies by their variables; check the title in the Research Title Builder.`);
+    const population = projectPopulation(draft);
+    if (population && !titleNames(title, population))
+      add("title-without-population", "title", "suggestion", `Your title doesn't name your population, ${listNames([population])}, so readers can't tell whom the findings apply to.`);
+  }
 
   // Hypotheses and variables.
   const hasRelationship = variables.some((variable) => variable.variableType === "independent") && variables.some((variable) => variable.variableType === "dependent");

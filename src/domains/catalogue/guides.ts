@@ -75,6 +75,7 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
   comingSoon("how-to-avoid-plagiarism", "How to avoid plagiarism", "How quoting, paraphrasing and citing work together to credit other people's ideas.", "citation"),
   comingSoon("reference-list-or-bibliography", "Reference list or bibliography?", "What each term means, and which one your citation style uses.", "citation"),
 
+  published("how-to-write-a-good-research-title", "research-methods"),
   comingSoon("how-to-write-a-research-question", "How to write a research question", "What makes a research question focused, answerable and worth asking.", "research-methods"),
   comingSoon("qualitative-or-quantitative-research", "Qualitative or quantitative research?", "How the two approaches differ, and how to choose between them.", "research-methods"),
   comingSoon("how-to-write-a-literature-review", "How to write a literature review", "How to find, organise and synthesise sources into a coherent review.", "research-methods"),

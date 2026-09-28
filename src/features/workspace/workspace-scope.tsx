@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
 import { Button, Icon, Link, VisuallyHidden } from "@/ui";
 import type { ResearchProjectDraft } from "@/knowledge/research/research-project";
+import { ownedChanges } from "@/knowledge/workspace/commit";
 import { getModule, type ModuleId } from "@/knowledge/workspace/modules";
 import type { Workspace } from "@/knowledge/workspace/workspace";
 import { scopeCopy as copy } from "./copy";
@@ -45,6 +46,13 @@ export function WorkspaceScope({ stage, children }: WorkspaceScopeProps) {
   const touched = useRef(false);
   /** The tool's latest draft, offered before the researcher changed anything, saved once they do. */
   const latest = useRef<ResearchProjectDraft | null>(null);
+  /**
+   * The stage's own fields as last offered. A tool re-offers its draft whenever the
+   * project changes, including when another tab saves; only a change in its own
+   * fields is the researcher's work, so only that is saved. Otherwise a tab left open
+   * would write its older state over newer work from another tab.
+   */
+  const offered = useRef<string | null>(null);
   /** The project as it was before this visit's first save, for undo. */
   const before = useRef<Workspace | null>(null);
   const [canUndo, setCanUndo] = useState(false);
@@ -53,9 +61,12 @@ export function WorkspaceScope({ stage, children }: WorkspaceScopeProps) {
   const definition = getModule(stage);
 
   const save = useCallback(
-    (source: ResearchProjectDraft) => {
+    (source: ResearchProjectDraft, force = false) => {
       latest.current = source;
-      if (!touched.current) return;
+      const own = JSON.stringify(ownedChanges(stage, source));
+      const changed = own !== offered.current;
+      offered.current = own;
+      if (!touched.current || (!changed && !force)) return;
       const current = workspaceActions.current();
       if (!current) return;
       if (workspaceActions.save(stage, source)) {
@@ -79,13 +90,14 @@ export function WorkspaceScope({ stage, children }: WorkspaceScopeProps) {
     if (touched.current) return;
     touched.current = true;
     setTimeout(() => {
-      if (latest.current) save(latest.current);
+      if (latest.current) save(latest.current, true);
     }, 0);
   };
 
   const restart = (nextMessage: string) => {
     touched.current = false;
     latest.current = null;
+    offered.current = null;
     before.current = null;
     setCanUndo(false);
     setSaved(false);
