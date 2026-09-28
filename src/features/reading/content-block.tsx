@@ -2,6 +2,8 @@ import { Link, cardClasses, cx } from "@/ui";
 import { getStyleProfile, stylePath, type GuideBlock } from "@/domains/publishing";
 import { ReferenceList } from "@/features/research/reference-list";
 import { TitleExamples } from "@/features/research/title-examples";
+import { ComparisonMatrix, DataTable, DecisionTreeView, DescriptiveExample, FormulaList, StructureDiagramView, TeachingFigure, TestProfileView, WorkedExampleView } from "@/features/statistics";
+import { STRUCTURE_DIAGRAMS, getWorkedExample } from "@/knowledge/research/test-finder";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
 import { getReference } from "@/knowledge/research/references";
 import { TITLE_EXAMPLES } from "@/knowledge/research/title/examples";
@@ -80,5 +82,41 @@ export function ContentBlock({ block }: { block: GuideBlock }) {
           ))}
         </ul>
       );
+    case "table":
+      return <DataTable caption={block.caption} columns={block.columns} rows={block.rows} />;
+    case "test-decision-tree":
+      return <DecisionTreeView />;
+    case "test-matrix":
+      return <ComparisonMatrix />;
+    case "test-profiles":
+      return (
+        <div className="grid gap-6">
+          {block.tests.map((test) => (
+            <TestProfileView key={test} test={test} />
+          ))}
+        </div>
+      );
+    case "worked-examples":
+      return (
+        <div className="grid gap-6">
+          {block.examples.map((id) => (
+            <WorkedExampleView key={id} example={getWorkedExample(id)} />
+          ))}
+        </div>
+      );
+    case "formulas":
+      return <FormulaList formulas={block.formulas} />;
+    case "structure-diagrams":
+      return (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {block.diagrams.map((id) => (
+            <StructureDiagramView key={id} diagram={STRUCTURE_DIAGRAMS[id]} />
+          ))}
+        </div>
+      );
+    case "figure":
+      return <TeachingFigure figure={block.figure} />;
+    case "descriptive-example":
+      return <DescriptiveExample />;
   }
 }

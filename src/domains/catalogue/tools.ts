@@ -21,6 +21,8 @@ import {
 import { page as hypothesisBuilder } from "@/tools/hypothesis-builder/copy";
 import { page as sampleSizeCalculator } from "@/tools/sample-size-calculator/copy";
 import { TOOL_ID as SAMPLE_SIZE_CALCULATOR_ID, TOOL_PATH as SAMPLE_SIZE_CALCULATOR_PATH } from "@/tools/sample-size-calculator/path";
+import { page as statisticalTestFinder } from "@/tools/statistical-test-finder/copy";
+import { TOOL_ID as STATISTICAL_TEST_FINDER_ID, TOOL_PATH as STATISTICAL_TEST_FINDER_PATH } from "@/tools/statistical-test-finder/path";
 import { page as dataAnalysisRecommender } from "@/tools/data-analysis-recommender/copy";
 import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
@@ -183,7 +185,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: SAMPLE_SIZE_CALCULATOR_PATH,
   },
-  comingSoon("statistical-test-finder", "Statistical Test Finder", "Suggests a suitable statistical test for your data and research question.", "statistics"),
+  {
+    id: STATISTICAL_TEST_FINDER_ID,
+    name: statisticalTestFinder.title,
+    description: statisticalTestFinder.summary,
+    category: "statistics",
+    family: "research",
+    status: "available",
+    href: STATISTICAL_TEST_FINDER_PATH,
+  },
   comingSoon("effect-size-calculator", "Effect Size Calculator", "Calculates common effect sizes, such as Cohen's d, from your results.", "statistics"),
   comingSoon("power-analysis", "Power Analysis", "Estimates a study's statistical power, or the sample size needed to reach it.", "statistics"),
   comingSoon("confidence-interval-calculator", "Confidence Interval Calculator", "Calculates confidence intervals for means and proportions.", "statistics"),
