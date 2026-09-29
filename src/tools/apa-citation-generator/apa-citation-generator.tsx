@@ -18,7 +18,10 @@ export function ApaCitationGenerator() {
           heading: page.rulesHeading,
           items: rules,
           aside: { heading: page.limitsHeading, items: limits },
-          links: [{ label: page.styleLink, href: stylePath("apa") }],
+          links: [
+            { label: page.styleLink, href: stylePath("apa") },
+            { label: page.learnLink, href: "/learn/apa-7-citations-and-references#parenthetical-and-narrative" },
+          ],
         },
         { id: "privacy", heading: page.privacyHeading, text: page.privacy },
       ]}

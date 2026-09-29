@@ -9,20 +9,21 @@ import { styleTitle } from "@/knowledge/citation/styles";
 const apa = styleTitle("apa");
 
 export const page = {
-  title: "APA Citation Generator",
+  title: "APA 7 Citation & Reference Builder",
   /** One sentence, for listings such as the tools index. */
-  summary: `Formats references and in-text citations for books, journal articles and web pages in ${apa}.`,
+  summary: `Builds temporary APA 7 references and in-text citations for books, journal articles and web pages in ${apa}.`,
   metaDescription:
-    "Free APA 7 citation generator for books, journal articles and web pages. Get the reference and in-text citations, with every formatting decision explained.",
+    "Build trustworthy APA 7 references and in-text citations for books, journal articles and web pages. Review metadata warnings and keep a temporary reference collection in your browser.",
   intro:
-    "Fill in your source's details to get its APA reference and in-text citations. Every formatting decision is explained, and nothing you type leaves your browser.",
-  noScript: "The generator formats as you type, which needs JavaScript. Turn on JavaScript to use it.",
+    "Enter one source at a time to get its APA reference, parenthetical citation and narrative citation. Review warnings, add sources to a temporary collection, and understand each formatting decision.",
+  noScript: "The builder needs JavaScript to format sources and manage its temporary collection. Turn on JavaScript to use it.",
   rulesHeading: "How references are formatted",
   limitsHeading: "What the generator can't check",
   privacyHeading: "Privacy",
   privacy:
     "Your reference is generated entirely in your browser. Nothing you type is sent to ResearchKit or anyone else, or stored.",
   styleLink: "More about APA Style",
+  learnLink: "Learn APA 7 citations and references",
 } as const;
 
 export const form = {
@@ -77,13 +78,45 @@ export const output = {
   parenthetical: "Parenthetical",
   narrative: "Narrative",
   notesHeading: "Check before you use it",
-  provenance: `Formatted to ${apa}. This tool has not yet been checked by a named reviewer.`,
+  provenance: `Formatted to ${apa}. Entered metadata is not externally verified by ResearchKit. Check it against the source before submission.`,
   empty: "Fill in the form, or load the example, to see the reference and in-text citations.",
 } as const;
 
 export const actions = {
   loadExample: "Load Example",
   clear: "Clear all fields",
+  addToCollection: "Add to temporary references",
+} as const;
+
+export const collection = {
+  heading: "Current references",
+  empty: "Add a formatted source to keep it in this browser session while you work.",
+  provenance: "This collection is temporary. Nothing is saved to your workspace or sent anywhere.",
+  copyAll: "all references",
+  copyReference: "reference",
+  copyParenthetical: "parenthetical citation",
+  copyNarrative: "narrative citation",
+  remove: "Remove",
+  clear: "Clear collection",
+  duplicate: (reason: string) => `Possible duplicate: this source has a ${reason}. You can still add it if it represents a different work.`,
+  addDuplicate: "Add despite duplicate warning",
+  added: "Reference added to the temporary collection.",
+  removed: "Reference removed from the temporary collection.",
+  blocked: "Add the required metadata before adding this source to the collection.",
+} as const;
+
+export const locator = {
+  mode: "Use this citation as",
+  paraphrase: "Paraphrase",
+  directQuotation: "Direct quotation",
+  kind: "Locator type",
+  value: "Locator",
+  valueHint: "For example, 12, 12–14, 4, or Methods",
+  noLocator: "No locator",
+  page: "Page",
+  pageRange: "Page range",
+  paragraph: "Paragraph",
+  section: "Section",
 } as const;
 
 const requiredLabels: Record<RequiredField, string> = {
