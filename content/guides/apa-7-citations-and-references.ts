@@ -86,7 +86,8 @@ export const apa7CitationsAndReferences: Guide = {
       blocks: [
         { type: "paragraph", text: "Every source cited in the text should have a corresponding reference entry, and every reference entry should be cited when the assignment or publication rules require it. Reference entries use a consistent structure, punctuation and hanging-indent presentation." },
         { type: "list", items: ["Review author names, dates, titles, publication details and locators against the source.", "Keep DOI links without a final full stop after the URL.", "Use the reference collection to review possible duplicates before copying the list.", "Do not treat the temporary collection as a saved project library: it disappears when the page session ends."] },
-        { type: "links", items: [{ label: "Open the APA 7 Citation & Reference Builder", href: "/tools/apa-citation-generator" }, { label: "Open the Literature Matrix", href: "/tools/literature-matrix" }] },
+        { type: "paragraph", text: "The Reference Checker can inspect pasted entries for detectable structure, missing metadata, duplicate identity and ordering issues. It reports what its checks found; it cannot verify every APA exception or prove that metadata is correct." },
+        { type: "links", items: [{ label: "Check an APA 7 reference list", href: "/tools/reference-checker" }, { label: "Open the APA 7 Citation & Reference Builder", href: "/tools/apa-citation-generator" }, { label: "Open the Literature Matrix", href: "/tools/literature-matrix" }] },
       ],
     },
     {
@@ -129,5 +130,5 @@ export const apa7CitationsAndReferences: Guide = {
     { question: "Are references saved to my ResearchKit workspace?", answer: "No. Sprint 42's collection is temporary and does not change the workspace schema or save structured references." },
     { question: "What if the source type is not supported?", answer: "Do not approximate it as another source type. Check the applicable APA guidance and use the future source-type support when it becomes available." },
   ],
-  relatedToolIds: ["apa-citation-generator"],
+  relatedToolIds: ["apa-citation-generator", "reference-checker"],
 };

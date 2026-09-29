@@ -8,6 +8,8 @@ import { page as apaGenerator } from "@/tools/apa-citation-generator/copy";
 import { page as characterCounter } from "@/tools/character-counter/copy";
 import { TOOL_ID as CHARACTER_COUNTER_ID, TOOL_PATH as CHARACTER_COUNTER_PATH } from "@/tools/character-counter/path";
 import { TOOL_ID as APA_GENERATOR_ID, TOOL_PATH as APA_GENERATOR_PATH } from "@/tools/apa-citation-generator/path";
+import { page as referenceChecker } from "@/tools/reference-checker/copy";
+import { TOOL_ID as REFERENCE_CHECKER_ID, TOOL_PATH as REFERENCE_CHECKER_PATH } from "@/tools/reference-checker/path";
 import { page as citationStyleFinder } from "@/tools/citation-style-finder/copy";
 import {
   TOOL_ID as CITATION_STYLE_FINDER_ID,
@@ -138,7 +140,15 @@ export const TOOLS: readonly ToolEntry[] = [
   comingSoon("chicago-citation-generator", "Chicago Citation Generator", "Formats notes, bibliographies and author–date citations in Chicago Style, 18th edition.", "citation"),
   comingSoon("ieee-citation-generator", "IEEE Citation Generator", "Formats numbered references in IEEE Style.", "citation"),
   comingSoon("harvard-citation-generator", "Harvard Citation Generator", "Formats author–date references in Harvard style.", "citation"),
-  comingSoon("reference-checker", "Reference Checker", "Checks a reference list for missing details and common formatting errors.", "citation"),
+  {
+    id: REFERENCE_CHECKER_ID,
+    name: referenceChecker.title,
+    description: referenceChecker.summary,
+    category: "citation",
+    family: "citation",
+    status: "available",
+    href: REFERENCE_CHECKER_PATH,
+  },
 
   {
     id: WORD_COUNTER_ID,
