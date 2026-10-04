@@ -379,6 +379,14 @@ export const STYLE_MANUAL_REFERENCES: readonly Reference[] = [
     year: 2024,
     apa: "University of Chicago Press. (2024). *The Chicago manual of style* (18th ed.).",
   },
+  {
+    // Checked against the guide itself, linked from the IEEE Author Center (journals.ieeeauthorcenter.ieee.org):
+    // "Reference Guide, IEEE Publication Operations", version 3.28.2025, © 2025 IEEE.
+    id: "ieee-2025",
+    cite: "IEEE Publication Operations, 2025",
+    year: 2025,
+    apa: "IEEE Publication Operations. (2025). *IEEE reference guide* (Version 3.28.2025).",
+  },
 ];
 
 /** The reference with this id. Throws for an unknown id. */

@@ -12,14 +12,20 @@ const rank: Record<ValidationSeverity, number> = { error: 0, warning: 1, informa
  * A citation's validation issues, problems first. Severity is always a word, never
  * colour alone, and each issue says why it matters and what to do.
  */
-export function ValidationIssues({ issues, labels, headingId }: { issues: readonly ValidationIssue[]; labels: ValidationIssueLabels; headingId: string }) {
+export function ValidationIssues({ issues, labels, headingId, headingLevel = 2 }: { issues: readonly ValidationIssue[]; labels: ValidationIssueLabels; headingId: string; headingLevel?: 2 | 3 }) {
   if (issues.length === 0) return null;
   const ordered = [...issues].sort((a, b) => rank[a.severity] - rank[b.severity]);
   return (
     <section aria-labelledby={headingId} className="grid min-w-0 gap-3">
-      <h2 id={headingId} className="text-heading font-semibold">
-        {labels.heading}
-      </h2>
+      {headingLevel === 2 ? (
+        <h2 id={headingId} className="text-heading font-semibold">
+          {labels.heading}
+        </h2>
+      ) : (
+        <h3 id={headingId} className="text-subheading font-semibold">
+          {labels.heading}
+        </h3>
+      )}
       <ul className="grid gap-2">
         {ordered.map((issue, index) => (
           <li key={`${issue.code}-${index}`} className="grid gap-1 rounded-panel border border-border bg-sunken p-3">

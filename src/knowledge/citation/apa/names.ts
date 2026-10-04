@@ -12,41 +12,13 @@
  *   spaced full stops (". . ."); confirm at editorial review.
  */
 
-import type { Contributor } from "../source/contributor";
+import { initials, type Contributor } from "../source/contributor";
 
-/** The contributor model is shared by every style (ADR-0006). */
-export { isBlank, type Contributor } from "../source/contributor";
+/** The contributor model and initials are shared by every style (ADR-0006). */
+export { initials, isBlank, type Contributor } from "../source/contributor";
 
 export const MAX_LISTED_AUTHORS = 20;
 export const AUTHOR_ELLIPSIS = ". . .";
-
-const firstCharacter = (text: string) => Array.from(text)[0] ?? "";
-
-/** "Jean-Paul Anne" → "J.-P. A."; "J.A." → "J. A."; "mary" → "M." */
-export function initials(given: string): string {
-  return given
-    .normalize("NFC")
-    .trim()
-    .split(/\s+/u)
-    .filter(Boolean)
-    .map((word) =>
-      word
-        .split("-")
-        .filter(Boolean)
-        .map((part) =>
-          part
-            .split(".")
-            .map((piece) => piece.trim())
-            .filter(Boolean)
-            .map((piece) => `${firstCharacter(piece).toLocaleUpperCase("en")}.`)
-            .join(" "),
-        )
-        .filter(Boolean)
-        .join("-"),
-    )
-    .filter(Boolean)
-    .join(" ");
-}
 
 /** The name as it appears in a reference list, or null if too incomplete to use. */
 export function referenceName(contributor: Contributor): string | null {

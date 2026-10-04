@@ -2,7 +2,7 @@
 
 import type { Ref } from "react";
 import { Button, RadioGroup, SelectField, TextField } from "@/ui";
-import { MONTHS, SOURCE_TYPES, type SourceType } from "@/knowledge/citation/source";
+import { MONTHS, SOURCE_TYPES, type AnySourceType, type SourceType } from "@/knowledge/citation/source";
 import type { AuthorDraft } from "./author-draft";
 import { AuthorFields, type AuthorFieldLabels } from "./author-fields";
 import { MoreDetails } from "./more-details";
@@ -11,7 +11,8 @@ import type { SourceDraft } from "./source-draft";
 /** Wording for the source fields. Each citation style supplies its own hints. */
 export interface SourceFieldLabels {
   sourceType: string;
-  sourceTypes: Record<SourceType, string>;
+  /** A label for each type offered; the opt-in types need one only where they are offered. */
+  sourceTypes: Record<SourceType, string> & Partial<Record<AnySourceType, string>>;
   authors: string;
   authorsHint: string;
   addAuthor: string;
@@ -47,6 +48,15 @@ export interface SourceFieldLabels {
   moreDetails: string;
   accessed: string;
   accessedHint: string;
+  /** For forms that ask for a book's place of publication. */
+  place?: string;
+  placeHint?: string;
+  /** For forms that offer conference papers. */
+  proceedings?: string;
+  proceedingsHint?: string;
+  location?: string;
+  locationHint?: string;
+  conferenceDateHint?: string;
 }
 
 /** Which date parts a style asks for, and in what order. */
@@ -55,17 +65,21 @@ export interface SourceFieldOptions {
   journalMonth: boolean;
   /** The order of a full date's parts, as the style writes them. */
   dateOrder: "day-month-year" | "month-day-year";
+  /** Whether a book's place of publication is asked for. */
+  bookPlace?: boolean;
+  /** The source types offered. Defaults to the types every style supports. */
+  types?: readonly AnySourceType[];
 }
 
 export interface SourceFieldsProps {
   /** Prefix for every field id and the source-type radio name, unique on the page. */
   idPrefix: string;
-  draft: SourceDraft;
+  draft: SourceDraft<AnySourceType>;
   labels: SourceFieldLabels;
   authorLabels: AuthorFieldLabels;
   options: SourceFieldOptions;
   addAuthorButton: Ref<HTMLButtonElement>;
-  onChange: (changes: Partial<SourceDraft>) => void;
+  onChange: (changes: Partial<SourceDraft<AnySourceType>>) => void;
   onTypeChange: (value: string) => void;
   onAuthorChange: (author: AuthorDraft) => void;
   onAddAuthor: () => void;
@@ -74,7 +88,7 @@ export interface SourceFieldsProps {
 
 const monthOptions = MONTHS.map((name, index) => ({ value: String(index + 1), label: name }));
 
-type TextKey = Exclude<keyof SourceDraft, "type" | "authors">;
+type TextKey = Exclude<keyof SourceDraft<AnySourceType>, "type" | "authors">;
 
 /** The form describing one source: its type, authors, title, container, date and identifiers. */
 export function SourceFields({ idPrefix, draft, labels, authorLabels, options, addAuthorButton, onChange, onTypeChange, onAuthorChange, onAddAuthor, onRemoveAuthor }: SourceFieldsProps) {
@@ -124,7 +138,7 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
       <RadioGroup
         name={`${idPrefix}-source-type`}
         legend={labels.sourceType}
-        options={SOURCE_TYPES.map((value) => ({ value, label: labels.sourceTypes[value] }))}
+        options={(options.types ?? SOURCE_TYPES).map((value) => ({ value, label: labels.sourceTypes[value] ?? value }))}
         value={draft.type}
         onChange={onTypeChange}
       />
@@ -154,7 +168,22 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
 
       {field("title", labels.title, labels.titleHint)}
 
-      {draft.type === "book" && field("publisher", labels.publisher)}
+      {draft.type === "book" && (
+        <>
+          {options.bookPlace && labels.place && field("place", labels.place, labels.placeHint)}
+          {field("publisher", labels.publisher)}
+        </>
+      )}
+
+      {draft.type === "conference-paper" && labels.proceedings && labels.location && (
+        <>
+          {field("proceedings", labels.proceedings, labels.proceedingsHint)}
+          <div className="grid items-start gap-3 sm:grid-cols-2">
+            {field("location", labels.location, labels.locationHint)}
+            {field("pages", labels.pages, labels.pagesHint)}
+          </div>
+        </>
+      )}
 
       {draft.type === "journal-article" && (
         <>
@@ -172,14 +201,14 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
       <fieldset className="grid gap-4" aria-describedby={`${idPrefix}-date-hint`}>
         <legend className="mb-1 text-subheading font-semibold">{labels.date}</legend>
         <p id={`${idPrefix}-date-hint`} className="text-small text-text-muted">
-          {draft.type === "journal-article" ? labels.journalDateHint : labels.dateHint}
+          {draft.type === "journal-article" ? labels.journalDateHint : draft.type === "conference-paper" ? (labels.conferenceDateHint ?? labels.dateHint) : labels.dateHint}
         </p>
         <div className="grid items-start gap-3 sm:grid-cols-3">
           {draft.type === "webpage" ? (
             fullDate("day", "month", "year")
           ) : (
             <>
-              {draft.type === "journal-article" && options.journalMonth && monthField("month")}
+              {((draft.type === "journal-article" && options.journalMonth) || draft.type === "conference-paper") && monthField("month")}
               {field("year", labels.year, undefined, { inputMode: "numeric" })}
             </>
           )}
@@ -201,6 +230,13 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
             {field("url", labels.url, labels.urlHintOptional, { inputMode: "url" })}
             {field("articleNumber", labels.articleNumber, labels.articleNumberHint)}
           </MoreDetails>
+        </>
+      )}
+
+      {draft.type === "conference-paper" && (
+        <>
+          {field("doi", labels.doi, labels.doiHint)}
+          <MoreDetails label={labels.moreDetails}>{field("url", labels.url, labels.urlHintOptional, { inputMode: "url" })}</MoreDetails>
         </>
       )}
 

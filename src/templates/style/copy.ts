@@ -3,6 +3,7 @@ import { TOOL_ID as APA_GENERATOR_ID } from "@/tools/apa-citation-generator/path
 import { TOOL_ID as CHICAGO_AUTHOR_DATE_GENERATOR_ID } from "@/tools/chicago-author-date-citation-generator/path";
 import { TOOL_ID as CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_ID } from "@/tools/chicago-notes-bibliography-citation-generator/path";
 import { TOOL_ID as CITATION_STYLE_FINDER_ID } from "@/tools/citation-style-finder/path";
+import { TOOL_ID as IEEE_GENERATOR_ID } from "@/tools/ieee-citation-generator/path";
 import { TOOL_ID as MLA_GENERATOR_ID } from "@/tools/mla-citation-generator/path";
 
 /** Wording shared by every style page. */
@@ -41,6 +42,14 @@ export const publishedResources: Partial<Record<ProfiledStyleId, PublishedResour
       title: "Guides and generators for both Chicago systems",
       text: "Chicago has two separate systems, and a piece of writing uses one of them. Author-date cites sources in the text, as in (Yu 2020, 45), with a reference list at the end. Notes and bibliography cites them in footnotes or endnotes, with a bibliography at the end. Each has its own guide and generator.",
       meta: "Read the guides to Chicago's author-date and notes-and-bibliography systems, and format sources with a generator for each.",
+    },
+  },
+  ieee: {
+    systems: [{ tool: IEEE_GENERATOR_ID, guide: "ieee-citations-and-references" }],
+    coverage: {
+      title: "Guide and generator available",
+      text: "IEEE is a numeric style: a citation is a number in square brackets, such as [1], and references are numbered in the order they are first cited, not alphabetically. The generator formats books, journal articles, conference papers and web pages, and uses the reference number you give it, since only your paper shows the citation order. Other kinds of source, such as standards, patents and theses, aren't supported yet.",
+      meta: "Read the guide to IEEE's numbered citations and references, and format books, journal articles, conference papers and web pages with the generator.",
     },
   },
 };
