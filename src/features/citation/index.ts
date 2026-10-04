@@ -4,7 +4,7 @@ export { LocatorFields, type LocatorFieldLabels, type LocatorFieldsProps } from 
 export { MoreDetails } from "./more-details";
 export { Runs } from "./runs";
 export { runsHtml } from "./runs-html";
-export { blankDraft, isEmptyDraft, toSource, withSourceType, type SourceDraft } from "./source-draft";
+export { blankDraft, isEmptyDraft, toAnySource, toSource, withOfferedType, withSourceType, type SourceDraft } from "./source-draft";
 export { SourceFields, type SourceFieldLabels, type SourceFieldOptions, type SourceFieldsProps } from "./source-fields";
 export { useAnnounceWhenTyped, useCitationForm, type CitationFormOptions } from "./use-citation-form";
 export { ValidationIssues, type ValidationIssueLabels } from "./validation-issues";

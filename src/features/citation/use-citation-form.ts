@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import type { SourceRecord } from "@/knowledge/citation/source";
+import { SOURCE_TYPES, type AnySource, type AnySourceType, type SourceRecord } from "@/knowledge/citation/source";
 import { emptyAuthor, type AuthorDraft } from "./author-draft";
 import { firstFieldId } from "./author-fields";
-import { blankDraft, isEmptyDraft, toSource, withSourceType, type SourceDraft } from "./source-draft";
+import { blankDraft, isEmptyDraft, toAnySource, toSource, withOfferedType, type SourceDraft } from "./source-draft";
 
 /** How long typing must pause before an updated result is announced to screen readers. */
 const ANNOUNCE_AFTER_MS = 1000;
@@ -14,6 +14,8 @@ export interface CitationFormOptions<Kind extends string> {
   idPrefix: string;
   /** The locator kind selected when the form is new or cleared, or "" for none. */
   defaultLocator: Kind | "";
+  /** The source types the form offers. Defaults to the types every style supports. */
+  types?: readonly AnySourceType[];
 }
 
 /**
@@ -22,9 +24,9 @@ export interface CitationFormOptions<Kind extends string> {
  * newly added author, back to the add button when one is removed, and to the first
  * field when the form is cleared. Nothing is stored or sent anywhere.
  */
-export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator }: CitationFormOptions<Kind>) {
+export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator, types = SOURCE_TYPES }: CitationFormOptions<Kind>) {
   const nextKey = useRef(2);
-  const [draft, setDraft] = useState<SourceDraft>(() => blankDraft(1));
+  const [draft, setDraft] = useState<SourceDraft<AnySourceType>>(() => blankDraft(1));
   const [locatorKind, setLocatorKind] = useState<Kind | "">(defaultLocator);
   const [locatorValue, setLocatorValue] = useState("");
   const [announcement, setAnnouncement] = useState("");
@@ -35,7 +37,13 @@ export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator 
   const focusAuthorKey = useRef<number | null>(null);
   const focusFirstField = useRef(false);
 
-  const record = useMemo<SourceRecord | null>(() => (isEmptyDraft(draft) ? null : { source: toSource(draft), provenance: "user-entered" }), [draft]);
+  /** The source, for the styles every generator supports; null for an opt-in type such as a conference paper. */
+  const record = useMemo<SourceRecord | null>(
+    () => (isEmptyDraft(draft) || draft.type === "conference-paper" ? null : { source: toSource({ ...draft, type: draft.type }), provenance: "user-entered" }),
+    [draft],
+  );
+  /** The source, of any type in the model, for styles that format the opt-in types. */
+  const anySource = useMemo<AnySource | null>(() => (isEmptyDraft(draft) ? null : toAnySource(draft)), [draft]);
   const locator = useMemo<{ kind: Kind; value: string } | undefined>(
     () => (locatorKind && locatorValue.trim() ? { kind: locatorKind, value: locatorValue } : undefined),
     [locatorKind, locatorValue],
@@ -58,7 +66,7 @@ export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator 
     setTimeout(() => setAnnouncement(message), 50);
   };
 
-  const update = (changes: Partial<SourceDraft>) => {
+  const update = (changes: Partial<SourceDraft<AnySourceType>>) => {
     typed.current = true;
     setDraft((current) => ({ ...current, ...changes }));
   };
@@ -66,6 +74,7 @@ export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator 
   return {
     draft,
     record,
+    anySource,
     locator,
     locatorKind,
     locatorValue,
@@ -75,7 +84,7 @@ export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator 
     update,
     setType: (value: string) => {
       typed.current = true;
-      setDraft((current) => withSourceType(current, value));
+      setDraft((current) => withOfferedType(current, value, types));
     },
     updateAuthor: (changed: AuthorDraft) => update({ authors: draft.authors.map((author) => (author.key === changed.key ? changed : author)) }),
     addAuthor: () => {
@@ -102,13 +111,13 @@ export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator 
       announce(message);
     },
     /** Fills the form with an example, whose authors take fresh keys. */
-    loadExample: (example: (firstAuthorKey: number) => SourceDraft, exampleLocator: { kind: Kind; value: string }, message: string) => {
+    loadExample: (example: (firstAuthorKey: number) => SourceDraft<AnySourceType>, exampleLocator: { kind: Kind; value: string } | null, message: string) => {
       typed.current = false;
       const filled = example(nextKey.current);
       nextKey.current += filled.authors.length;
       setDraft(filled);
-      setLocatorKind(exampleLocator.kind);
-      setLocatorValue(exampleLocator.value);
+      setLocatorKind(exampleLocator?.kind ?? defaultLocator);
+      setLocatorValue(exampleLocator?.value ?? "");
       announce(message);
     },
     /** Whether the latest change came from typing; read by useAnnounceWhenTyped. */

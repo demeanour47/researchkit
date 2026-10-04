@@ -5,45 +5,10 @@
  * the results appear.
  */
 
-import { isBlank, isWebAddress, normalizeDoi, ordinal, type Contributor } from "../source";
-import { named, type NamedContributor } from "./names";
+import { isWebAddress, normalizeDoi, ordinal } from "../source";
 
-export type AuthorProblem =
-  | { code: "author-incomplete"; position: number }
-  | { code: "ambiguous-author"; position: number }
-  | { code: "unsupported-contributor-role"; position: number };
-
-/** A name typed in one field that looks like several names, or a name already inverted. */
-const looksAmbiguous = (text: string) => /[,;&]|\s(?:and|et al\.?)\s/iu.test(` ${text} `);
-/** Roles the source model can't represent: editors, translators, compilers. */
-const ROLE_WORDS = /\b(?:eds?|editors?|edited by|trans|translators?|translated by|comp|compilers?)\b\.?/iu;
-
-/** The authors that can be named, in order, and the problems found in the others. Blank entries are ignored. */
-export function chicagoAuthors(contributors: readonly Contributor[]): { authors: NamedContributor[]; problems: AuthorProblem[] } {
-  const authors: NamedContributor[] = [];
-  const problems: AuthorProblem[] = [];
-  contributors.forEach((author, index) => {
-    if (isBlank(author)) return;
-    const name = named(author);
-    if (!name) {
-      problems.push({ code: "author-incomplete", position: index + 1 });
-      return;
-    }
-    const typed = name.kind === "person" ? `${name.family} ${name.given}` : name.name;
-    if (ROLE_WORDS.test(typed)) problems.push({ code: "unsupported-contributor-role", position: index + 1 });
-    else if (name.kind === "person" && looksAmbiguous(typed)) problems.push({ code: "ambiguous-author", position: index + 1 });
-    authors.push(name);
-  });
-  return { authors, problems };
-}
-
-export const sameName = (a: string, b: string) => a.trim().toLocaleLowerCase("en") === b.trim().toLocaleLowerCase("en");
-
-/** The single author's name, when the work has exactly one author and it is an organization. */
-export function soleOrganization(authors: readonly NamedContributor[]): string | null {
-  const [only] = authors;
-  return authors.length === 1 && only.kind === "organization" ? only.name : null;
-}
+/** Author analysis and name comparison are shared by every style (source/authors.ts). */
+export { nameableAuthors as chicagoAuthors, sameName, soleOrganization, type AuthorProblem } from "../source/authors";
 
 export interface ChicagoLocation {
   /** The DOI link or URL to give, or null when neither is valid. */
