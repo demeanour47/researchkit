@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { mla9CitationsAndWorksCited as guide } from "../../../../content/guides/mla-9-citations-and-works-cited";
 import { plainText, type CitationLocator, type Contributor, type Source } from "../source";
-import { STYLE_MANUAL_REFERENCES, getReference } from "../../research/references";
+import { getReference } from "../../research/references";
 import { formatMla } from "./citation";
 
 const text = guide.sections.flatMap((section) => section.blocks.map((block) => JSON.stringify(block))).join(" ");
@@ -29,12 +29,10 @@ describe("MLA 9 guide", () => {
     assert.deepEqual(guide.relatedToolIds, ["mla-citation-generator", "citation-style-finder"]);
   });
 
-  it("uses every style manual in the registry, formatted as a group author", () => {
-    for (const reference of STYLE_MANUAL_REFERENCES) {
-      assert.ok(text.includes(`"${reference.id}"`), `${reference.id} is unused`);
-      assert.ok(reference.apa.startsWith(`${reference.cite.replace(/, \d{4}$/, "")}. (${reference.year}).`));
-      assert.equal(getReference(reference.id), reference);
-    }
+  it("cites the MLA Handbook from the registry, formatted as a group author", () => {
+    const reference = getReference("mla-2021");
+    assert.ok(text.includes(`"${reference.id}"`), `${reference.id} is unused`);
+    assert.ok(reference.apa.startsWith(`${reference.cite.replace(/, \d{4}$/, "")}. (${reference.year}).`));
   });
 
   it("shows exactly what the generator produces for its worked examples", () => {

@@ -371,6 +371,14 @@ export const STYLE_MANUAL_REFERENCES: readonly Reference[] = [
     year: 2021,
     apa: "Modern Language Association of America. (2021). *MLA handbook* (9th ed.).",
   },
+  {
+    // Checked against Open Library (ISBN 9780226817972): the 18th edition, published 2024 by the
+    // University of Chicago Press, whose editorial staff is its author; as author and publisher it isn't repeated.
+    id: "chicago-2024",
+    cite: "University of Chicago Press, 2024",
+    year: 2024,
+    apa: "University of Chicago Press. (2024). *The Chicago manual of style* (18th ed.).",
+  },
 ];
 
 /** The reference with this id. Throws for an unknown id. */

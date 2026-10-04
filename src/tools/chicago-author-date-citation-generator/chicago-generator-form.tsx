@@ -3,29 +3,29 @@
 import { useMemo } from "react";
 import { Button, VisuallyHidden, type CopyResult } from "@/ui";
 import { LocatorFields, SourceFields, useAnnounceWhenTyped, useCitationForm } from "@/features/citation";
-import { formatMla, issuesFor, provenanceIssue } from "@/knowledge/citation/mla";
+import { formatChicagoAuthorDate, issuesFor, provenanceIssue } from "@/knowledge/citation/chicago/author-date";
 import { plainText } from "@/knowledge/citation/source";
 import { actions, announcements, authorLabels, form, locator as locatorCopy, type CopyTarget } from "./copy";
-import { exampleDraft } from "./draft";
-import { MlaOutput } from "./mla-output";
+import { EXAMPLE_LOCATOR, exampleDraft } from "./draft";
+import { ChicagoOutput } from "./chicago-output";
 
-const ID_PREFIX = "mla";
+const ID_PREFIX = "chicago";
 
+/** Chicago author-date text citations take page numbers; other locators aren't formatted. */
 const locatorKinds = [
   { value: "page", label: locatorCopy.page },
   { value: "page-range", label: locatorCopy.pageRange },
-  { value: "paragraph", label: locatorCopy.paragraph },
 ] as const;
 
 /** The form and its live result. Everything runs in the browser; nothing is sent anywhere. */
-export function MlaGeneratorForm() {
+export function ChicagoGeneratorForm() {
   const state = useCitationForm<(typeof locatorKinds)[number]["value"]>({ idPrefix: ID_PREFIX, defaultLocator: "page" });
   const { record, locator } = state;
 
-  const citation = useMemo(() => (record ? formatMla(record, locator) : null), [record, locator]);
+  const citation = useMemo(() => (record ? formatChicagoAuthorDate(record, locator) : null), [record, locator]);
   const issues = useMemo(() => (citation && record ? [...issuesFor(citation.notes), provenanceIssue(record)] : []), [citation, record]);
   const toCheck = issues.filter((issue) => issue.severity !== "information").length;
-  useAnnounceWhenTyped(state, citation ? announcements.entryUpdated(plainText(citation.worksCited), toCheck) : null);
+  useAnnounceWhenTyped(state, citation ? announcements.referenceUpdated(plainText(citation.reference), toCheck) : null);
 
   const handleCopy = (target: CopyTarget, result: CopyResult) =>
     state.announce(result === "copied" ? announcements.copied(target) : announcements.copyFailed(target));
@@ -33,7 +33,7 @@ export function MlaGeneratorForm() {
   return (
     <div className="grid min-w-0 gap-10">
       <div className="flex flex-wrap gap-3">
-        <Button variant="secondary" size="sm" onClick={() => state.loadExample(exampleDraft, { kind: "page", value: "437" }, announcements.exampleLoaded)}>
+        <Button variant="secondary" size="sm" onClick={() => state.loadExample(exampleDraft, EXAMPLE_LOCATOR, announcements.exampleLoaded)}>
           {actions.loadExample}
         </Button>
         <Button variant="subtle" size="sm" onClick={() => state.clear(announcements.formCleared)}>
@@ -46,7 +46,7 @@ export function MlaGeneratorForm() {
         draft={state.draft}
         labels={form}
         authorLabels={authorLabels}
-        options={{ journalMonth: true, dateOrder: "day-month-year" }}
+        options={{ journalMonth: false, dateOrder: "month-day-year" }}
         addAuthorButton={state.addAuthorButton}
         onChange={state.update}
         onTypeChange={state.setType}
@@ -68,7 +68,7 @@ export function MlaGeneratorForm() {
       )}
 
       <div className={record ? "border-t border-border pt-8" : undefined}>
-        <MlaOutput citation={citation} issues={issues} onCopy={handleCopy} />
+        <ChicagoOutput citation={citation} issues={issues} onCopy={handleCopy} />
       </div>
       <VisuallyHidden role="status" aria-live="polite">
         {state.announcement}

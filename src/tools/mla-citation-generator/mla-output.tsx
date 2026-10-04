@@ -1,7 +1,7 @@
 "use client";
 
 import { CopyButton, type CopyResult } from "@/ui";
-import { Runs } from "@/features/citation";
+import { Runs, ValidationIssues } from "@/features/citation";
 import type { MlaCitation } from "@/knowledge/citation/mla";
 import type { ValidationIssue } from "@/knowledge/citation/source";
 import { copySubjects, decisionText, output, type CopyTarget } from "./copy";
@@ -15,22 +15,6 @@ export interface MlaOutputProps {
 }
 
 const panel = "grid min-w-0 content-start gap-2 rounded-panel border border-border bg-surface p-4";
-
-function IssueItem({ issue }: { issue: ValidationIssue }) {
-  return (
-    <li className="grid gap-1 rounded-panel border border-border bg-sunken p-3">
-      <p>
-        <span className="font-semibold">{output.severity[issue.severity]}:</span> {issue.message}
-      </p>
-      {issue.explanation && <p className="text-small text-text-muted">{issue.explanation}</p>}
-      {issue.action && (
-        <p className="text-small">
-          <span className="font-semibold">{output.action}:</span> {issue.action}
-        </p>
-      )}
-    </li>
-  );
-}
 
 /** The Works Cited entry, its in-text citations with copy buttons, how they were built, and what to check. */
 export function MlaOutput({ citation, issues, onCopy }: MlaOutputProps) {
@@ -56,8 +40,6 @@ export function MlaOutput({ citation, issues, onCopy }: MlaOutputProps) {
     />
   );
   const { narrative } = citation;
-  // The order matters to the reader: problems first, then the decisions that need no action.
-  const ordered = [...issues].sort((a, b) => rank[a.severity] - rank[b.severity]);
 
   return (
     <div className="grid min-w-0 gap-8">
@@ -110,18 +92,7 @@ export function MlaOutput({ citation, issues, onCopy }: MlaOutputProps) {
         </div>
       </section>
 
-      {ordered.length > 0 && (
-        <section aria-labelledby="issues-title" className="grid min-w-0 gap-3">
-          <h2 id="issues-title" className="text-heading font-semibold">
-            {output.issuesHeading}
-          </h2>
-          <ul className="grid gap-2">
-            {ordered.map((issue, index) => (
-              <IssueItem key={`${issue.code}-${index}`} issue={issue} />
-            ))}
-          </ul>
-        </section>
-      )}
+      <ValidationIssues issues={issues} headingId="issues-title" labels={{ heading: output.issuesHeading, severity: output.severity, action: output.action }} />
 
       <section aria-labelledby="decisions-title" className="grid min-w-0 gap-3">
         <h2 id="decisions-title" className="text-heading font-semibold">
@@ -137,7 +108,5 @@ export function MlaOutput({ citation, issues, onCopy }: MlaOutputProps) {
     </div>
   );
 }
-
-const rank: Record<ValidationIssue["severity"], number> = { error: 0, warning: 1, information: 2 };
 
 const unique = (texts: readonly string[]) => [...new Set(texts)];
