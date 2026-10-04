@@ -109,3 +109,4 @@ A **Proposed** ADR may be edited freely. An **Accepted** ADR is never rewritten 
 |---|---|---|
 | [0000](0000-product-vision.md) | Product Vision | Proposed |
 | [0001](0001-adr-process.md) | Record Architecture Decisions | Proposed |
+| [0006](0006-shared-citation-source-model.md) | Share One Citation Source Model Across Citation Styles | Proposed |

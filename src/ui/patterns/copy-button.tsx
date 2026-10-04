@@ -4,13 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../primitives/button";
 import { Icon } from "../primitives/icon";
 import { VisuallyHidden } from "../primitives/visually-hidden";
-import { copyText } from "./clipboard";
+import { copyRich, copyText } from "./clipboard";
 
 export type CopyResult = "copied" | "failed";
 
 export interface CopyButtonProps {
   /** Plain text to copy. */
   text: string;
+  /** The same content as HTML, so word processors keep formatting such as italics. Plain text is the fallback. */
+  html?: string;
   /** What is copied, completing the accessible name: "Copy" + " reference". */
   subject: string;
   /**
@@ -31,9 +33,10 @@ function selectContents(id: string) {
   if (element && selection) selection.selectAllChildren(element);
 }
 
-/** Copies plain text, confirms it on the button for a moment, and reports the result. */
+/** Copies plain text, or rich text with a plain fallback, confirms it on the button for a moment, and reports the result. */
 export function CopyButton({
   text,
+  html,
   subject,
   selectOnFailure,
   onResult,
@@ -47,7 +50,7 @@ export function CopyButton({
   useEffect(() => () => clearTimeout(timer.current), []);
 
   async function handleClick() {
-    const succeeded = await copyText(text);
+    const succeeded = html === undefined ? await copyText(text) : await copyRich(html, text);
     clearTimeout(timer.current);
     setCopied(succeeded);
     if (succeeded) {

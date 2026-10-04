@@ -12,9 +12,10 @@
  *   spaced full stops (". . ."); confirm at editorial review.
  */
 
-export type Contributor =
-  | { kind: "person"; family: string; given?: string }
-  | { kind: "organization"; name: string };
+import type { Contributor } from "../source/contributor";
+
+/** The contributor model is shared by every style (ADR-0006). */
+export { isBlank, type Contributor } from "../source/contributor";
 
 export const MAX_LISTED_AUTHORS = 20;
 export const AUTHOR_ELLIPSIS = ". . .";
@@ -59,13 +60,6 @@ export function referenceName(contributor: Contributor): string | null {
 /** The name as it appears in an in-text citation: a family name, or an organization in full. */
 export function citationName(contributor: Contributor): string | null {
   return contributor.kind === "organization" ? contributor.name.trim() || null : contributor.family.trim() || null;
-}
-
-/** Whether an entry has anything in it at all. Blank entries are ignored rather than reported. */
-export function isBlank(contributor: Contributor): boolean {
-  return contributor.kind === "organization"
-    ? contributor.name.trim() === ""
-    : contributor.family.trim() === "" && (contributor.given ?? "").trim() === "";
 }
 
 export function formatAuthorList(names: readonly string[]): string {

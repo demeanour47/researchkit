@@ -357,9 +357,25 @@ export const GROUP_REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * Style manuals cited by the citation guides, as the authority for the rules a
+ * guide teaches. The guides' tests check each one is used.
+ */
+export const STYLE_MANUAL_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Open Library (ISBN 9781603293518): published April 2021 by the MLA. The MLA's
+    // own citation of the Handbook (style.mla.org/citing-mla-handbook-ninth-edition/) gives the
+    // publisher as the Modern Language Association of America; as author and publisher it isn't repeated.
+    id: "mla-2021",
+    cite: "Modern Language Association of America, 2021",
+    year: 2021,
+    apa: "Modern Language Association of America. (2021). *MLA handbook* (9th ed.).",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }

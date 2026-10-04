@@ -24,49 +24,11 @@
 import { editionLabel, formatPages, isWebAddress, normalizeDoi } from "./identifiers";
 import { citationName, formatAuthorList, isBlank, MAX_LISTED_AUTHORS, referenceName, type Contributor } from "./names";
 import { endsWithTerminalPunctuation, italic, mergeRuns, placeholder, plain, type Run } from "./runs";
+import { MONTHS, daysInMonth, isWholeNumberIn, type Source } from "../source";
 
-export type SourceType = "book" | "journal-article" | "webpage";
-
-export interface PublicationDate {
-  year?: number;
-  /** 1–12. Used for web pages only. */
-  month?: number;
-  /** Used for web pages only, and only with a month. */
-  day?: number;
-}
-
-interface CommonSource {
-  authors: readonly Contributor[];
-  date: PublicationDate;
-  title: string;
-}
-
-export interface BookSource extends CommonSource {
-  type: "book";
-  edition?: string;
-  publisher?: string;
-  doi?: string;
-  url?: string;
-}
-
-export interface JournalArticleSource extends CommonSource {
-  type: "journal-article";
-  journal: string;
-  volume?: string;
-  issue?: string;
-  pages?: string;
-  articleNumber?: string;
-  doi?: string;
-  url?: string;
-}
-
-export interface WebpageSource extends CommonSource {
-  type: "webpage";
-  siteName?: string;
-  url: string;
-}
-
-export type Source = BookSource | JournalArticleSource | WebpageSource;
+/** The source model is shared by every style (ADR-0006); APA uses the fields below and ignores the rest. */
+export type { BookSource, JournalArticleSource, PublicationDate, Source, SourceType, WebpageSource } from "../source";
+export { MONTHS } from "../source";
 
 export type RequiredField = "title" | "publisher" | "journal" | "url";
 
@@ -94,21 +56,6 @@ export interface Citation {
   narrative: Run[];
   notes: Note[];
 }
-
-export const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-] as const;
-
-const isLeapYear = (year: number) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-
-function daysInMonth(year: number, month: number): number {
-  if (month === 2) return isLeapYear(year) ? 29 : 28;
-  return [4, 6, 9, 11].includes(month) ? 30 : 31;
-}
-
-const isWholeNumberIn = (value: number | undefined, min: number, max: number): value is number =>
-  value !== undefined && Number.isInteger(value) && value >= min && value <= max;
 
 /** The date as it appears inside the parentheses: "2020", "2020, March 5" or "n.d.". */
 function dateLabel(source: Source, notes: Note[]): { label: string; year: string } {

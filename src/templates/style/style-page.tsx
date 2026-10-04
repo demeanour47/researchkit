@@ -4,18 +4,32 @@ import { STYLES_INDEX_PATH, getStyleProfile, type ProfiledStyleId } from "@/doma
 import { CatalogueCard } from "@/features/catalogue";
 import { Breadcrumbs } from "@/features/site";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
-import { stylePageCopy as copy, usefulNowIds } from "./copy";
+import { publishedResources, stylePageCopy as copy, usefulNowIds } from "./copy";
 
-const usefulNowTool = TOOLS.find((tool) => tool.id === usefulNowIds.tool);
-const usefulNowGuide = GUIDE_LISTINGS.find((guide) => guide.id === usefulNowIds.guide);
+const availableTool = (id: string) => TOOLS.find((tool) => tool.id === id && tool.status === "available");
+const availableGuide = (id: string) => GUIDE_LISTINGS.find((guide) => guide.id === id && guide.status === "available");
 
-/** A citation style's page: what it is, where it's used, and what to use until its full guide is published. */
+/** The style's own guide and generator, when both are published. */
+function published(style: ProfiledStyleId): { tool: CatalogueItem; guide: CatalogueItem } | null {
+  const ids = publishedResources[style];
+  const tool = ids && availableTool(ids.tool);
+  const guide = ids && availableGuide(ids.guide);
+  return tool && guide ? { tool, guide } : null;
+}
+
+/** Whether the style's page can link to a published guide and generator. */
+export const hasPublishedResources = (style: ProfiledStyleId) => published(style) !== null;
+
+/** A citation style's page: what it is, where it's used, and its guide and generator, or what to use until they are published. */
 export function StylePage({ style }: { style: ProfiledStyleId }) {
   const profile = getStyleProfile(style);
   const facts = CITATION_STYLES[style];
+  const resources = published(style);
+  const tool = resources?.tool ?? availableTool(usefulNowIds.tool);
+  const guide = resources?.guide ?? availableGuide(usefulNowIds.guide);
   const usefulNow: [CatalogueItem, "tool" | "guide"][] = [
-    ...(usefulNowTool ? [[usefulNowTool, "tool"] as [CatalogueItem, "tool"]] : []),
-    ...(usefulNowGuide ? [[usefulNowGuide, "guide"] as [CatalogueItem, "guide"]] : []),
+    ...(tool ? [[tool, "tool"] as [CatalogueItem, "tool"]] : []),
+    ...(guide ? [[guide, "guide"] as [CatalogueItem, "guide"]] : []),
   ];
 
   return (
@@ -43,9 +57,15 @@ export function StylePage({ style }: { style: ProfiledStyleId }) {
           </div>
         </Card>
 
-        <Callout tone="info" icon="hourglass" title={copy.status}>
-          {copy.comingSoon(facts.name)}
-        </Callout>
+        {resources ? (
+          <Callout tone="info" title={copy.published}>
+            {copy.publishedText(facts.name)}
+          </Callout>
+        ) : (
+          <Callout tone="info" icon="hourglass" title={copy.status}>
+            {copy.comingSoon(facts.name)}
+          </Callout>
+        )}
 
         {usefulNow.length > 0 && (
           <Section labelledBy="useful-now-title" spacing="compact">
