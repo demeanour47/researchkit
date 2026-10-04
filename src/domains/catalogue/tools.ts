@@ -8,6 +8,11 @@ import { page as apaGenerator } from "@/tools/apa-citation-generator/copy";
 import { page as characterCounter } from "@/tools/character-counter/copy";
 import { TOOL_ID as CHARACTER_COUNTER_ID, TOOL_PATH as CHARACTER_COUNTER_PATH } from "@/tools/character-counter/path";
 import { TOOL_ID as APA_GENERATOR_ID, TOOL_PATH as APA_GENERATOR_PATH } from "@/tools/apa-citation-generator/path";
+import { page as chicagoAuthorDateGenerator } from "@/tools/chicago-author-date-citation-generator/copy";
+import {
+  TOOL_ID as CHICAGO_AUTHOR_DATE_GENERATOR_ID,
+  TOOL_PATH as CHICAGO_AUTHOR_DATE_GENERATOR_PATH,
+} from "@/tools/chicago-author-date-citation-generator/path";
 import { page as mlaGenerator } from "@/tools/mla-citation-generator/copy";
 import { TOOL_ID as MLA_GENERATOR_ID, TOOL_PATH as MLA_GENERATOR_PATH } from "@/tools/mla-citation-generator/path";
 import { page as referenceChecker } from "@/tools/reference-checker/copy";
@@ -147,7 +152,16 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: MLA_GENERATOR_PATH,
   },
-  comingSoon("chicago-citation-generator", "Chicago Citation Generator", "Formats notes, bibliographies and author–date citations in Chicago Style, 18th edition.", "citation"),
+  {
+    id: CHICAGO_AUTHOR_DATE_GENERATOR_ID,
+    name: chicagoAuthorDateGenerator.title,
+    description: chicagoAuthorDateGenerator.summary,
+    category: "citation",
+    family: "citation",
+    status: "available",
+    href: CHICAGO_AUTHOR_DATE_GENERATOR_PATH,
+  },
+  comingSoon("chicago-notes-bibliography-citation-generator", "Chicago Notes-Bibliography Citation Generator", "Formats footnotes and bibliography entries in Chicago style, 18th edition.", "citation"),
   comingSoon("ieee-citation-generator", "IEEE Citation Generator", "Formats numbered references in IEEE Style.", "citation"),
   comingSoon("harvard-citation-generator", "Harvard Citation Generator", "Formats author–date references in Harvard style.", "citation"),
   {

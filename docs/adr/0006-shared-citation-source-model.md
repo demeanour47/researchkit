@@ -32,7 +32,8 @@ We will keep the style-neutral citation concepts in `src/knowledge/citation/sour
 - **APA compatibility.** The modules under `apa/` and `workflow.ts` re-export the moved concepts, so every existing import and test is unchanged and APA output is identical.
 - **The model grows additively.** Fields describe the work, not a style's output. A style uses the fields it needs and ignores the rest. Sprint 44 adds `publisher?` and `accessed?` to `WebpageSource` for MLA; APA ignores both.
 - **One validation shape.** `ValidationIssue` gains optional `explanation` and `action` fields, so a style can say what is wrong, why it matters and what to do, without a second issue model.
-- **Shared form pieces.** The author draft, author fields and run renderer used by every generator live in `src/features/citation/`; each style supplies its own wording.
+- **Shared form pieces.** Everything a generator's form needs that doesn't depend on a style lives in `src/features/citation/`: the source draft and its conversion to `Source`, the form state (authors, focus, clearing, examples, locator, announcements), the source and locator fields, the run renderer, rich-copy HTML and the validation issue list. Each style supplies its own wording, which fields it shows, which locators it formats, its example and its output.
+- **Style families.** A style with more than one system keeps the rules its systems share in one folder and each system's formatter in its own subfolder: `chicago/` holds Chicago's author names, inclusive numbers and dates, and `chicago/author-date/` the author-date formatter (Sprint 45). Notes and bibliography will be added as `chicago/notes-bibliography/` beside it.
 
 This decision covers the knowledge-layer boundary and the shared generator interface pieces. It does not cover saving references, collections of references, or the Reference Checker's parser, which remains APA-specific.
 
@@ -44,7 +45,7 @@ This decision covers the knowledge-layer boundary and the shared generator inter
 
 ## Consequences
 
-- MLA, and later Chicago, IEEE and Harvard, format the same `Source` without depending on one another.
+- MLA and Chicago author-date, and later IEEE, Harvard and Chicago notes and bibliography, format the same `Source` without depending on one another. A new generator is mostly its formatter, its wording and its output.
 - `apa/` keeps thin re-export modules for compatibility. New code imports from `source/`; the re-exports can be removed in a later change once nothing uses those paths.
 - A change to `source/` affects every style, so it needs tests in every style it touches. Changing the meaning of an existing field requires a new ADR.
 - The shared model now carries fields that some styles ignore. Each style's tests must show that unused fields don't change its output.

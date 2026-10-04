@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getStyleProfile, parseProfiledStyle, profiledStyles } from "@/domains/publishing";
 import { CITATION_STYLES } from "@/knowledge/citation/styles";
-import { StylePage, hasPublishedResources, stylePageCopy } from "@/templates/style";
+import { StylePage, publishedMeta, stylePageCopy } from "@/templates/style";
 
 interface StyleRouteProps {
   params: Promise<{ style: string }>;
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: StyleRouteProps): Promise<Met
   const style = parseProfiledStyle((await params).style);
   if (!style) return {};
   const { name } = CITATION_STYLES[style];
-  return { title: name, description: stylePageCopy.metaDescription(name, getStyleProfile(style).summary, hasPublishedResources(style)) };
+  return { title: name, description: stylePageCopy.metaDescription(name, getStyleProfile(style).summary, publishedMeta(style)) };
 }
 
 export default async function StyleRoute({ params }: StyleRouteProps) {
