@@ -23,6 +23,8 @@ describe("sentence boundaries", () => {
     ["e.g. and i.e.", "Some methods, e.g. Bayesian ones, i.e. those with priors, differ.", 1],
     ["e.g. before a capital", "Use a style, e.g. APA, consistently.", 1],
     ["figure and table labels", "See Fig. 3 and Table 2. No. 4 is missing.", 2],
+    ["a number label without a number is a word", "Yes. No. Maybe.", 3],
+    ["a page range after pp.", "See pp. 12–14. Then stop.", 2],
     ["page abbreviations", "This is covered on pp. 12–14 of the report.", 1],
     ["vs.", "The model vs. Baseline comparison was close.", 1],
     ["initialisms", "Studies in the U.S. and the U.K. agreed.", 1],

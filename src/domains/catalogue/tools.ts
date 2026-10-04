@@ -88,6 +88,8 @@ import {
 } from "@/tools/research-objectives-generator/path";
 import { page as paragraphCounter } from "@/tools/paragraph-counter/copy";
 import { page as sentenceCounter } from "@/tools/sentence-counter/copy";
+import { page as readabilityChecker } from "@/tools/readability-checker/copy";
+import { TOOL_ID as READABILITY_CHECKER_ID, TOOL_PATH as READABILITY_CHECKER_PATH } from "@/tools/readability-checker/path";
 import { TOOL_ID as SENTENCE_COUNTER_ID, TOOL_PATH as SENTENCE_COUNTER_PATH } from "@/tools/sentence-counter/path";
 import { TOOL_ID as PARAGRAPH_COUNTER_ID, TOOL_PATH as PARAGRAPH_COUNTER_PATH } from "@/tools/paragraph-counter/path";
 import { page as textStatistics } from "@/tools/text-statistics/copy";
@@ -265,8 +267,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: SENTENCE_COUNTER_PATH,
   },
-  // Planned text tools belong to the text-analysis family, so related-tool lists show them as coming soon.
-  { ...comingSoon("readability-checker", "Readability Checker", "Scores how easy your text is to read, using established readability formulas.", "writing"), family: "text-analysis" },
+  {
+    id: READABILITY_CHECKER_ID,
+    name: readabilityChecker.title,
+    description: readabilityChecker.summary,
+    category: "writing",
+    family: "text-analysis",
+    status: "available",
+    href: READABILITY_CHECKER_PATH,
+  },
 
   {
     id: SAMPLE_SIZE_CALCULATOR_ID,

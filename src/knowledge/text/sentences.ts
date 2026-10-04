@@ -13,7 +13,8 @@
  *   - the next word begins with a lowercase letter, as after "e.g. the", an ellipsis
  *     that continues ("unclear... however") or a quoted question ("Why?" she asked);
  *   - the word before it is an abbreviation that precedes what it refers to, such as
- *     Dr. or Fig. (ABBREVIATIONS), a single initial (J. Smith) or an initialism (U.S.);
+ *     Dr. or e.g. (ABBREVIATIONS), a label such as Fig. or No. followed by a number
+ *     (NUMBER_LABELS), a single initial (J. Smith) or an initialism (U.S.);
  *   - it follows a number at the very start of a paragraph, as in a numbered list.
  * - A sentence never crosses a paragraph break. Paragraphs end at blank lines or at
  *   every line break, as in the Paragraph Counter; a single line break inside a
@@ -43,16 +44,20 @@ import { average, countWords, hasLetterOrNumber } from "./text-statistics";
 
 /**
  * Abbreviations that precede the word they refer to, so a full stop after them
- * doesn't end a sentence: titles before names, and labels before numbers or examples
- * that academic writing uses constantly. Kept small on purpose; compared without case.
+ * doesn't end a sentence: titles before names, and Latin abbreviations academic
+ * writing uses constantly. Kept small on purpose; compared without case.
  */
-export const ABBREVIATIONS: readonly string[] = [
-  "dr", "mr", "mrs", "ms", "prof", "st",
-  "e.g", "i.e", "cf", "vs", "viz", "approx", "ca",
-  "fig", "figs", "eq", "eqs", "no", "nos", "vol", "vols", "p", "pp", "ch", "sec", "para",
-];
+export const ABBREVIATIONS: readonly string[] = ["dr", "mr", "mrs", "ms", "prof", "st", "e.g", "i.e", "cf", "vs", "viz", "approx", "ca"];
+
+/**
+ * Labels that precede a number, as in "Fig. 3" or "pp. 12–14". A full stop after one
+ * doesn't end a sentence when a number follows; otherwise it may ("Yes. No. Maybe.").
+ */
+export const NUMBER_LABELS: readonly string[] = ["fig", "figs", "eq", "eqs", "no", "nos", "vol", "vols", "p", "pp", "ch", "sec", "para"];
 
 const ABBREVIATION_SET = new Set(ABBREVIATIONS);
+const NUMBER_LABEL_SET = new Set(NUMBER_LABELS);
+const STARTS_WITH_NUMBER = /^[([]*\d/u;
 
 /** A run of end punctuation, any closing quotes or brackets, then a space or the end. */
 const CANDIDATE = /[.!?…]+[)\]"'”’»]*(?=\s|$)/gu;
@@ -102,7 +107,9 @@ function endsSentence(paragraph: string, start: number, end: number, sentenceSta
   const marks = paragraph.slice(start, end).replace(/[)\]"'”’»]+$/u, "");
   if (marks !== ".") return true;
   const before = wordBefore(paragraph, start);
-  if (ABBREVIATION_SET.has(before.toLocaleLowerCase("en"))) return false;
+  const abbreviation = before.toLocaleLowerCase("en");
+  if (ABBREVIATION_SET.has(abbreviation)) return false;
+  if (NUMBER_LABEL_SET.has(abbreviation) && STARTS_WITH_NUMBER.test(following)) return false;
   if (SINGLE_INITIAL.test(before) || INITIALISM.test(before)) return false;
   // A number opening the paragraph is a list number ("1. Introduction"), not a sentence.
   if (NUMBER.test(before) && paragraph.slice(sentenceStart, start).trim() === before) return false;

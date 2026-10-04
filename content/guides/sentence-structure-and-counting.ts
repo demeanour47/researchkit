@@ -126,7 +126,7 @@ export const sentenceStructureAndCounting: Guide = {
       id: "abbreviations",
       heading: "Abbreviations and sentence boundaries",
       blocks: [
-        { type: "paragraph", text: "Academic writing is full of abbreviations that end with a full stop: Dr., Prof., e.g., i.e., Fig., No., pp. A full stop after them usually doesn't end the sentence. The Sentence Counter recognizes a short list of these, single initials as in J. Smith, and initialisms such as U.S." },
+        { type: "paragraph", text: "Academic writing is full of abbreviations that end with a full stop: Dr., Prof., e.g., i.e., Fig., No., pp. A full stop after them usually doesn't end the sentence. The Sentence Counter recognizes a short list of these, single initials as in J. Smith, and initialisms such as U.S. Labels such as Fig., No. and pp. are treated as abbreviations only when a number follows, so “No.” on its own can still end a sentence." },
         { type: "paragraph", text: "When an abbreviation genuinely ends a sentence, as in “…in the U.K.”, the counter can't tell and joins it to the next sentence. “Etc.” and “et al.” are treated as sentence endings when a capital letter follows, which is usually, but not always, right." },
       ],
     },
