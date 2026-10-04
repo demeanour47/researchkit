@@ -1,35 +1,19 @@
 import { formatPages, normalizeDoi } from "./apa/identifiers";
 import { referenceName } from "./apa/names";
-import { formatCitation, type Citation, type Note, type Source } from "./apa/reference";
+import { formatCitation, type Citation, type Note } from "./apa/reference";
 import { plain, type Run } from "./apa/runs";
+import type { CitationLocator, CitationRequest, SourceRecord, ValidationIssue, ValidationSeverity } from "./source/record";
 
-export type CitationMode = "paraphrase" | "direct-quotation";
-export type LocatorKind = "page" | "page-range" | "paragraph" | "section";
-
-export interface CitationLocator {
-  kind: LocatorKind;
-  value: string;
-}
-
-export interface SourceRecord {
-  source: Source;
-  /** Metadata supplied by the researcher has not been checked against an external source. */
-  provenance: "user-entered" | "verified";
-}
-
-export interface CitationRequest {
-  record: SourceRecord;
-  mode: CitationMode;
-  locator?: CitationLocator;
-}
-
-export type ValidationSeverity = "error" | "warning" | "information";
-
-export interface ValidationIssue {
-  code: string;
-  severity: ValidationSeverity;
-  message: string;
-}
+/** The record, request, locator and validation shapes are shared by every style (ADR-0006). */
+export type {
+  CitationLocator,
+  CitationMode,
+  CitationRequest,
+  LocatorKind,
+  SourceRecord,
+  ValidationIssue,
+  ValidationSeverity,
+} from "./source/record";
 
 export interface FormattedReference {
   citation: Citation;

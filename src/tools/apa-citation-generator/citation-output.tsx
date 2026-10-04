@@ -1,26 +1,11 @@
 "use client";
 
-import { Fragment } from "react";
 import { CopyButton, type CopyResult } from "@/ui";
-import type { Citation, Run } from "@/knowledge/citation/apa";
+import { Runs } from "@/features/citation";
+import type { Citation } from "@/knowledge/citation/apa";
 import { copySubjects } from "./announcements";
 import { noteText, output } from "./copy";
 import { copyTexts, type CopyTarget } from "./copy-texts";
-
-/** Formatted runs: italics as italics, and missing information shown as bracketed placeholders. */
-function Runs({ runs }: { runs: readonly Run[] }) {
-  return runs.map((run, index) =>
-    run.italic ? (
-      <i key={index}>{run.text}</i>
-    ) : run.placeholder ? (
-      <span key={index} className="text-text-muted">
-        {run.text}
-      </span>
-    ) : (
-      <Fragment key={index}>{run.text}</Fragment>
-    ),
-  );
-}
 
 export interface CitationOutputProps {
   /** Null until something has been entered, so an empty form shows guidance instead of placeholders. */

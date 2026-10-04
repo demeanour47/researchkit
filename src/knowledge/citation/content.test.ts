@@ -13,6 +13,6 @@ describe("APA 7 citation guide", () => {
 
   it("contains teaching examples without claiming synthetic metadata is verified", () => {
     for (const phrase of ["Smith (2024)", "World Health Organization", "p. 12", "doi.org", "synthetic examples", "not externally verified"]) assert.ok(text.includes(phrase), phrase);
-    assert.deepEqual(apa7CitationsAndReferences.relatedToolIds, ["apa-citation-generator"]);
+    assert.deepEqual(apa7CitationsAndReferences.relatedToolIds, ["apa-citation-generator", "reference-checker"]);
   });
 });

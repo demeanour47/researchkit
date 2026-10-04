@@ -21,7 +21,7 @@ export interface DataTableProps {
 export function DataTable({ caption, columns, rows, numeric = [], id }: DataTableProps) {
   const labelId = id ?? captionId("table", caption);
   return (
-    <div role="region" aria-labelledby={labelId} tabIndex={0} className="overflow-x-auto rounded-panel border border-border bg-surface focus-ring">
+    <div role="region" aria-labelledby={labelId} tabIndex={0} className="relative overflow-x-auto rounded-panel border border-border bg-surface focus-ring">
       <table className="w-full min-w-max border-collapse text-small">
         <caption id={labelId} className="px-4 pt-3 pb-2 text-start font-semibold">
           {caption}
