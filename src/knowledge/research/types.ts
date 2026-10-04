@@ -49,7 +49,7 @@ export interface Reference {
   /** The parenthetical in-text form without brackets, such as "Saunders et al., 2019". */
   cite: string;
   year: number;
-  /** The APA reference without its DOI. The italic part is wrapped in asterisks. */
+  /** The APA reference without its DOI. The italic part is wrapped in asterisks; a literal asterisk, as in "G*Power", is escaped with a backslash. */
   apa: string;
   /** The DOI, without "https://doi.org/", where one exists. */
   doi?: string;

@@ -6,7 +6,7 @@
 
 import { EVIDENCE_LABELS, FIT_LABELS, SUMMARY_LABELS, SUMMARY_TEXT } from "./labels";
 import type { OnionSummary } from "./recommendation";
-import { doiUrl, getReference, referenceMarkdown, referenceText } from "./references";
+import { doiUrl, getReference, referenceMarkdown, referenceRuns, referenceText } from "./references";
 import { findOption } from "./research-onion";
 import type { Judgement, Reference } from "./types";
 import { LAYER_ORDER } from "./types";
@@ -147,9 +147,8 @@ export function escapeHtml(text: string): string {
 }
 
 function referenceHtml(reference: Reference): string {
-  const body = reference.apa
-    .split("*")
-    .map((part, index) => (index % 2 === 1 ? `<i>${escapeHtml(part)}</i>` : escapeHtml(part)))
+  const body = referenceRuns(reference)
+    .map((run) => (run.italic ? `<i>${escapeHtml(run.text)}</i>` : escapeHtml(run.text)))
     .join("");
   if (!reference.doi) return body;
   const url = escapeHtml(doiUrl(reference.doi));

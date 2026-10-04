@@ -105,6 +105,8 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
 
   published("how-to-choose-a-statistical-test", "statistics"),
   published("spss-from-data-preparation-to-reporting", "statistics"),
+  published("power-analysis", "statistics"),
+  published("confidence-intervals", "statistics"),
   comingSoon("what-a-p-value-tells-you", "What a p-value tells you", "What a p-value means, and the common ways it is misread.", "statistics"),
   comingSoon("how-to-report-statistics-in-apa", "How to report statistics in APA Style", "How to present test results, effect sizes and confidence intervals.", "statistics"),
 

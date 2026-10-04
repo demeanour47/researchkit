@@ -451,26 +451,145 @@ export const READABILITY_REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * Sources for the power analysis methods, cited by the power analysis guide alongside
+ * Cohen (1988) from the statistics references. Each was checked against Crossref.
+ */
+export const POWER_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Crossref (DOI 10.3758/BF03193146): authors, title, volume 39, issue 2, pages 175–191.
+    id: "faul-2007",
+    cite: "Faul et al., 2007",
+    year: 2007,
+    apa: "Faul, F., Erdfelder, E., Lang, A.-G., & Buchner, A. (2007). G\\*Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences. *Behavior Research Methods, 39*(2), 175–191.",
+    doi: "10.3758/BF03193146",
+  },
+  {
+    // Checked against Crossref (DOI 10.3758/BRM.41.4.1149): authors, title, volume 41, issue 4, pages 1149–1160.
+    id: "faul-2009",
+    cite: "Faul et al., 2009",
+    year: 2009,
+    apa: "Faul, F., Erdfelder, E., Buchner, A., & Lang, A.-G. (2009). Statistical power analyses using G\\*Power 3.1: Tests for correlation and regression analyses. *Behavior Research Methods, 41*(4), 1149–1160.",
+    doi: "10.3758/BRM.41.4.1149",
+  },
+  {
+    // Checked against Crossref (DOI 10.1198/000313001300339897): authors, title, volume 55, issue 1, pages 19–24.
+    id: "hoenig-heisey-2001",
+    cite: "Hoenig & Heisey, 2001",
+    year: 2001,
+    apa: "Hoenig, J. M., & Heisey, D. M. (2001). The abuse of power: The pervasive fallacy of power calculations for data analysis. *The American Statistician, 55*(1), 19–24.",
+    doi: "10.1198/000313001300339897",
+  },
+];
+
+/**
+ * Sources for the confidence interval methods and their interpretation, cited by the
+ * confidence intervals guide. Each article was checked against Crossref unless its
+ * comment says otherwise. Student (1908) is a pseudonym and Newcombe's two 1998
+ * papers carry year suffixes, so this group's format is tested with the guide.
+ */
+export const CONFIDENCE_INTERVAL_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Crossref (DOI 10.2307/2331554): author "Student", Biometrika volume 6, issue 1, first page 1.
+    // Crossref doesn't record the last page; 1–25 is the range consistently cited. Reviewer: confirm the last page.
+    id: "student-1908",
+    cite: "Student, 1908",
+    year: 1908,
+    apa: "Student. (1908). The probable error of a mean. *Biometrika, 6*(1), 1–25.",
+    doi: "10.2307/2331554",
+  },
+  {
+    // Checked against Crossref (DOI 10.1093/biomet/34.1-2.28): author, volume 34, issue 1–2, pages 28–35. Crossref's
+    // title misspells "variances" as "varlances"; the article's title is given here.
+    id: "welch-1947",
+    cite: "Welch, 1947",
+    year: 1947,
+    apa: "Welch, B. L. (1947). The generalization of “Student's” problem when several different population variances are involved. *Biometrika, 34*(1–2), 28–35.",
+    doi: "10.1093/biomet/34.1-2.28",
+  },
+  {
+    // Checked against Crossref (DOI 10.1080/01621459.1927.10502953): author, title, volume 22, issue 158, pages 209–212.
+    id: "wilson-1927",
+    cite: "Wilson, 1927",
+    year: 1927,
+    apa: "Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. *Journal of the American Statistical Association, 22*(158), 209–212.",
+    doi: "10.1080/01621459.1927.10502953",
+  },
+  {
+    // Checked against Crossref: author, title, volume 17, issue 8, pages 857–872. The DOI is a legacy SICI.
+    id: "newcombe-1998a",
+    cite: "Newcombe, 1998a",
+    year: 1998,
+    apa: "Newcombe, R. G. (1998a). Two-sided confidence intervals for the single proportion: Comparison of seven methods. *Statistics in Medicine, 17*(8), 857–872.",
+    doi: "10.1002/(SICI)1097-0258(19980430)17:8<857::AID-SIM777>3.0.CO;2-E",
+  },
+  {
+    // Checked against Crossref: author, title, volume 17, issue 8, pages 873–890. The DOI is a legacy SICI.
+    id: "newcombe-1998b",
+    cite: "Newcombe, 1998b",
+    year: 1998,
+    apa: "Newcombe, R. G. (1998b). Interval estimation for the difference between independent proportions: Comparison of eleven methods. *Statistics in Medicine, 17*(8), 873–890.",
+    doi: "10.1002/(SICI)1097-0258(19980430)17:8<873::AID-SIM779>3.0.CO;2-I",
+  },
+  {
+    // Checked against Crossref (DOI 10.1177/0962280211415469): authors, title, volume 24, issue 2, pages 224–254. Published
+    // online in 2011; APA uses the year of the issue, 2015.
+    id: "fagerland-2015",
+    cite: "Fagerland et al., 2015",
+    year: 2015,
+    apa: "Fagerland, M. W., Lydersen, S., & Laake, P. (2015). Recommended confidence intervals for two independent binomial proportions. *Statistical Methods in Medical Research, 24*(2), 224–254.",
+    doi: "10.1177/0962280211415469",
+  },
+  {
+    // Metron has no DOIs, so this couldn't be checked against Crossref. Volume 1, pages 3–32, is how the statistical
+    // literature consistently cites it. Reviewer: confirm against the original.
+    id: "fisher-1921",
+    cite: "Fisher, 1921",
+    year: 1921,
+    apa: "Fisher, R. A. (1921). On the “probable error” of a coefficient of correlation deduced from a small sample. *Metron, 1*, 3–32.",
+  },
+  {
+    // Checked against Crossref (DOI 10.3758/s13423-013-0572-3): authors, title, volume 21, issue 5, pages 1157–1164.
+    id: "hoekstra-2014",
+    cite: "Hoekstra et al., 2014",
+    year: 2014,
+    apa: "Hoekstra, R., Morey, R. D., Rouder, J. N., & Wagenmakers, E.-J. (2014). Robust misinterpretation of confidence intervals. *Psychonomic Bulletin & Review, 21*(5), 1157–1164.",
+    doi: "10.3758/s13423-013-0572-3",
+  },
+  {
+    // Checked against Crossref (DOI 10.1177/0956797613504966): author, title and subtitle, volume 25, issue 1, pages 7–29.
+    id: "cumming-2014",
+    cite: "Cumming, 2014",
+    year: 2014,
+    apa: "Cumming, G. (2014). The new statistics: Why and how. *Psychological Science, 25*(1), 7–29.",
+    doi: "10.1177/0956797613504966",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES, ...POWER_REFERENCES, ...CONFIDENCE_INTERVAL_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }
 
 export const doiUrl = (doi: string) => `https://doi.org/${doi}`;
 
+/** An asterisk that marks italics: one not escaped with a backslash, as the asterisk in "G*Power" is. */
+const ITALIC_MARK = /(?<!\\)\*/;
+const unescapeAsterisks = (text: string) => text.replaceAll("\\*", "*");
+
 /** A reference as text runs, so the italic part can be shown in italics. The DOI is not included. */
 export function referenceRuns(reference: Reference): { text: string; italic: boolean }[] {
   return reference.apa
-    .split("*")
-    .map((text, index) => ({ text, italic: index % 2 === 1 }))
+    .split(ITALIC_MARK)
+    .map((text, index) => ({ text: unescapeAsterisks(text), italic: index % 2 === 1 }))
     .filter((run) => run.text.length > 0);
 }
 
 /** The full reference in plain text, with its DOI as a link. */
 export function referenceText(reference: Reference): string {
-  const text = reference.apa.replaceAll("*", "");
+  const text = referenceRuns(reference).map((run) => run.text).join("");
   return reference.doi ? `${text} ${doiUrl(reference.doi)}` : text;
 }
 
