@@ -99,6 +99,7 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
     [WORD_COUNTER_ID],
   ),
   published("how-to-count-characters-in-academic-writing", "writing"),
+  published("paragraph-structure-and-counting", "writing"),
 
   published("how-to-choose-a-statistical-test", "statistics"),
   published("spss-from-data-preparation-to-reporting", "statistics"),
