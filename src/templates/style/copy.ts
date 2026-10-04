@@ -3,6 +3,7 @@ import { TOOL_ID as APA_GENERATOR_ID } from "@/tools/apa-citation-generator/path
 import { TOOL_ID as CHICAGO_AUTHOR_DATE_GENERATOR_ID } from "@/tools/chicago-author-date-citation-generator/path";
 import { TOOL_ID as CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_ID } from "@/tools/chicago-notes-bibliography-citation-generator/path";
 import { TOOL_ID as CITATION_STYLE_FINDER_ID } from "@/tools/citation-style-finder/path";
+import { TOOL_ID as HARVARD_GENERATOR_ID } from "@/tools/harvard-citation-generator/path";
 import { TOOL_ID as IEEE_GENERATOR_ID } from "@/tools/ieee-citation-generator/path";
 import { TOOL_ID as MLA_GENERATOR_ID } from "@/tools/mla-citation-generator/path";
 
@@ -50,6 +51,14 @@ export const publishedResources: Partial<Record<ProfiledStyleId, PublishedResour
       title: "Guide and generator available",
       text: "IEEE is a numeric style: a citation is a number in square brackets, such as [1], and references are numbered in the order they are first cited, not alphabetically. The generator formats books, journal articles, conference papers and web pages, and uses the reference number you give it, since only your paper shows the citation order. Other kinds of source, such as standards, patents and theses, aren't supported yet.",
       meta: "Read the guide to IEEE's numbered citations and references, and format books, journal articles, conference papers and web pages with the generator.",
+    },
+  },
+  harvard: {
+    systems: [{ tool: HARVARD_GENERATOR_ID, guide: "harvard-citations-and-references" }],
+    coverage: {
+      title: "Guide and generator for one defined version of Harvard",
+      text: "Harvard has no single official version: universities publish their own, and they differ in punctuation and detail. ResearchKit's guide and generator follow one defined author-date profile, based on Cite Them Right, 13th edition, and explain each choice. They don't reproduce any university's version, so check your university's referencing requirements. The generator formats books, journal articles and web pages.",
+      meta: "Read the guide to Harvard citations and references, and format books, journal articles and web pages with a generator that follows a defined profile based on Cite Them Right.",
     },
   },
 };

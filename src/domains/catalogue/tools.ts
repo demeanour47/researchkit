@@ -18,6 +18,8 @@ import {
   TOOL_ID as CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_ID,
   TOOL_PATH as CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_PATH,
 } from "@/tools/chicago-notes-bibliography-citation-generator/path";
+import { page as harvardGenerator } from "@/tools/harvard-citation-generator/copy";
+import { TOOL_ID as HARVARD_GENERATOR_ID, TOOL_PATH as HARVARD_GENERATOR_PATH } from "@/tools/harvard-citation-generator/path";
 import { page as ieeeGenerator } from "@/tools/ieee-citation-generator/copy";
 import { TOOL_ID as IEEE_GENERATOR_ID, TOOL_PATH as IEEE_GENERATOR_PATH } from "@/tools/ieee-citation-generator/path";
 import { page as mlaGenerator } from "@/tools/mla-citation-generator/copy";
@@ -186,7 +188,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: IEEE_GENERATOR_PATH,
   },
-  comingSoon("harvard-citation-generator", "Harvard Citation Generator", "Formats author–date references in Harvard style.", "citation"),
+  {
+    id: HARVARD_GENERATOR_ID,
+    name: harvardGenerator.title,
+    description: harvardGenerator.summary,
+    category: "citation",
+    family: "citation",
+    status: "available",
+    href: HARVARD_GENERATOR_PATH,
+  },
   {
     id: REFERENCE_CHECKER_ID,
     name: referenceChecker.title,

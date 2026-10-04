@@ -30,6 +30,8 @@ export interface BookSource extends CommonSource {
   place?: string;
   doi?: string;
   url?: string;
+  /** When the researcher consulted the book online, for styles that date a URL. */
+  accessed?: PublicationDate;
 }
 
 export interface JournalArticleSource extends CommonSource {
@@ -41,6 +43,8 @@ export interface JournalArticleSource extends CommonSource {
   articleNumber?: string;
   doi?: string;
   url?: string;
+  /** When the researcher consulted the article online, for styles that date a URL. */
+  accessed?: PublicationDate;
 }
 
 export interface WebpageSource extends CommonSource {

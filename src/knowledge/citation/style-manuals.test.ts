@@ -12,9 +12,15 @@ describe("style manuals in the reference registry", () => {
     for (const reference of STYLE_MANUAL_REFERENCES) assert.ok(cited.has(reference.id), `${reference.id} is unused`);
   });
 
-  it("are formatted as group authors, as APA does", () => {
+  it("are formatted in APA, a group author in full and named authors by surname and initials", () => {
     for (const reference of STYLE_MANUAL_REFERENCES) {
-      assert.ok(reference.apa.startsWith(`${reference.cite.replace(/, \d{4}$/, "")}. (${reference.year}).`), reference.id);
+      const authors = reference.cite.replace(/, \d{4}$/, "");
+      if (authors.includes(" & ")) {
+        const surnames = authors.split(" & ");
+        assert.match(reference.apa, new RegExp(`^${surnames[0]}, [A-Z]\\., & ${surnames[1]}, [A-Z]\\. \\(${reference.year}\\)\\.`), reference.id);
+      } else {
+        assert.ok(reference.apa.startsWith(`${authors}. (${reference.year}).`), reference.id);
+      }
       assert.equal(reference.apa.split("*").length, 3, reference.id);
       assert.equal(getReference(reference.id), reference);
     }

@@ -76,6 +76,7 @@ export const GUIDE_LISTINGS: readonly GuideEntry[] = [
   published("chicago-author-date-citations", "citation"),
   published("chicago-notes-bibliography", "citation"),
   published("ieee-citations-and-references", "citation"),
+  published("harvard-citations-and-references", "citation"),
   comingSoon("how-to-cite-a-website", "How to cite a website", "What to include when citing a web page, and what to do when details are missing.", "citation"),
   comingSoon("how-to-avoid-plagiarism", "How to avoid plagiarism", "How quoting, paraphrasing and citing work together to credit other people's ideas.", "citation"),
   comingSoon("reference-list-or-bibliography", "Reference list or bibliography?", "What each term means, and which one your citation style uses.", "citation"),

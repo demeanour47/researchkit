@@ -387,6 +387,15 @@ export const STYLE_MANUAL_REFERENCES: readonly Reference[] = [
     year: 2025,
     apa: "IEEE Publication Operations. (2025). *IEEE reference guide* (Version 3.28.2025).",
   },
+  {
+    // Checked against the publisher's listings (Blackwell's, ISBN 9781350477261; VitalSource): the 13th
+    // edition, published 2025 by Bloomsbury Academic, by Richard Pears and Graham Shields. The basis of
+    // ResearchKit's Harvard profile (ADR-0008). Unlike the other manuals, its authors are people.
+    id: "cite-them-right-2025",
+    cite: "Pears & Shields, 2025",
+    year: 2025,
+    apa: "Pears, R., & Shields, G. (2025). *Cite them right: The essential referencing guide* (13th ed.). Bloomsbury Academic.",
+  },
 ];
 
 /** The reference with this id. Throws for an unknown id. */

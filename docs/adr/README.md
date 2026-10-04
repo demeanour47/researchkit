@@ -111,3 +111,4 @@ A **Proposed** ADR may be edited freely. An **Accepted** ADR is never rewritten 
 | [0001](0001-adr-process.md) | Record Architecture Decisions | Proposed |
 | [0006](0006-shared-citation-source-model.md) | Share One Citation Source Model Across Citation Styles | Proposed |
 | [0007](0007-numeric-citation-numbering.md) | Keep Reference Numbers in the Citation, Not the Source | Proposed |
+| [0008](0008-harvard-referencing-profile.md) | Format Harvard to One Defined Profile | Proposed |

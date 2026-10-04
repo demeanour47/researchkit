@@ -98,13 +98,19 @@ const numberFrom = (text: string) => (text.trim() === "" ? undefined : Number(te
 
 const dateFrom = (year: string, month: string, day: string): PublicationDate => ({ year: numberFrom(year), month: numberFrom(month), day: numberFrom(day) });
 
+/** The access date, only when any part of it was entered, so an untouched field adds nothing to the source. */
+function accessedFrom(draft: SourceDraft): { accessed?: PublicationDate } {
+  const accessed = dateFrom(draft.accessedYear, draft.accessedMonth, draft.accessedDay);
+  return Object.values(accessed).some((part) => part !== undefined) ? { accessed } : {};
+}
+
 /** Converts what was typed into the shared source model. Fields that don't belong to the type are left out. */
 export function toSource(draft: SourceDraft): Source {
   const common = { authors: draft.authors.map(toContributor), title: draft.title };
 
   switch (draft.type) {
     case "book":
-      return { ...common, type: "book", date: { year: numberFrom(draft.year) }, edition: draft.edition, publisher: draft.publisher, place: draft.place, doi: draft.doi, url: draft.url };
+      return { ...common, type: "book", date: { year: numberFrom(draft.year) }, edition: draft.edition, publisher: draft.publisher, place: draft.place, doi: draft.doi, url: draft.url, ...accessedFrom(draft) };
     case "journal-article":
       return {
         ...common,
@@ -117,10 +123,9 @@ export function toSource(draft: SourceDraft): Source {
         articleNumber: draft.articleNumber,
         doi: draft.doi,
         url: draft.url,
+        ...accessedFrom(draft),
       };
-    case "webpage": {
-      const accessed = dateFrom(draft.accessedYear, draft.accessedMonth, draft.accessedDay);
-      const hasAccessed = Object.values(accessed).some((part) => part !== undefined);
+    case "webpage":
       return {
         ...common,
         type: "webpage",
@@ -128,9 +133,8 @@ export function toSource(draft: SourceDraft): Source {
         siteName: draft.siteName,
         publisher: draft.publisher,
         url: draft.url,
-        ...(hasAccessed ? { accessed } : {}),
+        ...accessedFrom(draft),
       };
-    }
   }
 }
 

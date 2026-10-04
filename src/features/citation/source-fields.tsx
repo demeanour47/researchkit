@@ -67,6 +67,8 @@ export interface SourceFieldOptions {
   dateOrder: "day-month-year" | "month-day-year";
   /** Whether a book's place of publication is asked for. */
   bookPlace?: boolean;
+  /** Whether books and journal articles ask for an access date, for styles that date every URL. */
+  accessDates?: boolean;
   /** The source types offered. Defaults to the types every style supports. */
   types?: readonly AnySourceType[];
 }
@@ -132,6 +134,16 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
       </>
     );
   };
+
+  const accessedFields = (
+    <fieldset className="grid gap-3" aria-describedby={`${idPrefix}-accessed-hint`}>
+      <legend className="mb-1 font-semibold">{labels.accessed}</legend>
+      <p id={`${idPrefix}-accessed-hint`} className="text-small text-text-muted">
+        {labels.accessedHint}
+      </p>
+      <div className="grid items-start gap-3 sm:grid-cols-3">{fullDate("accessedDay", "accessedMonth", "accessedYear")}</div>
+    </fieldset>
+  );
 
   return (
     <form className="grid min-w-0 gap-8" onSubmit={(event) => event.preventDefault()}>
@@ -220,6 +232,7 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
           {field("edition", labels.edition, labels.editionHint)}
           {field("doi", labels.doi, labels.doiHint)}
           {field("url", labels.url, labels.urlHintOptional, { inputMode: "url" })}
+          {options.accessDates && accessedFields}
         </MoreDetails>
       )}
 
@@ -229,6 +242,7 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
           <MoreDetails label={labels.moreDetails}>
             {field("url", labels.url, labels.urlHintOptional, { inputMode: "url" })}
             {field("articleNumber", labels.articleNumber, labels.articleNumberHint)}
+            {options.accessDates && accessedFields}
           </MoreDetails>
         </>
       )}
@@ -245,13 +259,7 @@ export function SourceFields({ idPrefix, draft, labels, authorLabels, options, a
           {field("url", labels.url, labels.urlHint, { inputMode: "url" })}
           <MoreDetails label={labels.moreDetails}>
             {field("publisher", labels.webPublisher, labels.webPublisherHint)}
-            <fieldset className="grid gap-3" aria-describedby={`${idPrefix}-accessed-hint`}>
-              <legend className="mb-1 font-semibold">{labels.accessed}</legend>
-              <p id={`${idPrefix}-accessed-hint`} className="text-small text-text-muted">
-                {labels.accessedHint}
-              </p>
-              <div className="grid items-start gap-3 sm:grid-cols-3">{fullDate("accessedDay", "accessedMonth", "accessedYear")}</div>
-            </fieldset>
+            {accessedFields}
           </MoreDetails>
         </>
       )}
