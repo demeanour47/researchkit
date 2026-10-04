@@ -14,3 +14,34 @@ export function isBlank(contributor: Contributor): boolean {
     ? contributor.name.trim() === ""
     : contributor.family.trim() === "" && (contributor.given ?? "").trim() === "";
 }
+
+const firstCharacter = (text: string) => Array.from(text)[0] ?? "";
+
+/**
+ * Given names reduced to initials, as several styles write them: "Jean-Paul Anne" →
+ * "J.-P. A."; "J.A." → "J. A."; "mary" → "M.". Hyphenated names keep the hyphen.
+ */
+export function initials(given: string): string {
+  return given
+    .normalize("NFC")
+    .trim()
+    .split(/\s+/u)
+    .filter(Boolean)
+    .map((word) =>
+      word
+        .split("-")
+        .filter(Boolean)
+        .map((part) =>
+          part
+            .split(".")
+            .map((piece) => piece.trim())
+            .filter(Boolean)
+            .map((piece) => `${firstCharacter(piece).toLocaleUpperCase("en")}.`)
+            .join(" "),
+        )
+        .filter(Boolean)
+        .join("-"),
+    )
+    .filter(Boolean)
+    .join(" ");
+}

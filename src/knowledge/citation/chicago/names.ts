@@ -14,27 +14,15 @@
  * source gives them, not reduced to initials. An organization is written in full.
  */
 
-import type { Contributor } from "../source";
+import type { NamedContributor } from "../source/authors";
 
-/** A contributor with enough information to name. */
-export type NamedContributor =
-  | { kind: "person"; family: string; given: string }
-  | { kind: "organization"; name: string };
+/** Which contributors can be named is shared by every style (source/authors.ts). */
+export { named, type NamedContributor } from "../source/authors";
 
 /** The most authors a reference list entry names before shortening to three and et al. */
 export const MAX_LISTED_AUTHORS = 6;
 /** How many authors are named before et al. when the list is shortened. */
 export const LISTED_BEFORE_ET_AL = 3;
-
-/** The contributor with whitespace trimmed, or null if it has no family name or organization name. */
-export function named(contributor: Contributor): NamedContributor | null {
-  if (contributor.kind === "organization") {
-    const name = contributor.name.trim();
-    return name ? { kind: "organization", name } : null;
-  }
-  const family = contributor.family.trim();
-  return family ? { kind: "person", family, given: (contributor.given ?? "").trim() } : null;
-}
 
 /** "Yu, Charles": the name inverted, for the first author in a list. */
 const inverted = (author: NamedContributor) =>

@@ -68,12 +68,14 @@ describe("toSource", () => {
     assert.ok(without.type === "webpage" && !("accessed" in without));
   });
 
-  it("keeps a journal issue's month, and ignores web-only fields for books", () => {
+  it("keeps a journal issue's month, and keeps a book's access date out of its MLA entry", () => {
     const journal = toSource({ ...blankDraft(1), type: "journal-article", year: "2004", month: "10", day: "3" });
     assert.deepEqual(journal.date, { year: 2004, month: 10 });
-    const book = toSource({ ...blankDraft(1), year: "2020", month: "5", accessedYear: "2026" });
-    assert.deepEqual(book.date, { year: 2020 });
-    assert.ok(!("accessed" in book));
+    const book: Draft = { ...blankDraft(1), authors: [{ ...emptyAuthor(1), given: "Ann", family: "Lee" }], title: "T", publisher: "P", year: "2020", month: "5" };
+    assert.deepEqual(toSource(book).date, { year: 2020 });
+    // Books carry an access date for styles that date every URL (Harvard, ADR-0006); MLA ignores it.
+    const accessed = { ...book, url: "https://example.org/book", accessedYear: "2026", accessedMonth: "1", accessedDay: "5" };
+    assert.equal(copyTexts(citationFor(accessed)).worksCited.text, copyTexts(citationFor({ ...book, url: "https://example.org/book" })).worksCited.text);
   });
 
   it("formats a full web page from the form", () => {

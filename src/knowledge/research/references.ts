@@ -379,6 +379,23 @@ export const STYLE_MANUAL_REFERENCES: readonly Reference[] = [
     year: 2024,
     apa: "University of Chicago Press. (2024). *The Chicago manual of style* (18th ed.).",
   },
+  {
+    // Checked against the guide itself, linked from the IEEE Author Center (journals.ieeeauthorcenter.ieee.org):
+    // "Reference Guide, IEEE Publication Operations", version 3.28.2025, © 2025 IEEE.
+    id: "ieee-2025",
+    cite: "IEEE Publication Operations, 2025",
+    year: 2025,
+    apa: "IEEE Publication Operations. (2025). *IEEE reference guide* (Version 3.28.2025).",
+  },
+  {
+    // Checked against the publisher's listings (Blackwell's, ISBN 9781350477261; VitalSource): the 13th
+    // edition, published 2025 by Bloomsbury Academic, by Richard Pears and Graham Shields. The basis of
+    // ResearchKit's Harvard profile (ADR-0008). Unlike the other manuals, its authors are people.
+    id: "cite-them-right-2025",
+    cite: "Pears & Shields, 2025",
+    year: 2025,
+    apa: "Pears, R., & Shields, G. (2025). *Cite them right: The essential referencing guide* (13th ed.). Bloomsbury Academic.",
+  },
 ];
 
 /** The reference with this id. Throws for an unknown id. */

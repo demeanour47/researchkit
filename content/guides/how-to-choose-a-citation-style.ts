@@ -149,5 +149,5 @@ export const howToChooseACitationStyle: Guide = {
         "Footnotes are a way of citing that several styles use, including Chicago's notes and bibliography system and most legal styles. The style decides how each note is written.",
     },
   ],
-  relatedToolIds: ["citation-style-finder", "apa-citation-generator", "mla-citation-generator", "chicago-author-date-citation-generator", "chicago-notes-bibliography-citation-generator"],
+  relatedToolIds: ["citation-style-finder", "apa-citation-generator", "mla-citation-generator", "chicago-author-date-citation-generator", "chicago-notes-bibliography-citation-generator", "ieee-citation-generator", "harvard-citation-generator"],
 };
