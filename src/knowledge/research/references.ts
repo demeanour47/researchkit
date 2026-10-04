@@ -451,26 +451,61 @@ export const READABILITY_REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * Sources for the power analysis methods, cited by the power analysis guide alongside
+ * Cohen (1988) from the statistics references. Each was checked against Crossref.
+ */
+export const POWER_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Crossref (DOI 10.3758/BF03193146): authors, title, volume 39, issue 2, pages 175–191.
+    id: "faul-2007",
+    cite: "Faul et al., 2007",
+    year: 2007,
+    apa: "Faul, F., Erdfelder, E., Lang, A.-G., & Buchner, A. (2007). G\\*Power 3: A flexible statistical power analysis program for the social, behavioral, and biomedical sciences. *Behavior Research Methods, 39*(2), 175–191.",
+    doi: "10.3758/BF03193146",
+  },
+  {
+    // Checked against Crossref (DOI 10.3758/BRM.41.4.1149): authors, title, volume 41, issue 4, pages 1149–1160.
+    id: "faul-2009",
+    cite: "Faul et al., 2009",
+    year: 2009,
+    apa: "Faul, F., Erdfelder, E., Buchner, A., & Lang, A.-G. (2009). Statistical power analyses using G\\*Power 3.1: Tests for correlation and regression analyses. *Behavior Research Methods, 41*(4), 1149–1160.",
+    doi: "10.3758/BRM.41.4.1149",
+  },
+  {
+    // Checked against Crossref (DOI 10.1198/000313001300339897): authors, title, volume 55, issue 1, pages 19–24.
+    id: "hoenig-heisey-2001",
+    cite: "Hoenig & Heisey, 2001",
+    year: 2001,
+    apa: "Hoenig, J. M., & Heisey, D. M. (2001). The abuse of power: The pervasive fallacy of power calculations for data analysis. *The American Statistician, 55*(1), 19–24.",
+    doi: "10.1198/000313001300339897",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES, ...POWER_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }
 
 export const doiUrl = (doi: string) => `https://doi.org/${doi}`;
 
+/** An asterisk that marks italics: one not escaped with a backslash, as the asterisk in "G*Power" is. */
+const ITALIC_MARK = /(?<!\\)\*/;
+const unescapeAsterisks = (text: string) => text.replaceAll("\\*", "*");
+
 /** A reference as text runs, so the italic part can be shown in italics. The DOI is not included. */
 export function referenceRuns(reference: Reference): { text: string; italic: boolean }[] {
   return reference.apa
-    .split("*")
-    .map((text, index) => ({ text, italic: index % 2 === 1 }))
+    .split(ITALIC_MARK)
+    .map((text, index) => ({ text: unescapeAsterisks(text), italic: index % 2 === 1 }))
     .filter((run) => run.text.length > 0);
 }
 
 /** The full reference in plain text, with its DOI as a link. */
 export function referenceText(reference: Reference): string {
-  const text = reference.apa.replaceAll("*", "");
+  const text = referenceRuns(reference).map((run) => run.text).join("");
   return reference.doi ? `${text} ${doiUrl(reference.doi)}` : text;
 }
 

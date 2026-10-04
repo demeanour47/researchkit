@@ -6,7 +6,7 @@ export function ReferenceList({ references }: { references: readonly Reference[]
   return (
     <ul className="grid gap-2">
       {references.map((reference) => (
-        <li key={reference.id} className="ps-6 -indent-6 break-words">
+        <li key={reference.id} className="ps-6 -indent-6 wrap-anywhere">
           {referenceRuns(reference).map((run, index) => (run.italic ? <i key={index}>{run.text}</i> : run.text))}
           {reference.doi && (
             <>

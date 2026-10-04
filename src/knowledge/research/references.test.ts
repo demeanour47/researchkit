@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ALTERNATIVE_VIEWS, EVIDENCE, GENERAL_VIEW } from "./evidence";
-import { REFERENCES, doiUrl, getReference, referenceMarkdown, referenceRuns, referenceText } from "./references";
+import { POWER_REFERENCES, REFERENCES, doiUrl, getReference, referenceMarkdown, referenceRuns, referenceText } from "./references";
 import { FINER_SOURCES } from "./finer";
 import { GENERAL_NOTE_SOURCES } from "./question-evaluator";
 import { QUESTION_TYPES } from "./question-types";
@@ -23,11 +23,11 @@ describe("REFERENCES", () => {
     assert.equal(new Set(dois).size, dois.length);
   });
 
-  for (const reference of REFERENCES) {
+  for (const reference of [...REFERENCES, ...POWER_REFERENCES]) {
     it(`formats ${reference.id} as a complete APA reference`, () => {
       assert.ok(reference.apa.includes(`(${reference.year}).`), "year in brackets after the authors");
       assert.ok(reference.apa.endsWith("."), "ends with a full stop");
-      assert.equal(reference.apa.split("*").length, 3, "exactly one italic part");
+      assert.equal(referenceRuns(reference).filter((run) => run.italic).length, 1, "exactly one italic part");
       assert.ok(!/\d-\d/.test(reference.apa), "page ranges use an en dash");
       assert.ok(!reference.apa.includes("doi.org"), "the DOI is stored separately");
     });

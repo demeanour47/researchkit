@@ -45,6 +45,8 @@ import { page as effectSizeCalculator } from "@/tools/effect-size-calculator/cop
 import { TOOL_ID as EFFECT_SIZE_CALCULATOR_ID, TOOL_PATH as EFFECT_SIZE_CALCULATOR_PATH } from "@/tools/effect-size-calculator/path";
 import { page as spssResearchLab } from "@/tools/spss-research-lab/copy";
 import { TOOL_ID as SPSS_RESEARCH_LAB_ID, TOOL_PATH as SPSS_RESEARCH_LAB_PATH } from "@/tools/spss-research-lab/path";
+import { page as powerAnalysis } from "@/tools/power-analysis/copy";
+import { TOOL_ID as POWER_ANALYSIS_ID, TOOL_PATH as POWER_ANALYSIS_PATH } from "@/tools/power-analysis/path";
 import { page as dataAnalysisRecommender } from "@/tools/data-analysis-recommender/copy";
 import { TOOL_ID as DATA_ANALYSIS_RECOMMENDER_ID, TOOL_PATH as DATA_ANALYSIS_RECOMMENDER_PATH } from "@/tools/data-analysis-recommender/path";
 import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy";
@@ -313,7 +315,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: SPSS_RESEARCH_LAB_PATH,
   },
-  comingSoon("power-analysis", "Power Analysis", "Estimates a study's statistical power, or the sample size needed to reach it.", "statistics"),
+  {
+    id: POWER_ANALYSIS_ID,
+    name: powerAnalysis.title,
+    description: powerAnalysis.summary,
+    category: "statistics",
+    family: "statistics",
+    status: "available",
+    href: POWER_ANALYSIS_PATH,
+  },
   comingSoon("confidence-interval-calculator", "Confidence Interval Calculator", "Calculates confidence intervals for means and proportions.", "statistics"),
 
   {

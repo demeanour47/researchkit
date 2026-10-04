@@ -40,6 +40,26 @@ export const dMagnitude = (d: number): Magnitude => ({
   convention: `${COHEN} for d: .20 small, .50 medium, .80 large`,
 });
 
+/** Cohen's f, the ANOVA effect size: .10 small, .25 medium, .40 large (Cohen, 1988; G*Power manual, section 10). */
+export const fMagnitude = (f: number): Magnitude => ({
+  label: band(Math.abs(f), "negligible", [
+    [0.1, "small"],
+    [0.25, "medium"],
+    [0.4, "large"],
+  ]),
+  convention: `${COHEN} for f: .10 small, .25 medium, .40 large`,
+});
+
+/** Cohen's h, the difference between arcsine-transformed proportions: .20 small, .50 medium, .80 large (Cohen, 1988). */
+export const hMagnitude = (h: number): Magnitude => ({
+  label: band(Math.abs(h), "negligible", [
+    [0.2, "small"],
+    [0.5, "medium"],
+    [0.8, "large"],
+  ]),
+  convention: `${COHEN} for h: .20 small, .50 medium, .80 large`,
+});
+
 export const wMagnitude = (w: number): Magnitude => ({
   label: band(Math.abs(w), "negligible", [
     [0.1, "small"],
