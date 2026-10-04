@@ -398,9 +398,62 @@ export const STYLE_MANUAL_REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * The sources of the readability formulas, cited by the readability guide. Each was
+ * read in the original or an authoritative reprint: Flesch (1948) in DuBay (2007);
+ * Kincaid et al. (1975) from the report itself (DTIC ADA006655); McLaughlin (1969)
+ * from the paper and his own formula statement; Gunning (1952) as described by
+ * DuBay (2004), since the book itself wasn't available.
+ */
+export const READABILITY_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Crossref (DOI 10.1037/h0057532): title, journal, volume 32, issue 3, pages 221–233.
+    id: "flesch-1948",
+    cite: "Flesch, 1948",
+    year: 1948,
+    apa: "Flesch, R. (1948). A new readability yardstick. *Journal of Applied Psychology, 32*(3), 221–233.",
+    doi: "10.1037/h0057532",
+  },
+  {
+    // Checked against the report's cover and title page: Naval Technical Training Command, Research Branch Report 8-75, February 1975.
+    id: "kincaid-1975",
+    cite: "Kincaid et al., 1975",
+    year: 1975,
+    apa: "Kincaid, J. P., Fishburne, R. P., Jr., Rogers, R. L., & Chissom, B. S. (1975). *Derivation of new readability formulas (Automated Readability Index, Fog Count and Flesch Reading Ease formula) for Navy enlisted personnel* (Research Branch Report 8-75). Naval Technical Training Command.",
+  },
+  {
+    // Checked against the paper's first page: Journal of Reading, May 1969, pages 639–646.
+    id: "mclaughlin-1969",
+    cite: "McLaughlin, 1969",
+    year: 1969,
+    apa: "McLaughlin, G. H. (1969). SMOG grading: A new readability formula. *Journal of Reading, 12*(8), 639–646.",
+  },
+  {
+    // As listed in DuBay (2004), which describes the Fog Index; the book wasn't available to check.
+    id: "gunning-1952",
+    cite: "Gunning, 1952",
+    year: 1952,
+    apa: "Gunning, R. (1952). *The technique of clear writing*. McGraw-Hill.",
+  },
+  {
+    // Checked against the document's copyright page (© 2004 William H. DuBay; ERIC ED490073).
+    id: "dubay-2004",
+    cite: "DuBay, 2004",
+    year: 2004,
+    apa: "DuBay, W. H. (2004). *The principles of readability*. Impact Information.",
+  },
+  {
+    // Checked against ERIC ED506404 (publication year 2007) and the title page: William H. DuBay, editor; Impact Information.
+    id: "dubay-2007",
+    cite: "DuBay, 2007",
+    year: 2007,
+    apa: "DuBay, W. H. (Ed.). (2007). *The classic readability studies*. Impact Information.",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }

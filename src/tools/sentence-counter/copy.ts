@@ -6,7 +6,7 @@
 
 // Relative and type-only imports, so the test runner can load this module (see TESTING.md).
 import { OPENING_WORDS, type ParagraphBreak } from "../../knowledge/text/paragraphs";
-import { ABBREVIATIONS, type SentenceAnalysis, type SentenceRecord } from "../../knowledge/text/sentences";
+import { ABBREVIATIONS, NUMBER_LABELS, type SentenceAnalysis, type SentenceRecord } from "../../knowledge/text/sentences";
 
 const numbers = new Intl.NumberFormat("en");
 const count = (value: number) => numbers.format(value);
@@ -102,13 +102,15 @@ export const announcement = (analysis: SentenceAnalysis) =>
 
 /** The abbreviations the counter recognises, as readers write them. */
 const LOWERCASE = new Set(["e.g", "i.e", "cf", "vs", "viz", "approx", "ca", "p", "pp"]);
-const abbreviationList = ABBREVIATIONS.map((abbreviation) => `${LOWERCASE.has(abbreviation) ? abbreviation : `${abbreviation.charAt(0).toUpperCase()}${abbreviation.slice(1)}`}.`).join(", ");
+const written = (abbreviation: string) => `${LOWERCASE.has(abbreviation) ? abbreviation : `${abbreviation.charAt(0).toUpperCase()}${abbreviation.slice(1)}`}.`;
+const abbreviationList = ABBREVIATIONS.map(written).join(", ");
+const numberLabelList = NUMBER_LABELS.map(written).join(", ");
 
 export const rules: readonly string[] = [
   "A sentence ends with a full stop, question mark, exclamation mark or ellipsis, or a combination such as ?!, followed by a space or the end of a paragraph. Closing quotation marks and brackets stay with the sentence.",
   "Full stops inside numbers, web addresses and email addresses, as in 3.14, 2.5% or example.com, never end a sentence.",
   "End punctuation doesn't end a sentence when the next word starts with a lowercase letter, as after “e.g. the”, an ellipsis that continues, or a quoted question followed by “she asked”.",
-  `A full stop doesn't end a sentence after these abbreviations: ${abbreviationList}; after a single initial, as in J. Smith; or after an initialism such as U.S.`,
+  `A full stop doesn't end a sentence after these abbreviations: ${abbreviationList}; after ${numberLabelList} when a number follows; after a single initial, as in J. Smith; or after an initialism such as U.S.`,
   "A sentence never runs across a paragraph break. A single line break inside a paragraph is read as a space, so a sentence wrapped across lines stays whole.",
   `Words are counted exactly as the Word Counter counts them. The average is rounded to one decimal place; when sentences tie for shortest or longest, the first is shown. Each sentence in the list is identified by its first ${OPENING_WORDS} words.`,
 ];

@@ -48,7 +48,7 @@ const graphemes = new Intl.Segmenter("en", { granularity: "grapheme" });
 export const hasLetterOrNumber = (text: string) => LETTER_OR_NUMBER.test(text);
 
 /** The words in a text, by the word rule above. Every word count derives from this. */
-function wordsOf(text: string): string[] {
+export function wordsOf(text: string): string[] {
   return text.split(WHITESPACE_RUN).filter(hasLetterOrNumber);
 }
 
