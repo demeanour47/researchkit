@@ -4,12 +4,16 @@ import { STYLES_INDEX_PATH, getStyleProfile, type ProfiledStyleId } from "@/doma
 import { CatalogueCard } from "@/features/catalogue";
 import { Breadcrumbs } from "@/features/site";
 import { CITATION_STYLES, styleTitle } from "@/knowledge/citation/styles";
-import { publishedResources, stylePageCopy as copy, usefulNowIds, type PublishedResources } from "./copy";
+import { checkerToolId, publishedResources, stylePageCopy as copy, usefulNowIds, type PublishedResources } from "./copy";
 
 const availableTool = (id: string) => TOOLS.find((tool) => tool.id === id && tool.status === "available");
 const availableGuide = (id: string) => GUIDE_LISTINGS.find((guide) => guide.id === id && guide.status === "available");
 
-/** The style's published generators and guides, each system's pair in order, and what they cover; null if none is published yet. */
+/**
+ * The style's published generators and guides, each system's pair in order, then the
+ * Reference Checker, which checks every published style; and what they cover. Null if
+ * none is published yet.
+ */
 function published(style: ProfiledStyleId): { items: [CatalogueItem, "tool" | "guide"][]; coverage?: PublishedResources["coverage"] } | null {
   const resources = publishedResources[style];
   const items = (resources?.systems ?? []).flatMap(({ tool, guide }) => {
@@ -17,6 +21,8 @@ function published(style: ProfiledStyleId): { items: [CatalogueItem, "tool" | "g
     const guideItem = availableGuide(guide);
     return toolItem && guideItem ? [[toolItem, "tool"], [guideItem, "guide"]] as [CatalogueItem, "tool" | "guide"][] : [];
   });
+  const checker = availableTool(checkerToolId);
+  if (items.length > 0 && checker) items.push([checker, "tool"]);
   return items.length > 0 ? { items, coverage: resources?.coverage } : null;
 }
 
