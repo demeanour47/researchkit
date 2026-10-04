@@ -38,7 +38,7 @@ We will keep the style-neutral citation concepts in `src/knowledge/citation/sour
 - **Style families.** A style with more than one system keeps the rules its systems share in one folder and each system's formatter in its own subfolder: `chicago/` holds Chicago's author names, inclusive numbers and dates, and `chicago/author-date/` the author-date formatter (Sprint 45). `chicago/notes-bibliography/` holds the notes-and-bibliography formatter (Sprint 46). Readings of a source that both systems make the same way, such as which authors can be named and whether a DOI or URL locates the work, live in `chicago/source-parts.ts`.
 - **Sources describe works; requests describe citations.** How a source is being cited never goes into `Source`. A style whose citations need more than a locator defines its own request: Chicago notes and bibliography uses a `NotesBibliographyRequest` that adds the citation context (a full note for a first citation, a shortened note after that), an optional short title, and its own locator kinds, such as chapters. The writer chooses the context explicitly, because only their document shows whether a source was cited before.
 
-This decision covers the knowledge-layer boundary and the shared generator interface pieces. It does not cover saving references, collections of references, or the Reference Checker's parser, which remains APA-specific.
+This decision covers the knowledge-layer boundary and the shared generator interface pieces. It does not cover saving references, collections of references, or the Reference Checker, whose style-specific checks are decided in [ADR-0009](0009-style-specific-reference-checking.md).
 
 ## Alternatives Considered
 

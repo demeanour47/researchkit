@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ReferenceChecker, page } from "@/tools/reference-checker";
 
 export const metadata: Metadata = {
-  title: "APA 7 Reference Checker",
+  title: page.title,
   description: page.metaDescription,
 };
 

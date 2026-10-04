@@ -6,6 +6,7 @@ import { TOOL_ID as CITATION_STYLE_FINDER_ID } from "@/tools/citation-style-find
 import { TOOL_ID as HARVARD_GENERATOR_ID } from "@/tools/harvard-citation-generator/path";
 import { TOOL_ID as IEEE_GENERATOR_ID } from "@/tools/ieee-citation-generator/path";
 import { TOOL_ID as MLA_GENERATOR_ID } from "@/tools/mla-citation-generator/path";
+import { TOOL_ID as REFERENCE_CHECKER_ID } from "@/tools/reference-checker/path";
 
 /** Wording shared by every style page. */
 export const stylePageCopy = {
@@ -62,6 +63,9 @@ export const publishedResources: Partial<Record<ProfiledStyleId, PublishedResour
     },
   },
 };
+
+/** The checker every published style's page links to; it checks all of them (ADR-0009). */
+export const checkerToolId = REFERENCE_CHECKER_ID;
 
 /** What every other style page links to while its full guide is in preparation. */
 export const usefulNowIds = {
