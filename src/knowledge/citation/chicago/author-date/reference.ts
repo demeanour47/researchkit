@@ -25,21 +25,10 @@
  * - Titles are not re-capitalised: headline style depends on judgment.
  */
 
-import {
-  endsWithTerminalPunctuation,
-  isBlank,
-  isWebAddress,
-  italic,
-  mergeRuns,
-  normalizeDoi,
-  ordinal,
-  placeholder,
-  plain,
-  type Run,
-  type Source,
-} from "../../source";
+import { endsWithTerminalPunctuation, italic, mergeRuns, placeholder, plain, type Run, type Source } from "../../source";
 import { chicagoDate, fullDate } from "../dates";
-import { MAX_LISTED_AUTHORS, listAuthors, named, type NamedContributor } from "../names";
+import { MAX_LISTED_AUTHORS, listAuthors, type NamedContributor } from "../names";
+import { chicagoAuthors, chicagoEdition, chicagoLocation, sameName, soleOrganization } from "../source-parts";
 import { formatChicagoPages } from "../numbers";
 import type { Decision, Note } from "./notes";
 
@@ -60,35 +49,6 @@ export interface ChicagoReference {
 /** Adds a full stop unless the text already ends with terminal punctuation. */
 const closing = (text: string) => (endsWithTerminalPunctuation(text) ? "" : ".");
 const sentence = (text: string): Run[] => [plain(text + closing(text))];
-const sameName = (a: string, b: string) => a.trim().toLocaleLowerCase("en") === b.trim().toLocaleLowerCase("en");
-
-/** A name typed in one field that looks like several names, or a name already inverted. */
-const looksAmbiguous = (text: string) => /[,;&]|\s(?:and|et al\.?)\s/iu.test(` ${text} `);
-/** Roles the source model can't represent: editors, translators, compilers. */
-const ROLE_WORDS = /\b(?:eds?|editors?|edited by|trans|translators?|translated by|comp|compilers?)\b\.?/iu;
-
-function authorsOf(source: Source, notes: Note[]): NamedContributor[] {
-  const listed: NamedContributor[] = [];
-  source.authors.forEach((author, index) => {
-    if (isBlank(author)) return;
-    const name = named(author);
-    if (!name) {
-      notes.push({ code: "author-incomplete", position: index + 1 });
-      return;
-    }
-    const typed = name.kind === "person" ? `${name.family} ${name.given}` : name.name;
-    if (ROLE_WORDS.test(typed)) notes.push({ code: "unsupported-contributor-role", position: index + 1 });
-    else if (name.kind === "person" && looksAmbiguous(typed)) notes.push({ code: "ambiguous-author", position: index + 1 });
-    listed.push(name);
-  });
-  return listed;
-}
-
-const soleOrganization = (authors: readonly NamedContributor[]) => {
-  const [only] = authors;
-  return authors.length === 1 && only.kind === "organization" ? only.name : null;
-};
-
 function titleElement(source: Source, decisions: Decision[], notes: Note[]): Run[] {
   decisions.push({ code: source.type === "book" ? "book-title-italic" : source.type === "journal-article" ? "article-title-quoted" : "page-title-quoted" });
   const title = source.title.trim();
@@ -102,38 +62,29 @@ function titleElement(source: Source, decisions: Decision[], notes: Note[]): Run
 
 /** A DOI if valid, otherwise a URL if valid, otherwise nothing. */
 function locationElement(doi: string | undefined, url: string | undefined, decisions: Decision[], notes: Note[]): Run[] | null {
-  const typedUrl = (url ?? "").trim();
-  if (doi && doi.trim()) {
-    const normalized = normalizeDoi(doi);
-    if (normalized) {
-      decisions.push({ code: "doi-used" });
-      if (typedUrl) decisions.push({ code: "url-left-out-for-doi" });
-      return sentence(normalized);
-    }
-    notes.push({ code: "invalid-doi" });
+  const { location, urlLeftOut, problems } = chicagoLocation(doi, url);
+  for (const problem of problems) notes.push({ code: problem });
+  if (!location) return null;
+  if (location.kind === "doi") {
+    decisions.push({ code: "doi-used" });
+    if (urlLeftOut) decisions.push({ code: "url-left-out-for-doi" });
+  } else {
+    decisions.push({ code: "url-used" });
   }
-  if (!typedUrl) return null;
-  if (!isWebAddress(typedUrl)) {
-    notes.push({ code: "invalid-url" });
-    return null;
-  }
-  decisions.push({ code: "url-used" });
-  return sentence(typedUrl);
+  return sentence(location.text);
 }
 
 function bookElements(source: Extract<Source, { type: "book" }>, authors: readonly NamedContributor[], decisions: Decision[], notes: Note[]): (Run[] | null)[] {
   const elements: (Run[] | null)[] = [];
-  const edition = (source.edition ?? "").trim();
-  if (/^\d+$/u.test(edition)) {
-    if (Number(edition) > 1) {
-      decisions.push({ code: "edition-shown" });
-      elements.push(sentence(`${ordinal(Number(edition))} ed.`));
-    } else {
-      decisions.push({ code: "first-edition-omitted" });
-    }
-  } else if (edition) {
+  const edition = chicagoEdition(source.edition);
+  if (edition.kind === "numbered") {
+    decisions.push({ code: "edition-shown" });
+    elements.push(sentence(edition.label));
+  } else if (edition.kind === "first") {
+    decisions.push({ code: "first-edition-omitted" });
+  } else if (edition.kind === "as-typed") {
     notes.push({ code: "check-edition" });
-    elements.push(sentence(edition));
+    elements.push(sentence(edition.label));
   }
   const publisher = (source.publisher ?? "").trim();
   if (!publisher) notes.push({ code: "missing-publisher" });
@@ -234,7 +185,8 @@ export function formatChicagoReference(source: Source): ChicagoReference {
   const decisions: Decision[] = [];
   const notes: Note[] = [];
 
-  const authors = authorsOf(source, notes);
+  const { authors, problems } = chicagoAuthors(source.authors);
+  notes.push(...problems);
   const date = chicagoDate(source.date);
   if (date.problem) notes.push({ code: date.problem, date: "publication" });
   const yearRuns = sentence(date.year === null ? "n.d." : String(date.year));

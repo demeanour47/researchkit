@@ -33,7 +33,8 @@ We will keep the style-neutral citation concepts in `src/knowledge/citation/sour
 - **The model grows additively.** Fields describe the work, not a style's output. A style uses the fields it needs and ignores the rest. Sprint 44 adds `publisher?` and `accessed?` to `WebpageSource` for MLA; APA ignores both.
 - **One validation shape.** `ValidationIssue` gains optional `explanation` and `action` fields, so a style can say what is wrong, why it matters and what to do, without a second issue model.
 - **Shared form pieces.** Everything a generator's form needs that doesn't depend on a style lives in `src/features/citation/`: the source draft and its conversion to `Source`, the form state (authors, focus, clearing, examples, locator, announcements), the source and locator fields, the run renderer, rich-copy HTML and the validation issue list. Each style supplies its own wording, which fields it shows, which locators it formats, its example and its output.
-- **Style families.** A style with more than one system keeps the rules its systems share in one folder and each system's formatter in its own subfolder: `chicago/` holds Chicago's author names, inclusive numbers and dates, and `chicago/author-date/` the author-date formatter (Sprint 45). Notes and bibliography will be added as `chicago/notes-bibliography/` beside it.
+- **Style families.** A style with more than one system keeps the rules its systems share in one folder and each system's formatter in its own subfolder: `chicago/` holds Chicago's author names, inclusive numbers and dates, and `chicago/author-date/` the author-date formatter (Sprint 45). `chicago/notes-bibliography/` holds the notes-and-bibliography formatter (Sprint 46). Readings of a source that both systems make the same way, such as which authors can be named and whether a DOI or URL locates the work, live in `chicago/source-parts.ts`.
+- **Sources describe works; requests describe citations.** How a source is being cited never goes into `Source`. A style whose citations need more than a locator defines its own request: Chicago notes and bibliography uses a `NotesBibliographyRequest` that adds the citation context (a full note for a first citation, a shortened note after that), an optional short title, and its own locator kinds, such as chapters. The writer chooses the context explicitly, because only their document shows whether a source was cited before.
 
 This decision covers the knowledge-layer boundary and the shared generator interface pieces. It does not cover saving references, collections of references, or the Reference Checker's parser, which remains APA-specific.
 
@@ -45,7 +46,7 @@ This decision covers the knowledge-layer boundary and the shared generator inter
 
 ## Consequences
 
-- MLA and Chicago author-date, and later IEEE, Harvard and Chicago notes and bibliography, format the same `Source` without depending on one another. A new generator is mostly its formatter, its wording and its output.
+- MLA and both Chicago systems, and later IEEE and Harvard, format the same `Source` without depending on one another. A new generator is mostly its formatter, its wording and its output.
 - `apa/` keeps thin re-export modules for compatibility. New code imports from `source/`; the re-exports can be removed in a later change once nothing uses those paths.
 - A change to `source/` affects every style, so it needs tests in every style it touches. Changing the meaning of an existing field requires a new ADR.
 - The shared model now carries fields that some styles ignore. Each style's tests must show that unused fields don't change its output.

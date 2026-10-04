@@ -13,6 +13,11 @@ import {
   TOOL_ID as CHICAGO_AUTHOR_DATE_GENERATOR_ID,
   TOOL_PATH as CHICAGO_AUTHOR_DATE_GENERATOR_PATH,
 } from "@/tools/chicago-author-date-citation-generator/path";
+import { page as chicagoNotesBibliographyGenerator } from "@/tools/chicago-notes-bibliography-citation-generator/copy";
+import {
+  TOOL_ID as CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_ID,
+  TOOL_PATH as CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_PATH,
+} from "@/tools/chicago-notes-bibliography-citation-generator/path";
 import { page as mlaGenerator } from "@/tools/mla-citation-generator/copy";
 import { TOOL_ID as MLA_GENERATOR_ID, TOOL_PATH as MLA_GENERATOR_PATH } from "@/tools/mla-citation-generator/path";
 import { page as referenceChecker } from "@/tools/reference-checker/copy";
@@ -161,7 +166,15 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: CHICAGO_AUTHOR_DATE_GENERATOR_PATH,
   },
-  comingSoon("chicago-notes-bibliography-citation-generator", "Chicago Notes-Bibliography Citation Generator", "Formats footnotes and bibliography entries in Chicago style, 18th edition.", "citation"),
+  {
+    id: CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_ID,
+    name: chicagoNotesBibliographyGenerator.title,
+    description: chicagoNotesBibliographyGenerator.summary,
+    category: "citation",
+    family: "citation",
+    status: "available",
+    href: CHICAGO_NOTES_BIBLIOGRAPHY_GENERATOR_PATH,
+  },
   comingSoon("ieee-citation-generator", "IEEE Citation Generator", "Formats numbered references in IEEE Style.", "citation"),
   comingSoon("harvard-citation-generator", "Harvard Citation Generator", "Formats author–date references in Harvard style.", "citation"),
   {

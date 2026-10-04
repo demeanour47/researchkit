@@ -42,7 +42,8 @@ export const chicagoAuthorDateCitations: Guide = {
       blocks: [
         { type: "paragraph", text: "Both Chicago systems record the same information about a source; they differ in where the citation goes and in the order of the elements. The Chicago Manual of Style's own samples for the same book show the difference." },
         { type: "table", caption: "One book in both Chicago systems (Chicago Manual of Style samples)", columns: ["System", "In the text", "At the end"], rows: [["Author-date", "(Yu 2020, 45)", "Yu, Charles. 2020. Interior Chinatown. Pantheon Books."], ["Notes and bibliography", "A numbered note: 1. Charles Yu, Interior Chinatown (Pantheon Books, 2020), 45.", "Yu, Charles. Interior Chinatown. Pantheon Books, 2020."]] },
-        { type: "paragraph", text: "In author-date the year moves up to follow the author; in a bibliography it comes at the end, with the publisher. ResearchKit's generator produces author-date only; notes and bibliography are shown here for comparison." },
+        { type: "paragraph", text: "In author-date the year moves up to follow the author; in a bibliography it comes at the end, with the publisher. ResearchKit's author-date generator produces author-date only; notes and bibliography have their own guide and generator." },
+        { type: "links", items: [{ label: "Chicago Notes and Bibliography guide", href: "/learn/chicago-notes-bibliography" }, { label: "Chicago Notes and Bibliography Citation Generator", href: "/tools/chicago-notes-bibliography-citation-generator" }] },
       ],
     },
     {
@@ -215,7 +216,7 @@ export const chicagoAuthorDateCitations: Guide = {
       id: "limitations",
       heading: "Limitations of automated citation",
       blocks: [
-        { type: "list", items: ["Notes and bibliography aren't generated yet.", "Headline-style capitalization and shortened titles need your judgment, so titles are used as you type them.", "Year letters such as 2024a depend on the whole reference list.", "Editors, translators, chapters, news articles, databases and other sources aren't supported yet; the generator says so rather than approximate them.", "A perfectly formatted reference can still contain a wrong date or a misspelled name. Formatting is not verification."] },
+        { type: "list", items: ["This generator produces author-date citations only; Chicago notes and bibliography have a separate generator.", "Headline-style capitalization and shortened titles need your judgment, so titles are used as you type them.", "Year letters such as 2024a depend on the whole reference list.", "Editors, translators, chapters, news articles, databases and other sources aren't supported yet; the generator says so rather than approximate them.", "A perfectly formatted reference can still contain a wrong date or a misspelled name. Formatting is not verification."] },
       ],
     },
     {
@@ -224,7 +225,7 @@ export const chicagoAuthorDateCitations: Guide = {
       blocks: [
         { type: "paragraph", text: "The Chicago Manual of Style is the authority for both Chicago systems; its website publishes sample citations and answers to questions from writers and editors. Your instructor's or publisher's requirements come first where they differ." },
         { type: "references", ids: ["chicago-2024"] },
-        { type: "links", items: [{ label: "Chicago Manual of Style: author-date sample citations", href: "https://www.chicagomanualofstyle.org/tools_citationguide/citation-guide-2.html" }, { label: "MLA 9 Citation and Works Cited Guide", href: "/learn/mla-9-citations-and-works-cited" }, { label: "APA 7 Citations and References", href: "/learn/apa-7-citations-and-references" }, { label: "How to choose a citation style", href: "/learn/how-to-choose-a-citation-style" }] },
+        { type: "links", items: [{ label: "Chicago Manual of Style: author-date sample citations", href: "https://www.chicagomanualofstyle.org/tools_citationguide/citation-guide-2.html" }, { label: "Chicago Notes and Bibliography", href: "/learn/chicago-notes-bibliography" }, { label: "MLA 9 Citation and Works Cited Guide", href: "/learn/mla-9-citations-and-works-cited" }, { label: "APA 7 Citations and References", href: "/learn/apa-7-citations-and-references" }, { label: "How to choose a citation style", href: "/learn/how-to-choose-a-citation-style" }] },
       ],
     },
   ],
@@ -232,7 +233,7 @@ export const chicagoAuthorDateCitations: Guide = {
     { question: "Is there a comma between the author and the year?", answer: "No: (Yu 2020). A comma separates the year from a page number, (Yu 2020, 45), and comes before n.d. when there is no date, (Yale University, n.d.)." },
     { question: "Do I write p. before page numbers?", answer: "No. Chicago author-date text citations give the page number alone after a comma." },
     { question: "When do I use et al.?", answer: "In the text, from three authors on. In the reference list, only when there are more than six authors, after the first three." },
-    { question: "Does ResearchKit generate footnotes?", answer: "Not yet. The generator covers the author-date system; notes and bibliography are planned separately." },
+    { question: "Does ResearchKit generate footnotes?", answer: "Yes, with the separate Chicago Notes and Bibliography Citation Generator. The generator this guide accompanies covers the author-date system." },
     { question: "Does a DOI mean the reference is correct?", answer: "No. A DOI identifies the work, but the authors, title, dates and numbers you entered still need checking against the source." },
   ],
   relatedToolIds: ["chicago-author-date-citation-generator", "citation-style-finder"],
