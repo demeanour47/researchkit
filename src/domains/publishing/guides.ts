@@ -12,6 +12,7 @@ import { ieeeCitationsAndReferences } from "../../../content/guides/ieee-citatio
 import { harvardCitationsAndReferences } from "../../../content/guides/harvard-citations-and-references";
 import { referenceCheckerGuide } from "../../../content/guides/reference-checker";
 import { paragraphStructureAndCounting } from "../../../content/guides/paragraph-structure-and-counting";
+import { sentenceStructureAndCounting } from "../../../content/guides/sentence-structure-and-counting";
 import { howToChooseAStatisticalTest } from "../../../content/guides/how-to-choose-a-statistical-test";
 import { spssFromDataPreparationToReporting } from "../../../content/guides/spss-from-data-preparation-to-reporting";
 import { howToCountCharactersInAcademicWriting } from "../../../content/guides/how-to-count-characters-in-academic-writing";
@@ -19,7 +20,7 @@ import { howToWriteAGoodResearchTitle } from "../../../content/guides/how-to-wri
 import { howToWriteResearchObjectives } from "../../../content/guides/how-to-write-research-objectives";
 import type { Guide } from "./guide";
 
-const GUIDES: readonly Guide[] = [howToChooseACitationStyle, apa7CitationsAndReferences, mla9CitationsAndWorksCited, chicagoAuthorDateCitations, chicagoNotesBibliography, ieeeCitationsAndReferences, harvardCitationsAndReferences, referenceCheckerGuide, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, paragraphStructureAndCounting, howToWriteResearchObjectives, howToChooseAStatisticalTest, spssFromDataPreparationToReporting];
+const GUIDES: readonly Guide[] = [howToChooseACitationStyle, apa7CitationsAndReferences, mla9CitationsAndWorksCited, chicagoAuthorDateCitations, chicagoNotesBibliography, ieeeCitationsAndReferences, harvardCitationsAndReferences, referenceCheckerGuide, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, paragraphStructureAndCounting, sentenceStructureAndCounting, howToWriteResearchObjectives, howToChooseAStatisticalTest, spssFromDataPreparationToReporting];
 
 /** A guide's address. Provisional until the URL strategy (ADR-0005) is accepted. */
 export const guidePath = (slug: string) => `/learn/${slug}`;

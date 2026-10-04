@@ -87,6 +87,8 @@ import {
   TOOL_PATH as RESEARCH_OBJECTIVES_GENERATOR_PATH,
 } from "@/tools/research-objectives-generator/path";
 import { page as paragraphCounter } from "@/tools/paragraph-counter/copy";
+import { page as sentenceCounter } from "@/tools/sentence-counter/copy";
+import { TOOL_ID as SENTENCE_COUNTER_ID, TOOL_PATH as SENTENCE_COUNTER_PATH } from "@/tools/sentence-counter/path";
 import { TOOL_ID as PARAGRAPH_COUNTER_ID, TOOL_PATH as PARAGRAPH_COUNTER_PATH } from "@/tools/paragraph-counter/path";
 import { page as textStatistics } from "@/tools/text-statistics/copy";
 import { TOOL_ID as TEXT_STATISTICS_ID, TOOL_PATH as TEXT_STATISTICS_PATH } from "@/tools/text-statistics/path";
@@ -254,8 +256,16 @@ export const TOOLS: readonly ToolEntry[] = [
     status: "available",
     href: PARAGRAPH_COUNTER_PATH,
   },
+  {
+    id: SENTENCE_COUNTER_ID,
+    name: sentenceCounter.title,
+    description: sentenceCounter.summary,
+    category: "writing",
+    family: "text-analysis",
+    status: "available",
+    href: SENTENCE_COUNTER_PATH,
+  },
   // Planned text tools belong to the text-analysis family, so related-tool lists show them as coming soon.
-  { ...comingSoon("sentence-counter", "Sentence Counter", "Counts sentences and shows their average length.", "writing"), family: "text-analysis" },
   { ...comingSoon("readability-checker", "Readability Checker", "Scores how easy your text is to read, using established readability formulas.", "writing"), family: "text-analysis" },
 
   {
