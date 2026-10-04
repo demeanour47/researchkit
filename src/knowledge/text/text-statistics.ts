@@ -36,14 +36,16 @@ export const SPEAKING_WORDS_PER_MINUTE = 130;
 
 const LETTER_OR_NUMBER = /[\p{L}\p{N}]/u;
 const WHITESPACE_RUN = /\s+/u;
-const LINE_BREAK = /\r\n|[\n\r\u0085\u2028\u2029]/u;
+/** Any line break: CRLF, LF, CR, or the Unicode line and paragraph separators. */
+export const LINE_BREAK = /\r\n|[\n\r\u0085\u2028\u2029]/u;
 const SENTENCE_END = /[.!?…]+[)\]"'”’»]*(?=\s|$)/gu;
 const ONLY_WHITESPACE = /^\s+$/u;
 const ONLY_LINE_BREAK = /^(?:\r\n|[\n\r\u0085\u2028\u2029])$/u;
 
 const graphemes = new Intl.Segmenter("en", { granularity: "grapheme" });
 
-const hasLetterOrNumber = (text: string) => LETTER_OR_NUMBER.test(text);
+/** Whether text has anything to count: at least one letter or number, in any script. */
+export const hasLetterOrNumber = (text: string) => LETTER_OR_NUMBER.test(text);
 
 /** The words in a text, by the word rule above. Every word count derives from this. */
 function wordsOf(text: string): string[] {
@@ -134,7 +136,8 @@ export function countCharacters(text: string): CharacterCounts {
   return { withSpaces, withoutSpaces };
 }
 
-function paragraphsOf(text: string): string[] {
+/** The paragraphs in a text by the paragraph rule above: each line with a letter or number. */
+export function paragraphsOf(text: string): string[] {
   return text.split(LINE_BREAK).filter(hasLetterOrNumber);
 }
 
