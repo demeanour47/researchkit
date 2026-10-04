@@ -49,13 +49,23 @@ export const results = {
   ignored: (value: number) => `${count(value)} ${value === 1 ? "block has" : "blocks have"} no letters or numbers, such as *** or ---, and ${value === 1 ? "isn't" : "aren't"} counted.`,
   listHeading: "Words in each paragraph",
   listSummary: (value: number) => `Words in each paragraph (${count(value)})`,
-  columns: { paragraph: "Paragraph", opening: "Begins", words: "Words", note: "Note" },
+  columns: { paragraph: "Paragraph", opening: "Begins", words: "Words" },
   shortestNote: "Shortest",
   longestNote: "Longest",
   copySubject: "results",
   clear: "Clear text",
   cleared: "Text cleared.",
 } as const;
+
+/** Labels for the table of each paragraph's words. */
+export const tableLabels = (total: number) => ({
+  summary: results.listSummary(total),
+  caption: results.listHeading,
+  columns: { item: results.columns.paragraph, opening: results.columns.opening, words: results.columns.words },
+  shortest: results.shortestNote,
+  longest: results.longestNote,
+  truncated: (shown: number, all: number) => `Showing the first ${count(shown)} of ${count(all)} paragraphs. Copy the results to get every paragraph's words.`,
+});
 
 /** "42 words, paragraph 3". */
 export const describeRecord = (paragraph: ParagraphRecord) => `${words(paragraph.words)}, paragraph ${count(paragraph.position)}`;

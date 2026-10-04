@@ -193,7 +193,7 @@ export const WORDS_PER_PAGE_DOUBLE_SPACED = 250;
 const toOneDecimal = (value: number) => Math.round(value * 10) / 10;
 
 /** An average rounded to one decimal place, or null when there is nothing to average over. */
-const average = (total: number, count: number): number | null => (count === 0 ? null : toOneDecimal(total / count));
+export const average = (total: number, count: number): number | null => (count === 0 ? null : toOneDecimal(total / count));
 
 const longest = (values: readonly number[]) => values.reduce((max, value) => Math.max(max, value), 0);
 

@@ -22,7 +22,7 @@
  * right or wrong.
  */
 
-import { LINE_BREAK, countWords, hasLetterOrNumber, paragraphsOf } from "./text-statistics";
+import { LINE_BREAK, average, countWords, hasLetterOrNumber, paragraphsOf } from "./text-statistics";
 
 export type ParagraphBreak = "blank-line" | "line";
 
@@ -77,9 +77,24 @@ function blocks(text: string): string[][] {
   return found;
 }
 
-function opening(text: string): string {
-  const words = text.trim().split(WORD_SEPARATOR);
-  return words.length > OPENING_WORDS ? `${words.slice(0, OPENING_WORDS).join(" ")}…` : words.join(" ");
+/** A text's first words, to identify it in a list, with "…" if it continues. */
+export function opening(text: string, words = OPENING_WORDS): string {
+  const found = text.trim().split(WORD_SEPARATOR);
+  return found.length > words ? `${found.slice(0, words).join(" ")}…` : found.join(" ");
+}
+
+export interface ParagraphGroups {
+  /** Every non-blank block (or line), counted or not. */
+  groups: string[][];
+  /** The groups that are paragraphs: those with a letter or number. */
+  paragraphs: string[][];
+}
+
+/** The text's paragraphs, each as its lines, by the chosen break rule. Shared with the Sentence Counter, whose sentences never cross a paragraph break. */
+export function paragraphGroups(text: string, breaks: ParagraphBreak = "blank-line"): ParagraphGroups {
+  const groups = breaks === "blank-line" ? blocks(text) : text.split(LINE_BREAK).filter((line) => !BLANK.test(line)).map((line) => [line]);
+  const paragraphs = breaks === "blank-line" ? groups.filter((group) => hasLetterOrNumber(group.join("\n"))) : paragraphsOf(text).map((line) => [line]);
+  return { groups, paragraphs };
 }
 
 const record = (lines: readonly string[], position: number): ParagraphRecord => {
@@ -89,8 +104,7 @@ const record = (lines: readonly string[], position: number): ParagraphRecord => 
 
 /** The paragraph structure of a text, with paragraphs ending at blank lines or at every line break. */
 export function analyseParagraphs(text: string, breaks: ParagraphBreak = "blank-line"): ParagraphAnalysis {
-  const groups = breaks === "blank-line" ? blocks(text) : text.split(LINE_BREAK).filter((line) => !BLANK.test(line)).map((line) => [line]);
-  const counted = breaks === "blank-line" ? groups.filter((group) => hasLetterOrNumber(group.join("\n"))) : paragraphsOf(text).map((line) => [line]);
+  const { groups, paragraphs: counted } = paragraphGroups(text, breaks);
   const paragraphs = counted.map((group, index) => record(group, index + 1));
   const words = paragraphs.reduce((total, paragraph) => total + paragraph.words, 0);
   const shortest = paragraphs.reduce<ParagraphRecord | null>((min, paragraph) => (min === null || paragraph.words < min.words ? paragraph : min), null);
@@ -101,7 +115,7 @@ export function analyseParagraphs(text: string, breaks: ParagraphBreak = "blank-
     paragraphs,
     count: paragraphs.length,
     words,
-    averageWords: paragraphs.length === 0 ? null : Math.round((words / paragraphs.length) * 10) / 10,
+    averageWords: average(words, paragraphs.length),
     shortest,
     longest,
     ignored: groups.length - counted.length,

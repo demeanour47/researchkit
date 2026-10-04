@@ -3,8 +3,9 @@
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Callout, CopyButton, EmptyState, Icon, RadioGroup, TextField, VisuallyHidden } from "@/ui";
 import { WordLengthTable } from "@/features/text-analysis";
-import { PARAGRAPH_BREAKS, analyseParagraphs, type ParagraphBreak } from "@/knowledge/text/paragraphs";
-import { announcement, form, resultLines, results, resultsText, tableLabels } from "./copy";
+import { PARAGRAPH_BREAKS, type ParagraphBreak } from "@/knowledge/text/paragraphs";
+import { analyseSentences, sentenceOpening } from "@/knowledge/text/sentences";
+import { OPEN_LIST_UP_TO, announcement, form, resultLines, results, resultsText, tableLabels } from "./copy";
 
 /** How long typing must pause before results are announced to screen readers, as in the other text tools. */
 const ANNOUNCE_AFTER_MS = 1000;
@@ -13,15 +14,15 @@ const breakOptions = PARAGRAPH_BREAKS.map((value) => ({ value, label: form.break
 const card = "grid min-w-0 content-start gap-1 rounded-panel border border-border bg-surface p-4";
 
 /** The text box, the paragraph-break choice and the live results. Everything runs in the browser. */
-export function ParagraphCounterInput() {
+export function SentenceCounterInput() {
   const [text, setText] = useState("");
   const [breaks, setBreaks] = useState<ParagraphBreak>("blank-line");
   const [spoken, setSpoken] = useState("");
   const hasEdited = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const deferredText = useDeferredValue(text);
-  const analysis = useMemo(() => analyseParagraphs(deferredText, breaks), [deferredText, breaks]);
-  const isEmpty = analysis.count === 0 && analysis.ignored === 0;
+  const analysis = useMemo(() => analyseSentences(deferredText, breaks), [deferredText, breaks]);
+  const items = useMemo(() => analysis.sentences.map((sentence) => ({ position: sentence.position, opening: sentenceOpening(sentence), words: sentence.words })), [analysis]);
 
   useEffect(() => {
     if (!hasEdited.current) return;
@@ -40,7 +41,7 @@ export function ParagraphCounterInput() {
     <div className="grid min-w-0 gap-8">
       <TextField
         ref={textareaRef}
-        id="paragraph-text"
+        id="sentence-text"
         multiline
         label={form.label}
         hint={form.hint}
@@ -54,21 +55,32 @@ export function ParagraphCounterInput() {
         spellCheck
       />
 
-      <RadioGroup name="paragraph-breaks" variant="inline" legend={form.breaksLegend} hint={form.breaksHint} options={breakOptions} value={breaks} onChange={(value) => { hasEdited.current = true; setBreaks(value); }} />
+      <RadioGroup
+        name="sentence-breaks"
+        variant="inline"
+        legend={form.breaksLegend}
+        hint={form.breaksHint}
+        options={breakOptions}
+        value={breaks}
+        onChange={(value) => {
+          hasEdited.current = true;
+          setBreaks(value);
+        }}
+      />
 
       <section aria-labelledby="results-title" className="grid min-w-0 gap-4">
         <h2 id="results-title" className="text-heading font-semibold">
           {results.heading}
         </h2>
-        {isEmpty ? (
+        {analysis.count === 0 ? (
           <EmptyState icon="file-text" title={results.empty.title} level={3}>
             {results.empty.description}
           </EmptyState>
         ) : (
           <>
-            {analysis.lineBreaksWithoutBlankLines && (
-              <Callout tone="info" title={results.lineBreaksTitle}>
-                {results.lineBreaks}
+            {analysis.joinedUnpunctuatedLine && (
+              <Callout tone="info" title={results.joinedTitle}>
+                {results.joined}
               </Callout>
             )}
             <dl className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -79,8 +91,14 @@ export function ParagraphCounterInput() {
                 </div>
               ))}
             </dl>
-            {analysis.ignored > 0 && <p className="text-small text-text-muted">{results.ignored(analysis.ignored)}</p>}
-            {analysis.count > 0 && <WordLengthTable items={analysis.paragraphs} shortest={analysis.shortest?.position ?? null} longest={analysis.longest?.position ?? null} labels={tableLabels(analysis.count)} />}
+            <WordLengthTable
+              key={analysis.count > OPEN_LIST_UP_TO ? "folded" : "open"}
+              items={items}
+              shortest={analysis.shortest?.position ?? null}
+              longest={analysis.longest?.position ?? null}
+              labels={tableLabels(analysis.count)}
+              open={analysis.count <= OPEN_LIST_UP_TO}
+            />
             <div className="flex flex-wrap gap-3">
               <CopyButton text={resultsText(analysis)} subject={results.copySubject} />
               <Button variant="outline" size="sm" onClick={clear}>
