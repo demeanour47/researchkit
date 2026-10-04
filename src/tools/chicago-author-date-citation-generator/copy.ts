@@ -15,7 +15,7 @@ export const page = {
   metaDescription:
     "Format Chicago author-date reference list entries and in-text citations for books, journal articles and web pages, following the Chicago Manual of Style, 18th edition, with every decision explained.",
   intro:
-    "Enter one source to get its Chicago author-date reference, parenthetical citation and narrative citation. This tool covers Chicago's author-date system; the notes-and-bibliography system is coming separately.",
+    "Enter one source to get its Chicago author-date reference, parenthetical citation and narrative citation. This tool covers Chicago's author-date system; for footnotes and a bibliography, use the Chicago Notes and Bibliography Citation Generator.",
   noScript: "The generator needs JavaScript to format your source. Turn on JavaScript to use it.",
   rulesHeading: "How references are formatted",
   limitsHeading: "What the generator can't check",
@@ -201,7 +201,7 @@ export const rules: readonly string[] = [
 ];
 
 export const limits: readonly string[] = [
-  "Notes and bibliography. This tool covers Chicago's author-date system only. The notes-and-bibliography system, with footnotes, is coming separately.",
+  "Notes and bibliography. This tool covers Chicago's author-date system only. For footnotes and a bibliography, use the Chicago Notes and Bibliography Citation Generator.",
   "Same author, same year. Letters such as 2024a and 2024b depend on your whole reference list, so the generator can't assign them.",
   "Capitalization and short titles. Titles are used as you type them; headline style and shortened titles need your judgment.",
   "Other sources and contributors. Chapters, editors, translators, news articles and other formats aren't supported yet.",

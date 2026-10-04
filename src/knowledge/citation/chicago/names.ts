@@ -57,7 +57,20 @@ export function listAuthors(authors: readonly NamedContributor[]): string {
   return `${names.slice(0, -1).join(", ")}, and ${names[names.length - 1]}`;
 }
 
-/** Names for a text citation: "Yu", "Binder and Kidder", "Snyder et al.". */
+/**
+ * Names for a full note, in normal order: "Charles Yu", "Amy J. Binder and Jeffrey L.
+ * Kidder", and from three authors the first and et al.: "Carl D. Snyder et al." (CMOS 18
+ * notes-and-bibliography sample citations).
+ */
+export function noteAuthors(authors: readonly NamedContributor[]): string {
+  const [first, second] = authors;
+  if (!first) return "";
+  if (authors.length === 1) return normalOrder(first);
+  if (authors.length === 2) return `${normalOrder(first)} and ${normalOrder(second)}`;
+  return `${normalOrder(first)} et al.`;
+}
+
+/** Names for a text citation or a shortened note: "Yu", "Binder and Kidder", "Snyder et al.". */
 export function textAuthors(authors: readonly NamedContributor[]): string {
   const [first, second] = authors;
   if (!first) return "";

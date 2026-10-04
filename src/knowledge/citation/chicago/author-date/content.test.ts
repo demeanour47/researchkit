@@ -29,9 +29,11 @@ describe("Chicago author-date guide", () => {
     assert.deepEqual(guide.relatedToolIds, ["chicago-author-date-citation-generator", "citation-style-finder"]);
   });
 
-  it("does not claim the generator produces notes and bibliography", () => {
-    assert.match(text, /generator produces author-date only/);
-    assert.match(text, /Notes and bibliography aren't generated yet/);
+  it("does not claim the author-date generator produces notes, and points to the one that does", () => {
+    assert.match(text, /author-date generator produces author-date only/);
+    assert.match(text, /This generator produces author-date citations only/);
+    assert.ok(text.includes("/tools/chicago-notes-bibliography-citation-generator"));
+    assert.ok(text.includes("/learn/chicago-notes-bibliography"));
   });
 
   it("shows exactly what the generator produces for every generator example", () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
-import type { CitationLocator, LocatorKind, SourceRecord } from "@/knowledge/citation/source";
+import type { SourceRecord } from "@/knowledge/citation/source";
 import { emptyAuthor, type AuthorDraft } from "./author-draft";
 import { firstFieldId } from "./author-fields";
 import { blankDraft, isEmptyDraft, toSource, withSourceType, type SourceDraft } from "./source-draft";
@@ -9,11 +9,11 @@ import { blankDraft, isEmptyDraft, toSource, withSourceType, type SourceDraft } 
 /** How long typing must pause before an updated result is announced to screen readers. */
 const ANNOUNCE_AFTER_MS = 1000;
 
-export interface CitationFormOptions<Kind extends LocatorKind> {
+export interface CitationFormOptions<Kind extends string> {
   /** The same prefix the form's fields use, so focus can return to the first field. */
   idPrefix: string;
-  /** The locator kind selected when the form is new or cleared. */
-  defaultLocator: Kind;
+  /** The locator kind selected when the form is new or cleared, or "" for none. */
+  defaultLocator: Kind | "";
 }
 
 /**
@@ -22,7 +22,7 @@ export interface CitationFormOptions<Kind extends LocatorKind> {
  * newly added author, back to the add button when one is removed, and to the first
  * field when the form is cleared. Nothing is stored or sent anywhere.
  */
-export function useCitationForm<Kind extends LocatorKind>({ idPrefix, defaultLocator }: CitationFormOptions<Kind>) {
+export function useCitationForm<Kind extends string>({ idPrefix, defaultLocator }: CitationFormOptions<Kind>) {
   const nextKey = useRef(2);
   const [draft, setDraft] = useState<SourceDraft>(() => blankDraft(1));
   const [locatorKind, setLocatorKind] = useState<Kind | "">(defaultLocator);
@@ -36,7 +36,7 @@ export function useCitationForm<Kind extends LocatorKind>({ idPrefix, defaultLoc
   const focusFirstField = useRef(false);
 
   const record = useMemo<SourceRecord | null>(() => (isEmptyDraft(draft) ? null : { source: toSource(draft), provenance: "user-entered" }), [draft]);
-  const locator = useMemo<CitationLocator | undefined>(
+  const locator = useMemo<{ kind: Kind; value: string } | undefined>(
     () => (locatorKind && locatorValue.trim() ? { kind: locatorKind, value: locatorValue } : undefined),
     [locatorKind, locatorValue],
   );

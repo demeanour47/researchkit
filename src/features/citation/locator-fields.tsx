@@ -1,7 +1,6 @@
 "use client";
 
 import { SelectField, TextField } from "@/ui";
-import type { LocatorKind } from "@/knowledge/citation/source";
 
 export interface LocatorFieldLabels {
   heading: string;
@@ -12,7 +11,7 @@ export interface LocatorFieldLabels {
   valueHint: string;
 }
 
-export interface LocatorFieldsProps<Kind extends LocatorKind> {
+export interface LocatorFieldsProps<Kind extends string> {
   idPrefix: string;
   labels: LocatorFieldLabels;
   /** The kinds of locator the style formats, with their labels. */
@@ -24,7 +23,7 @@ export interface LocatorFieldsProps<Kind extends LocatorKind> {
 }
 
 /** Where in the source a citation points: a page, a range, or whatever else the style formats. */
-export function LocatorFields<Kind extends LocatorKind>({ idPrefix, labels, kinds, kind, value, onKindChange, onValueChange }: LocatorFieldsProps<Kind>) {
+export function LocatorFields<Kind extends string>({ idPrefix, labels, kinds, kind, value, onKindChange, onValueChange }: LocatorFieldsProps<Kind>) {
   return (
     <section aria-labelledby={`${idPrefix}-locator-title`} className="grid gap-4 border-t border-border pt-8">
       <h2 id={`${idPrefix}-locator-title`} className="text-heading font-semibold">

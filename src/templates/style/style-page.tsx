@@ -9,30 +9,33 @@ import { publishedResources, stylePageCopy as copy, usefulNowIds, type Published
 const availableTool = (id: string) => TOOLS.find((tool) => tool.id === id && tool.status === "available");
 const availableGuide = (id: string) => GUIDE_LISTINGS.find((guide) => guide.id === id && guide.status === "available");
 
-/** The style's own guide and generator, when both are published, and what they cover. */
-function published(style: ProfiledStyleId): { tool: CatalogueItem; guide: CatalogueItem; coverage?: PublishedResources["coverage"] } | null {
-  const ids = publishedResources[style];
-  const tool = ids && availableTool(ids.tool);
-  const guide = ids && availableGuide(ids.guide);
-  return tool && guide ? { tool, guide, coverage: ids.coverage } : null;
+/** The style's published generators and guides, each system's pair in order, and what they cover; null if none is published yet. */
+function published(style: ProfiledStyleId): { items: [CatalogueItem, "tool" | "guide"][]; coverage?: PublishedResources["coverage"] } | null {
+  const resources = publishedResources[style];
+  const items = (resources?.systems ?? []).flatMap(({ tool, guide }) => {
+    const toolItem = availableTool(tool);
+    const guideItem = availableGuide(guide);
+    return toolItem && guideItem ? [[toolItem, "tool"], [guideItem, "guide"]] as [CatalogueItem, "tool" | "guide"][] : [];
+  });
+  return items.length > 0 ? { items, coverage: resources?.coverage } : null;
 }
 
-/** The style page's description of its published guide and generator, or null while they are coming soon. */
+/** The style page's description of its published guides and generators, or null while they are coming soon. */
 export function publishedMeta(style: ProfiledStyleId): string | null {
   const resources = published(style);
   return resources ? (resources.coverage?.meta ?? copy.publishedMeta) : null;
 }
 
-/** A citation style's page: what it is, where it's used, and its guide and generator, or what to use until they are published. */
+/** A citation style's page: what it is, where it's used, and its guides and generators, or what to use until they are published. */
 export function StylePage({ style }: { style: ProfiledStyleId }) {
   const profile = getStyleProfile(style);
   const facts = CITATION_STYLES[style];
   const resources = published(style);
-  const tool = resources?.tool ?? availableTool(usefulNowIds.tool);
-  const guide = resources?.guide ?? availableGuide(usefulNowIds.guide);
-  const usefulNow: [CatalogueItem, "tool" | "guide"][] = [
-    ...(tool ? [[tool, "tool"] as [CatalogueItem, "tool"]] : []),
-    ...(guide ? [[guide, "guide"] as [CatalogueItem, "guide"]] : []),
+  const fallbackTool = availableTool(usefulNowIds.tool);
+  const fallbackGuide = availableGuide(usefulNowIds.guide);
+  const usefulNow: [CatalogueItem, "tool" | "guide"][] = resources?.items ?? [
+    ...(fallbackTool ? [[fallbackTool, "tool"] as [CatalogueItem, "tool"]] : []),
+    ...(fallbackGuide ? [[fallbackGuide, "guide"] as [CatalogueItem, "guide"]] : []),
   ];
 
   return (
