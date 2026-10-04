@@ -4,6 +4,7 @@
  * NaN, Infinity or impossible probability reaches the calculation.
  */
 
+import { decimal, probability, wholeNumber } from "./parse";
 import { DESIGN_INFO, MAX_GROUPS, cohensH, fisherZ, minimumDetectableEffect, powerFor, requiredSampleSize, type Design, type Mode, type PowerParameters, type Tails } from "./power";
 
 export type FieldId = "alpha" | "power" | "effect" | "p0" | "p1" | "p2" | "r" | "r0" | "groups" | "n";
@@ -73,39 +74,6 @@ export type PowerCalculation =
 /** Common target powers shown beside a sample size, for comparison. */
 export const SENSITIVITY_POWERS = [0.8, 0.9, 0.95] as const;
 
-const DECIMAL = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/u;
-const WHOLE = /^\d+$/u;
-
-type Parsed = { ok: true; value: number } | { ok: false; message: string };
-
-function decimal(text: string | undefined, label: string, example: string): Parsed {
-  const value = (text ?? "").trim();
-  if (value === "") return { ok: false, message: `Enter ${label}, such as ${example}.` };
-  if (value.endsWith("%")) return { ok: false, message: `Enter ${label} as a decimal, not a percentage: ${example} rather than ${Number(example) * 100}%.` };
-  if (!DECIMAL.test(value)) return { ok: false, message: `Enter ${label} as a number, such as ${example}.` };
-  return { ok: true, value: Number(value) };
-}
-
-function probability(text: string | undefined, label: string, example: string, inclusive: boolean): Parsed {
-  const parsed = decimal(text, label, example);
-  if (!parsed.ok) return parsed;
-  const inside = inclusive ? parsed.value >= 0 && parsed.value <= 1 : parsed.value > 0 && parsed.value < 1;
-  if (inside) return parsed;
-  const range = inclusive ? "from 0 to 1" : "between 0 and 1";
-  // A value above 1 and up to 100 is most likely a percentage, such as 80 for 0.80.
-  if (parsed.value > 1 && parsed.value <= 100) return { ok: false, message: `Enter ${label} as a decimal ${range}, not a percentage: ${Number((parsed.value / 100).toPrecision(12))} rather than ${parsed.value}.` };
-  return { ok: false, message: `Enter ${label} ${range}, such as ${example}.` };
-}
-
-function wholeNumber(text: string | undefined, label: string, minimum: number, maximum: number): Parsed {
-  const value = (text ?? "").trim();
-  if (value === "") return { ok: false, message: `Enter ${label}.` };
-  if (!WHOLE.test(value)) return { ok: false, message: `Enter ${label} as a whole number${DECIMAL.test(value) && Number(value) > 0 ? "" : ` of at least ${minimum}`}.` };
-  const number = Number(value);
-  if (number < minimum) return { ok: false, message: `Enter ${label} of at least ${minimum}.` };
-  if (number > maximum) return { ok: false, message: `Enter ${label} of no more than ${maximum.toLocaleString("en")}.` };
-  return { ok: true, value: number };
-}
 
 const SAMPLE_LABEL = { total: "a sample size", pairs: "a number of pairs", "per-group": "a sample size per group" } as const;
 

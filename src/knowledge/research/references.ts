@@ -482,9 +482,93 @@ export const POWER_REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * Sources for the confidence interval methods and their interpretation, cited by the
+ * confidence intervals guide. Each article was checked against Crossref unless its
+ * comment says otherwise. Student (1908) is a pseudonym and Newcombe's two 1998
+ * papers carry year suffixes, so this group's format is tested with the guide.
+ */
+export const CONFIDENCE_INTERVAL_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against Crossref (DOI 10.2307/2331554): author "Student", Biometrika volume 6, issue 1, first page 1.
+    // Crossref doesn't record the last page; 1–25 is the range consistently cited. Reviewer: confirm the last page.
+    id: "student-1908",
+    cite: "Student, 1908",
+    year: 1908,
+    apa: "Student. (1908). The probable error of a mean. *Biometrika, 6*(1), 1–25.",
+    doi: "10.2307/2331554",
+  },
+  {
+    // Checked against Crossref (DOI 10.1093/biomet/34.1-2.28): author, volume 34, issue 1–2, pages 28–35. Crossref's
+    // title misspells "variances" as "varlances"; the article's title is given here.
+    id: "welch-1947",
+    cite: "Welch, 1947",
+    year: 1947,
+    apa: "Welch, B. L. (1947). The generalization of “Student's” problem when several different population variances are involved. *Biometrika, 34*(1–2), 28–35.",
+    doi: "10.1093/biomet/34.1-2.28",
+  },
+  {
+    // Checked against Crossref (DOI 10.1080/01621459.1927.10502953): author, title, volume 22, issue 158, pages 209–212.
+    id: "wilson-1927",
+    cite: "Wilson, 1927",
+    year: 1927,
+    apa: "Wilson, E. B. (1927). Probable inference, the law of succession, and statistical inference. *Journal of the American Statistical Association, 22*(158), 209–212.",
+    doi: "10.1080/01621459.1927.10502953",
+  },
+  {
+    // Checked against Crossref: author, title, volume 17, issue 8, pages 857–872. The DOI is a legacy SICI.
+    id: "newcombe-1998a",
+    cite: "Newcombe, 1998a",
+    year: 1998,
+    apa: "Newcombe, R. G. (1998a). Two-sided confidence intervals for the single proportion: Comparison of seven methods. *Statistics in Medicine, 17*(8), 857–872.",
+    doi: "10.1002/(SICI)1097-0258(19980430)17:8<857::AID-SIM777>3.0.CO;2-E",
+  },
+  {
+    // Checked against Crossref: author, title, volume 17, issue 8, pages 873–890. The DOI is a legacy SICI.
+    id: "newcombe-1998b",
+    cite: "Newcombe, 1998b",
+    year: 1998,
+    apa: "Newcombe, R. G. (1998b). Interval estimation for the difference between independent proportions: Comparison of eleven methods. *Statistics in Medicine, 17*(8), 873–890.",
+    doi: "10.1002/(SICI)1097-0258(19980430)17:8<873::AID-SIM779>3.0.CO;2-I",
+  },
+  {
+    // Checked against Crossref (DOI 10.1177/0962280211415469): authors, title, volume 24, issue 2, pages 224–254. Published
+    // online in 2011; APA uses the year of the issue, 2015.
+    id: "fagerland-2015",
+    cite: "Fagerland et al., 2015",
+    year: 2015,
+    apa: "Fagerland, M. W., Lydersen, S., & Laake, P. (2015). Recommended confidence intervals for two independent binomial proportions. *Statistical Methods in Medical Research, 24*(2), 224–254.",
+    doi: "10.1177/0962280211415469",
+  },
+  {
+    // Metron has no DOIs, so this couldn't be checked against Crossref. Volume 1, pages 3–32, is how the statistical
+    // literature consistently cites it. Reviewer: confirm against the original.
+    id: "fisher-1921",
+    cite: "Fisher, 1921",
+    year: 1921,
+    apa: "Fisher, R. A. (1921). On the “probable error” of a coefficient of correlation deduced from a small sample. *Metron, 1*, 3–32.",
+  },
+  {
+    // Checked against Crossref (DOI 10.3758/s13423-013-0572-3): authors, title, volume 21, issue 5, pages 1157–1164.
+    id: "hoekstra-2014",
+    cite: "Hoekstra et al., 2014",
+    year: 2014,
+    apa: "Hoekstra, R., Morey, R. D., Rouder, J. N., & Wagenmakers, E.-J. (2014). Robust misinterpretation of confidence intervals. *Psychonomic Bulletin & Review, 21*(5), 1157–1164.",
+    doi: "10.3758/s13423-013-0572-3",
+  },
+  {
+    // Checked against Crossref (DOI 10.1177/0956797613504966): author, title and subtitle, volume 25, issue 1, pages 7–29.
+    id: "cumming-2014",
+    cite: "Cumming, 2014",
+    year: 2014,
+    apa: "Cumming, G. (2014). The new statistics: Why and how. *Psychological Science, 25*(1), 7–29.",
+    doi: "10.1177/0956797613504966",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES, ...POWER_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES, ...POWER_REFERENCES, ...CONFIDENCE_INTERVAL_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }
