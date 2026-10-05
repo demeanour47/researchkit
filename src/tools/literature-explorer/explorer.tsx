@@ -139,7 +139,7 @@ export function Explorer() {
         )}
 
         {state.phase === "error" && (
-          <Callout tone={state.kind === "rate-limited" ? "caution" : "danger"} title={state.kind === "invalid" ? undefined : "Search unavailable"}>
+          <Callout className="animate-rise-in" tone={state.kind === "rate-limited" ? "caution" : "danger"} title={state.kind === "invalid" ? undefined : "Search unavailable"}>
             {state.kind === "rate-limited" ? ui.rateLimited : state.kind === "malformed" ? ui.malformed : state.kind === "offline" ? ui.offline : state.kind === "invalid" ? (state.message ?? ui.failed) : ui.failed}
           </Callout>
         )}

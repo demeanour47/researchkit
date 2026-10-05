@@ -4,6 +4,7 @@ import { TOOLS, TOOLS_INDEX_PATH, TOOL_CATEGORIES, type CatalogueItem } from "@/
 import { CatalogueList, toolIcon } from "@/features/catalogue";
 import { Breadcrumbs } from "@/features/site";
 import { LATEST_TOOL_IDS } from "@/config/highlights";
+import { NextSteps, ProgressTracker } from "@/features/engagement";
 import { NextStage, StageNav } from "@/features/workspace/stage-nav";
 import { moduleForTool } from "@/knowledge/workspace/modules";
 
@@ -193,6 +194,9 @@ export function ToolPageLayout({ title, intro, noScript, children, sections = []
             <NextStage stage={stage.id} />
           </div>
         )}
+
+        {tool && <NextSteps toolId={tool.id} />}
+        {tool && <ProgressTracker kind="tools" id={tool.id} />}
 
         {shownSections.length > 0 && <div className="grid gap-6 py-section-compact">{shownSections.map((section) => <ExplanationSection key={section.id} section={section} />)}</div>}
 

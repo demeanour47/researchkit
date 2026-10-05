@@ -1,4 +1,4 @@
-import { Link, cardClasses, cx } from "@/ui";
+import { Icon, Link, cardClasses, cx } from "@/ui";
 import { getStyleProfile, stylePath, type GuideBlock } from "@/domains/publishing";
 import { ReferenceList } from "@/features/research/reference-list";
 import { TitleExamples } from "@/features/research/title-examples";
@@ -23,6 +23,26 @@ export function ContentBlock({ block }: { block: GuideBlock }) {
   switch (block.type) {
     case "paragraph":
       return <p>{block.text}</p>;
+    case "reveal":
+      return (
+        <details className="group rounded-panel border border-border bg-sunken transition-colors duration-(--duration-instant) ease-standard open:border-border-control">
+          <summary className="flex min-h-control cursor-pointer list-none items-center justify-between gap-3 rounded-panel p-4 font-semibold focus-ring [&::-webkit-details-marker]:hidden">
+            <span>{block.prompt}</span>
+            <Icon name="chevron-down" className="shrink-0 text-text-muted transition-transform duration-(--duration-quick) ease-standard group-open:rotate-180" />
+          </summary>
+          <div className="grid animate-rise-in gap-3 border-t border-border p-4">
+            <p>
+              <span className="font-semibold">Weak: </span>
+              {block.weak}
+            </p>
+            <p>
+              <span className="font-semibold">Improved: </span>
+              {block.improved}
+            </p>
+            <p className="text-text-muted">{block.explanation}</p>
+          </div>
+        </details>
+      );
     case "list": {
       const List = block.ordered ? "ol" : "ul";
       return (

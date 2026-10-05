@@ -12,7 +12,7 @@ export const blocksOf = (guide: Guide): GuideBlock[] => guide.sections.flatMap((
 /** The guide's prose: paragraphs, list items, table cells and FAQ answers. */
 export function proseOf(guide: Guide): string {
   const blocks = blocksOf(guide).map((block) =>
-    block.type === "paragraph" ? block.text : block.type === "list" ? block.items.join(" ") : block.type === "table" ? [block.caption, ...block.rows.flat()].join(" ") : "",
+    block.type === "paragraph" ? block.text : block.type === "reveal" ? [block.prompt, block.weak, block.improved, block.explanation].join(" ") : block.type === "list" ? block.items.join(" ") : block.type === "table" ? [block.caption, ...block.rows.flat()].join(" ") : "",
   );
   return [guide.summary, ...blocks, ...guide.faq.map((item) => `${item.question} ${item.answer}`)].join(" ");
 }
