@@ -1,4 +1,5 @@
-import { Badge, Hero, Icon, Link, PageContainer } from "@/ui";
+import { Badge, ButtonLink, Hero, Icon, Link, PageContainer } from "@/ui";
+import { ProgressTracker } from "@/features/engagement";
 import { GUIDES_INDEX_PATH, GUIDE_LISTINGS, RESEARCH_STAGES, TOOLS, publishedGuides, stagePath } from "@/domains/catalogue";
 import type { Guide } from "@/domains/publishing";
 import { CatalogueList } from "@/features/catalogue";
@@ -128,6 +129,21 @@ export function GuidePage({ guide }: { guide: Guide }) {
             <CatalogueList items={relatedTools} layout="pair" />
           </section>
         )}
+
+        {relatedTools.length > 0 && relatedTools[0].status === "available" && (
+          <section aria-labelledby="apply-title" className="grid gap-3 rounded-panel border border-border bg-sunken p-6">
+            <h2 id="apply-title" className="font-display text-heading-sm font-semibold">
+              Ready to apply this?
+            </h2>
+            <p className="text-text-muted">Put what you have read into practice with {relatedTools[0].name}.</p>
+            <div>
+              <ButtonLink href={relatedTools[0].href} trailingIcon="arrow-right">
+                Open {relatedTools[0].name}
+              </ButtonLink>
+            </div>
+          </section>
+        )}
+        <ProgressTracker kind="guides" id={guide.slug} />
       </PageContainer>
     </article>
   );

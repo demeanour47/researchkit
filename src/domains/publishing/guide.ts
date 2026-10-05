@@ -9,6 +9,8 @@ import type { ProfiledStyleId } from "./style-profile";
 
 export type GuideBlock =
   | { type: "paragraph"; text: string }
+  /** A weak example the reader can set against an improved one, with the reason; all of it is in the page's HTML. */
+  | { type: "reveal"; prompt: string; weak: string; improved: string; explanation: string }
   | { type: "list"; ordered?: boolean; items: readonly string[] }
   /** Styles described from their shared profiles, with facts from the knowledge layer. */
   | { type: "styles"; styles: readonly ProfiledStyleId[] }

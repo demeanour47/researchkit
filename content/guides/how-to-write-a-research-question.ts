@@ -124,6 +124,27 @@ export const howToWriteAResearchQuestion: Guide = {
       ],
     },
     {
+      id: "weak-or-improved",
+      heading: "Try it: weak or improved?",
+      blocks: [
+        { type: "paragraph", text: "Think about what is wrong with each question below, then open it to compare. The examples are invented for practice." },
+        {
+          type: "reveal",
+          prompt: "A question about social media and students",
+          weak: "Is social media bad for students?",
+          improved: "Is the time undergraduate students in Kathmandu spend on social media each day associated with their self-reported sleep duration?",
+          explanation: "“Bad” is a judgement, not a measurable outcome, and “students” and “social media” are too broad to study. The improved version names the variables, the population and the setting.",
+        },
+        {
+          type: "reveal",
+          prompt: "A question that can be answered yes or no",
+          weak: "Do homestays help communities?",
+          improved: "How does participation in a homestay programme relate to household income in Ghandruk?",
+          explanation: "A yes or no question hides the real interest, which is how and how much. The improved version states the relationship to be examined and where.",
+        },
+      ],
+    },
+    {
       id: "sub-questions",
       heading: "Main questions, sub-questions and objectives",
       blocks: [

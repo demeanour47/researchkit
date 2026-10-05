@@ -31,7 +31,7 @@ export function ResultCard({ record, onCopy }: ResultCardProps) {
 
   return (
     <li>
-      <article aria-labelledby={headingId} className="grid gap-3 rounded-panel border border-border bg-surface p-4">
+      <article aria-labelledby={headingId} className="grid animate-fade-in gap-3 rounded-panel border border-border bg-surface p-4">
         <div className="grid gap-1">
           <h3 id={headingId} className="text-subheading font-semibold break-words">
             {record.source.title}

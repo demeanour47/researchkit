@@ -16,6 +16,7 @@ import {
 } from "@/ui";
 import { TOOLS_INDEX_PATH, TOOL_CATEGORIES, toolsInCategory } from "@/domains/catalogue";
 import { CATEGORY_ICONS, CatalogueList, CategoryCard, availableTools, toolIcon } from "@/features/catalogue";
+import { InteractiveChallenge, ProgressSummary, ResearchJourney, TestDemo } from "@/features/engagement";
 import { WORKSPACE_PATH } from "@/features/workspace/stage-links";
 import { ESSENTIAL_TOOL_IDS, FEATURED_TOOL_ID, LATEST_TOOL_IDS } from "@/config/highlights";
 import { academicPrinciples, categories, essentials, featured, hero, latest, principles, roadmap, workflow } from "./copy";
@@ -252,13 +253,47 @@ function AcademicPrinciples() {
 }
 
 /** The homepage: what ResearchKit is, its featured tool, where to start, and what is coming. */
+function JourneySection() {
+  return (
+    <Section id="research-journey" labelledBy="research-journey-title">
+      <SectionHeader
+        id="research-journey-title"
+        title="Your research journey"
+        description="Research rarely goes in a straight line, but most projects pass through the same nine stages. Open any stage to see what it means, why it matters, and where to start."
+      />
+      <ResearchJourney />
+    </Section>
+  );
+}
+
+function TrySection() {
+  return (
+    <Section id="try-it" labelledBy="try-it-title">
+      <SectionHeader id="try-it-title" title="Try it" description="Two short exercises to get a feel for choosing a statistical test. Nothing you choose here is saved or sent." />
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-2">
+        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">
+          <h3 className="text-heading-sm font-semibold">Which test might fit?</h3>
+          <TestDemo />
+        </div>
+        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-3">
+          <h3 className="text-heading-sm font-semibold">Research challenge</h3>
+          <InteractiveChallenge />
+        </div>
+      </div>
+      <ProgressSummary />
+    </Section>
+  );
+}
+
 export function HomePage() {
   return (
     <>
       <HomeHero />
       <PageContainer>
+        <JourneySection />
         <FeaturedTool />
         <EssentialTools />
+        <TrySection />
         <ResearchCategories />
         <WhyResearchKit />
         <LatestAdditions />
