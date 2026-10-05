@@ -115,3 +115,4 @@ A **Proposed** ADR may be edited freely. An **Accepted** ADR is never rewritten 
 | [0009](0009-style-specific-reference-checking.md) | Check References Through Style-Specific Checkers Behind One Contract | Proposed |
 | [0010](0010-learn-information-architecture.md) | Organise Learn by Research Stage, with Declared Guide-to-Guide Links | Proposed |
 | [0011](0011-server-side-literature-search.md) | Search Scholarly Literature Through a Server-Side Provider Endpoint | Proposed |
+| [0012](0012-research-journey-project-state.md) | Keep the Research Journey as Project State Beside the Workspace | Proposed |
