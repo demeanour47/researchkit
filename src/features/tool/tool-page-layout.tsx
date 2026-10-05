@@ -5,6 +5,7 @@ import { CatalogueList, toolIcon } from "@/features/catalogue";
 import { Breadcrumbs } from "@/features/site";
 import { LATEST_TOOL_IDS } from "@/config/highlights";
 import { NextSteps, ProgressTracker } from "@/features/engagement";
+import { JourneyStrip } from "@/features/project";
 import { NextStage, StageNav } from "@/features/workspace/stage-nav";
 import { moduleForTool } from "@/knowledge/workspace/modules";
 
@@ -182,6 +183,7 @@ export function ToolPageLayout({ title, intro, noScript, children, sections = []
       </Hero>
 
       <PageContainer width="reading">
+        <JourneyStrip />
         {children}
         {noScript && (
           <noscript>

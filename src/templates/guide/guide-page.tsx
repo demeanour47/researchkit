@@ -1,3 +1,4 @@
+import { JourneyStrip } from "@/features/project";
 import { Badge, ButtonLink, Hero, Icon, Link, PageContainer } from "@/ui";
 import { ProgressTracker } from "@/features/engagement";
 import { GUIDES_INDEX_PATH, GUIDE_LISTINGS, RESEARCH_STAGES, TOOLS, publishedGuides, stagePath } from "@/domains/catalogue";
@@ -67,6 +68,7 @@ export function GuidePage({ guide }: { guide: Guide }) {
       </Hero>
 
       <PageContainer width="reading" className="grid grid-cols-1 gap-14 py-section-compact">
+        <JourneyStrip />
         <nav aria-labelledby="contents-title" className="w-full max-w-full min-w-0 rounded-panel border border-border bg-sunken p-6">
           <h2 id="contents-title" className="mb-3 text-caption font-semibold tracking-wide text-text-muted uppercase">
             {guideLabels.contents}

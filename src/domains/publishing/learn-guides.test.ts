@@ -8,6 +8,9 @@ import { howToStructureAnAcademicEssay } from "../../../content/guides/how-to-st
 import { howToReadAResearchPaper } from "../../../content/guides/how-to-read-a-research-paper";
 import { howToManageYourReferences } from "../../../content/guides/how-to-manage-your-references";
 import { howToPlanADissertation } from "../../../content/guides/how-to-plan-a-dissertation";
+import { howToWriteAResearchProposal } from "../../../content/guides/how-to-write-a-research-proposal";
+import { howToWriteAResearchPaper } from "../../../content/guides/how-to-write-a-research-paper";
+import { howToWriteAThesisOrDissertation } from "../../../content/guides/how-to-write-a-thesis-or-dissertation";
 import { LEARN_REFERENCES, STYLE_MANUAL_REFERENCES, GROUP_REFERENCES } from "../../knowledge/research/references";
 import { citationProblems, proseOf, tableOf } from "./guide-checks";
 
@@ -139,5 +142,29 @@ describe("How to search academic literature", () => {
     for (const term of ["synonyms", "AND, OR and NOT", "phrase", "DOI", "open access", "Duplicates", "Record your search", "preliminary set"]) {
       assert.ok(prose.toLowerCase().includes(term.toLowerCase()), `missing ${term}`);
     }
+  });
+});
+
+describe("research document guides", () => {
+  it("cite nothing they don't list", () => {
+    for (const guide of [howToWriteAResearchProposal, howToWriteAResearchPaper, howToWriteAThesisOrDissertation]) assert.deepEqual(citationProblems(guide, KNOWN), []);
+  });
+
+  it("says a proposal reports no results and defers to the institution", () => {
+    const prose = proseOf(howToWriteAResearchProposal);
+    assert.match(prose, /reports no results/);
+    assert.match(prose, /never invent results/);
+    assert.match(prose, /your instructions decide/);
+  });
+
+  it("separates Results from Discussion in the paper guide", () => {
+    assert.match(proseOf(howToWriteAResearchPaper), /Results report; Discussion interprets/);
+  });
+
+  it("puts the framework and appendices in the thesis guide and defers to regulations", () => {
+    const prose = proseOf(howToWriteAThesisOrDissertation);
+    assert.match(prose, /theoretical or conceptual framework/i);
+    assert.match(prose, /Appendices hold material/);
+    assert.match(prose, /vary by country and institution|differ in structure|vary/);
   });
 });

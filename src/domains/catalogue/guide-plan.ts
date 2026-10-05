@@ -97,4 +97,7 @@ export const GUIDE_PLAN: readonly GuidePlacement[] = [
   { slug: "how-to-read-a-research-paper", category: "academic-skills", stage: "discover" },
   { slug: "how-to-manage-your-references", category: "academic-skills", stage: "review" },
   { slug: "how-to-plan-a-dissertation", category: "academic-skills", stage: "plan" },
+  { slug: "how-to-write-a-research-proposal", category: "academic-skills", stage: "plan" },
+  { slug: "how-to-write-a-research-paper", category: "academic-skills", stage: "report" },
+  { slug: "how-to-write-a-thesis-or-dissertation", category: "academic-skills", stage: "report" },
 ];
