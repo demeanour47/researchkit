@@ -5,3 +5,4 @@ export * from "./readiness";
 export * from "./formatting";
 export * from "./next-steps";
 export * from "./output";
+export * from "./stage-map";
