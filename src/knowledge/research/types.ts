@@ -53,6 +53,8 @@ export interface Reference {
   apa: string;
   /** The DOI, without "https://doi.org/", where one exists. */
   doi?: string;
+  /** For a work published only on the web, without a DOI: its address. */
+  url?: string;
 }
 
 /** Earlier choices that an option typically suits strongly, or can work with. Anything unlisted needs careful justification. */

@@ -7,7 +7,7 @@ export const howToCountCharactersInAcademicWriting: Guide = {
     "What a character count is, how it differs from a word count, and why abstracts, titles, research proposals, journal submission systems and online forms often set limits in characters rather than words, including guidance for Nepali (Devanagari) and other multilingual text.",
   summary:
     "A character count is every letter, digit, punctuation mark and space a reader sees, usually reported with and without the spaces. Many academic systems set their limits in characters rather than words, so counting before you submit avoids losing text at the last moment, whatever language you write in.",
-  updated: "2026-09-28",
+  updated: "2026-10-04",
   reviewedBy: null,
   sections: [
     {
@@ -91,7 +91,7 @@ export const howToCountCharactersInAcademicWriting: Guide = {
       blocks: [
         {
           type: "paragraph",
-          text: "APA Style's Publication Manual (American Psychological Association, 2020) gives abstracts as normally around 150 to 250 words, though the exact figure is set by whoever publishes the work, and some systems state the same limit in characters instead. Either way, an abstract is written to be read on its own, so cutting it to fit a limit needs care: remove what is least essential to understanding the study, not simply the last sentence.",
+          text: "APA Style's Publication Manual (American Psychological Association, 2020) limits abstracts to 250 words unless an instructor or publisher asks otherwise; journals set their own limits, and some submission systems state the limit in characters instead. Either way, an abstract is written to be read on its own, so cutting it to fit a limit needs care: remove what is least essential to understanding the study, not simply the last sentence.",
         },
         {
           type: "paragraph",
@@ -275,4 +275,5 @@ export const howToCountCharactersInAcademicWriting: Guide = {
     },
   ],
   relatedToolIds: ["character-counter", "word-counter", "reading-time-calculator", "text-statistics", "research-title-builder"],
+  relatedGuideSlugs: ["how-to-meet-a-word-limit", "how-to-write-an-abstract", "how-to-write-a-good-research-title"],
 };

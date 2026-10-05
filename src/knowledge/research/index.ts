@@ -1,7 +1,7 @@
 export { COMPARED_LAYERS, LAYERS, OPTIONS, findOption, getLayer, optionsFor } from "./research-onion";
 export { allJudgements, areCompared, judge, judgementsFor, validateSelection } from "./compatibility";
 export { GENERAL_JUSTIFICATION, summarise, type OnionSummary } from "./recommendation";
-export { REFERENCES, doiUrl, getReference, referenceMarkdown, referenceRuns, referenceText } from "./references";
+export { REFERENCES, doiUrl, getReference, referenceLink, referenceMarkdown, referenceRuns, referenceText } from "./references";
 export { ALTERNATIVE_VIEWS, EVIDENCE, GENERAL_VIEW, alternativeViewFor, evidenceFor } from "./evidence";
 export { explainJudgement, explainOption, type JudgementExplanation, type OptionExplanation } from "./explanation";
 export { EVIDENCE_DESCRIPTIONS, EVIDENCE_LABELS, FIT_LABELS, SUMMARY_LABELS, SUMMARY_TEXT } from "./labels";

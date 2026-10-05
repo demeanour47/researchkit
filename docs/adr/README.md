@@ -113,3 +113,4 @@ A **Proposed** ADR may be edited freely. An **Accepted** ADR is never rewritten 
 | [0007](0007-numeric-citation-numbering.md) | Keep Reference Numbers in the Citation, Not the Source | Proposed |
 | [0008](0008-harvard-referencing-profile.md) | Format Harvard to One Defined Profile | Proposed |
 | [0009](0009-style-specific-reference-checking.md) | Check References Through Style-Specific Checkers Behind One Contract | Proposed |
+| [0010](0010-learn-information-architecture.md) | Organise Learn by Research Stage, with Declared Guide-to-Guide Links | Proposed |

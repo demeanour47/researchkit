@@ -1,5 +1,5 @@
-import { GUIDES_INDEX_PATH, GUIDE_LISTINGS, TOOLS, TOOLS_INDEX_PATH, TOOL_CATEGORIES } from "@/domains/catalogue";
-import { ABOUT_PATH, STYLES_INDEX_PATH, getAboutPage } from "@/domains/publishing";
+import { GUIDES_INDEX_PATH, GUIDE_CATEGORIES, GUIDE_LISTINGS, RESEARCH_STAGES, TOOLS, TOOLS_INDEX_PATH, TOOL_CATEGORIES } from "@/domains/catalogue";
+import { ABOUT_PATH, STYLES_INDEX_PATH, getAboutPage, getGuide } from "@/domains/publishing";
 import { STYLE_LISTINGS, toolIcon } from "@/features/catalogue";
 import { guidesIndex } from "@/templates/guides-index/copy";
 import { stylesIndex } from "@/templates/styles-index/copy";
@@ -19,8 +19,13 @@ export function buildSearchIndex(): SearchItem[] {
       ? [{ id: `tool-${tool.id}`, title: tool.name, description: tool.description, href: tool.href, group: "Tools" as const, icon: toolIcon(tool), keywords: TOOL_CATEGORIES.find((category) => category.id === tool.category)?.title }]
       : [],
   );
+  // Guides are also found by their research stage, subject and related tools (ADR-0010).
+  const guideKeywords = (slug: string, stage: string, category: string) =>
+    [RESEARCH_STAGES.find((entry) => entry.id === stage)?.title, GUIDE_CATEGORIES.find((entry) => entry.id === category)?.title, ...TOOLS.filter((tool) => getGuide(slug)?.relatedToolIds.includes(tool.id)).map((tool) => tool.name)].filter(Boolean).join(" ");
   const guides: SearchItem[] = GUIDE_LISTINGS.flatMap((guide) =>
-    guide.status === "available" ? [{ id: `guide-${guide.id}`, title: guide.name, description: guide.description, href: guide.href, group: "Guides" as const, icon: "learning" }] : [],
+    guide.status === "available"
+      ? [{ id: `guide-${guide.id}`, title: guide.name, description: guide.description, href: guide.href, group: "Guides" as const, icon: "learning", keywords: guideKeywords(guide.id, guide.stage, guide.category) }]
+      : [],
   );
   const styles: SearchItem[] = STYLE_LISTINGS.flatMap((style) =>
     style.status === "available" ? [{ id: `style-${style.id}`, title: style.name, description: style.description, href: style.href, group: "Citation styles" as const, icon: "publishing", keywords: "citation referencing" }] : [],

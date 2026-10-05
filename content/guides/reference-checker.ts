@@ -175,4 +175,5 @@ export const referenceCheckerGuide: Guide = {
     { question: "Is my reference list sent anywhere?", answer: "No. Checking happens in your browser, and nothing you paste is sent, stored or placed in the URL." },
   ],
   relatedToolIds: ["reference-checker", "citation-style-finder"],
+  relatedGuideSlugs: ["how-to-choose-a-citation-style", "reference-list-or-bibliography", "how-to-avoid-plagiarism"],
 };

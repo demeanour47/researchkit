@@ -280,4 +280,5 @@ export const howToWriteAGoodResearchTitle: Guide = {
     },
   ],
   relatedToolIds: ["research-title-builder", "research-question-builder", "hypothesis-builder", "variables-builder"],
+  relatedGuideSlugs: ["how-to-write-a-research-question", "how-to-write-research-objectives", "how-to-write-an-abstract"],
 };

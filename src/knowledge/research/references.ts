@@ -566,14 +566,112 @@ export const CONFIDENCE_INTERVAL_REFERENCES: readonly Reference[] = [
   },
 ];
 
+/**
+ * Sources for the Learn guides added in Sprint 55: reviewing literature, reading
+ * papers, academic writing, plagiarism and p-values. Articles were checked against
+ * Crossref and books against Open Library, as each comment says.
+ */
+export const LEARN_REFERENCES: readonly Reference[] = [
+  {
+    // Checked against the Office of Research Integrity's module page: written by Miguel Roig, created 2003, revised 2006 and 2015.
+    id: "roig-2015",
+    cite: "Roig, 2015",
+    year: 2015,
+    apa: "Roig, M. (2015). *Avoiding plagiarism, self-plagiarism, and other questionable writing practices: A guide to ethical writing*. Office of Research Integrity, U.S. Department of Health and Human Services.",
+    url: "https://ori.hhs.gov/avoiding-plagiarism-self-plagiarism-and-other-questionable-writing-practices-guide-ethical-writing",
+  },
+  {
+    // Checked against Crossref (DOI 10.1136/bmj.n71): 26 authors, article n71, 2021. Crossref doesn't record the volume;
+    // 372 is the volume in the BMJ's own citation line. APA 7 lists the first 19 authors, an ellipsis and the last.
+    id: "page-2021",
+    cite: "Page et al., 2021",
+    year: 2021,
+    apa: "Page, M. J., McKenzie, J. E., Bossuyt, P. M., Boutron, I., Hoffmann, T. C., Mulrow, C. D., Shamseer, L., Tetzlaff, J. M., Akl, E. A., Brennan, S. E., Chou, R., Glanville, J., Grimshaw, J. M., Hróbjartsson, A., Lalu, M. M., Li, T., Loder, E. W., Mayo-Wilson, E., McDonald, S., . . . Moher, D. (2021). The PRISMA 2020 statement: An updated guideline for reporting systematic reviews. *BMJ, 372*, Article n71.",
+    doi: "10.1136/bmj.n71",
+  },
+  {
+    // Checked against Crossref (DOI 10.1111/j.1471-1842.2009.00848.x): authors, title, volume 26, issue 2, pages 91–108.
+    id: "grant-booth-2009",
+    cite: "Grant & Booth, 2009",
+    year: 2009,
+    apa: "Grant, M. J., & Booth, A. (2009). A typology of reviews: An analysis of 14 review types and associated methodologies. *Health Information & Libraries Journal, 26*(2), 91–108.",
+    doi: "10.1111/j.1471-1842.2009.00848.x",
+  },
+  {
+    // Checked against Crossref (DOI 10.1016/j.jbusres.2019.07.039): author, title, volume 104, pages 333–339.
+    id: "snyder-2019",
+    cite: "Snyder, 2019",
+    year: 2019,
+    apa: "Snyder, H. (2019). Literature review as a research methodology: An overview and guidelines. *Journal of Business Research, 104*, 333–339.",
+    doi: "10.1016/j.jbusres.2019.07.039",
+  },
+  {
+    // Checked against Crossref (DOI 10.2307/4132319): authors, title, volume 26, issue 2, pages xiii–xxiii.
+    id: "webster-watson-2002",
+    cite: "Webster & Watson, 2002",
+    year: 2002,
+    apa: "Webster, J., & Watson, R. T. (2002). Analyzing the past to prepare for the future: Writing a literature review. *MIS Quarterly, 26*(2), xiii–xxiii.",
+    doi: "10.2307/4132319",
+  },
+  {
+    // Checked against Open Library (ISBN 9781526419217): title and subtitle, SAGE, 2018; the 2018 edition is the second.
+    id: "hart-2018",
+    cite: "Hart, 2018",
+    year: 2018,
+    apa: "Hart, C. (2018). *Doing a literature review: Releasing the research imagination* (2nd ed.). SAGE.",
+  },
+  {
+    // Checked against Crossref (DOI 10.1145/1273445.1273458): author, title, volume 37, issue 3, pages 83–84.
+    id: "keshav-2007",
+    cite: "Keshav, 2007",
+    year: 2007,
+    apa: "Keshav, S. (2007). How to read a paper. *ACM SIGCOMM Computer Communication Review, 37*(3), 83–84.",
+    doi: "10.1145/1273445.1273458",
+  },
+  {
+    // Checked against Open Library (ISBN 9781119484745): title and subtitle, Wiley-Blackwell, 2019; the 2019 edition is the sixth.
+    id: "greenhalgh-2019",
+    cite: "Greenhalgh, 2019",
+    year: 2019,
+    apa: "Greenhalgh, T. (2019). *How to read a paper: The basics of evidence-based medicine and healthcare* (6th ed.). Wiley-Blackwell.",
+  },
+  {
+    // Checked against Open Library (ISBN 9780472034758): University of Michigan Press, 2012; the 2012 edition is the third.
+    id: "swales-feak-2012",
+    cite: "Swales & Feak, 2012",
+    year: 2012,
+    apa: "Swales, J. M., & Feak, C. B. (2012). *Academic writing for graduate students: Essential tasks and skills* (3rd ed.). University of Michigan Press.",
+  },
+  {
+    // Checked against Crossref (DOI 10.1007/s10654-016-0149-3): seven authors, title, volume 31, issue 4, pages 337–350.
+    id: "greenland-2016",
+    cite: "Greenland et al., 2016",
+    year: 2016,
+    apa: "Greenland, S., Senn, S. J., Rothman, K. J., Carlin, J. B., Poole, C., Goodman, S. N., & Altman, D. G. (2016). Statistical tests, P values, confidence intervals, and power: A guide to misinterpretations. *European Journal of Epidemiology, 31*(4), 337–350.",
+    doi: "10.1007/s10654-016-0149-3",
+  },
+  {
+    // Checked against Crossref (DOI 10.1371/journal.pmed.0050020): seven named authors and the CONSORT Group, title,
+    // volume 5, issue 1, article e20.
+    id: "hopewell-2008",
+    cite: "Hopewell et al., 2008",
+    year: 2008,
+    apa: "Hopewell, S., Clarke, M., Moher, D., Wager, E., Middleton, P., Altman, D. G., Schulz, K. F., & the CONSORT Group. (2008). CONSORT for reporting randomized controlled trials in journal and conference abstracts: Explanation and elaboration. *PLoS Medicine, 5*(1), Article e20.",
+    doi: "10.1371/journal.pmed.0050020",
+  },
+];
+
 /** The reference with this id. Throws for an unknown id. */
 export function getReference(id: string): Reference {
-  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES, ...POWER_REFERENCES, ...CONFIDENCE_INTERVAL_REFERENCES].find((candidate) => candidate.id === id);
+  const reference = [...REFERENCES, ...TEXTBOOK_REFERENCES, ...STATISTICS_REFERENCES, ...GROUP_REFERENCES, ...STYLE_MANUAL_REFERENCES, ...READABILITY_REFERENCES, ...POWER_REFERENCES, ...CONFIDENCE_INTERVAL_REFERENCES, ...LEARN_REFERENCES].find((candidate) => candidate.id === id);
   if (!reference) throw new RangeError(`Unknown reference: ${id}`);
   return reference;
 }
 
 export const doiUrl = (doi: string) => `https://doi.org/${doi}`;
+
+/** Where a reference can be found online: its DOI as a link, or else its URL. Null for a work with neither. */
+export const referenceLink = (reference: Reference): string | null => (reference.doi ? doiUrl(reference.doi) : (reference.url ?? null));
 
 /** An asterisk that marks italics: one not escaped with a backslash, as the asterisk in "G*Power" is. */
 const ITALIC_MARK = /(?<!\\)\*/;
@@ -587,13 +685,15 @@ export function referenceRuns(reference: Reference): { text: string; italic: boo
     .filter((run) => run.text.length > 0);
 }
 
-/** The full reference in plain text, with its DOI as a link. */
+/** The full reference in plain text, with its DOI or URL as a link. */
 export function referenceText(reference: Reference): string {
   const text = referenceRuns(reference).map((run) => run.text).join("");
-  return reference.doi ? `${text} ${doiUrl(reference.doi)}` : text;
+  const link = referenceLink(reference);
+  return link ? `${text} ${link}` : text;
 }
 
-/** The full reference in Markdown, with the italic part in asterisks and its DOI as a link. */
+/** The full reference in Markdown, with the italic part in asterisks and its DOI or URL as a link. */
 export function referenceMarkdown(reference: Reference): string {
-  return reference.doi ? `${reference.apa} ${doiUrl(reference.doi)}` : reference.apa;
+  const link = referenceLink(reference);
+  return link ? `${reference.apa} ${link}` : reference.apa;
 }

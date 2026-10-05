@@ -131,4 +131,5 @@ export const apa7CitationsAndReferences: Guide = {
     { question: "What if the source type is not supported?", answer: "Do not approximate it as another source type. Check the applicable APA guidance and use the future source-type support when it becomes available." },
   ],
   relatedToolIds: ["apa-citation-generator", "reference-checker"],
+  relatedGuideSlugs: ["how-to-cite-a-website", "reference-list-or-bibliography", "how-to-report-statistics-in-apa", "how-to-avoid-plagiarism", "reference-checker"],
 };

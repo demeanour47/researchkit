@@ -233,4 +233,5 @@ export const chicagoNotesBibliography: Guide = {
     { question: "Can I mix notes and author-date citations?", answer: "No. Choose one Chicago system, as your instructions direct, and use it throughout a piece of writing." },
   ],
   relatedToolIds: ["chicago-notes-bibliography-citation-generator", "citation-style-finder"],
+  relatedGuideSlugs: ["chicago-author-date-citations", "how-to-cite-a-website", "reference-list-or-bibliography", "reference-checker"],
 };

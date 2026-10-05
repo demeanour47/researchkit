@@ -199,4 +199,5 @@ export const readabilityInAcademicWriting: Guide = {
     { question: "Is my text sent anywhere?", answer: "No. The checker runs in your browser, and your text isn't sent to ResearchKit or anyone else." },
   ],
   relatedToolIds: ["readability-checker", "sentence-counter", "paragraph-counter", "word-counter", "text-statistics"],
+  relatedGuideSlugs: ["sentence-structure-and-counting", "paragraph-structure-and-counting", "how-to-structure-an-academic-essay"],
 };

@@ -64,4 +64,6 @@ export interface Guide {
   faq: readonly { question: string; answer: string }[];
   /** Catalogue ids of tools that put the guide into practice. */
   relatedToolIds: readonly string[];
+  /** Slugs of published guides to read alongside or next, in the order a reader should take them (ADR-0010). */
+  relatedGuideSlugs: readonly string[];
 }

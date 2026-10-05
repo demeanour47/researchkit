@@ -1,5 +1,5 @@
-import { Badge, Hero, Icon, PageContainer } from "@/ui";
-import { GUIDES_INDEX_PATH, TOOLS } from "@/domains/catalogue";
+import { Badge, Hero, Icon, Link, PageContainer } from "@/ui";
+import { GUIDES_INDEX_PATH, GUIDE_LISTINGS, RESEARCH_STAGES, TOOLS, publishedGuides, stagePath } from "@/domains/catalogue";
 import type { Guide } from "@/domains/publishing";
 import { CatalogueList } from "@/features/catalogue";
 import { ContentBlock } from "@/features/reading";
@@ -8,9 +8,12 @@ import { guideLabels } from "./copy";
 
 const FAQ_ID = "faq";
 const RELATED_ID = "related-tools";
+const RELATED_GUIDES_ID = "related-guides";
 
 function Credentials({ guide }: { guide: Guide }) {
   const updated = new Intl.DateTimeFormat("en", { dateStyle: "long", timeZone: "UTC" }).format(new Date(guide.updated));
+  const stageId = GUIDE_LISTINGS.find((entry) => entry.id === guide.slug)?.stage;
+  const stage = RESEARCH_STAGES.find((entry) => entry.id === stageId);
 
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-small text-text-muted">
@@ -18,6 +21,12 @@ function Credentials({ guide }: { guide: Guide }) {
         <Icon name="clock" />
         {guideLabels.updated} <time dateTime={guide.updated}>{updated}</time>
       </span>
+      {stage && (
+        <span className="inline-flex items-center gap-1.5">
+          <Icon name="layers" />
+          {guideLabels.stage} <Link href={stagePath(stage.id)}>{stage.title}</Link>
+        </span>
+      )}
       {guide.reviewedBy ? (
         <Badge tone="success" icon="shield-check">
           {guideLabels.reviewedBy} {guide.reviewedBy}
@@ -34,9 +43,12 @@ function Credentials({ guide }: { guide: Guide }) {
 /** The layout every guide shares: the answer first, then contents, sections, questions and related tools. */
 export function GuidePage({ guide }: { guide: Guide }) {
   const relatedTools = TOOLS.filter((tool) => guide.relatedToolIds.includes(tool.id));
+  const relatedGuides = publishedGuides(guide.relatedGuideSlugs);
+  const relatedGuidesHeading = relatedGuides.length === 1 ? guideLabels.relatedGuide : guideLabels.relatedGuides;
   const contents = [
     ...guide.sections.map(({ id, heading }) => ({ id, heading })),
     ...(guide.faq.length > 0 ? [{ id: FAQ_ID, heading: guideLabels.faq }] : []),
+    ...(relatedGuides.length > 0 ? [{ id: RELATED_GUIDES_ID, heading: relatedGuidesHeading }] : []),
     ...(relatedTools.length > 0 ? [{ id: RELATED_ID, heading: relatedTools.length === 1 ? guideLabels.relatedTool : guideLabels.relatedTools }] : []),
   ];
 
@@ -96,6 +108,15 @@ export function GuidePage({ guide }: { guide: Guide }) {
                 </div>
               ))}
             </div>
+          </section>
+        )}
+
+        {relatedGuides.length > 0 && (
+          <section id={RELATED_GUIDES_ID} aria-labelledby={`${RELATED_GUIDES_ID}-title`} className="grid gap-6">
+            <h2 id={`${RELATED_GUIDES_ID}-title`} className="font-display text-heading font-semibold">
+              {relatedGuidesHeading}
+            </h2>
+            <CatalogueList items={relatedGuides} kind="guide" layout="pair" />
           </section>
         )}
 

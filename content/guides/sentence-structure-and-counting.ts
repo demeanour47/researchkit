@@ -183,4 +183,5 @@ export const sentenceStructureAndCounting: Guide = {
     { question: "Is my text stored or sent anywhere?", answer: "No. The counter runs in your browser, and your text isn't sent to ResearchKit or anyone else." },
   ],
   relatedToolIds: ["sentence-counter", "paragraph-counter", "word-counter", "text-statistics"],
+  relatedGuideSlugs: ["paragraph-structure-and-counting", "readability-in-academic-writing", "how-to-structure-an-academic-essay"],
 };

@@ -194,4 +194,5 @@ export const howToChooseAStatisticalTest: Guide = {
     },
   ],
   relatedToolIds: ["statistical-test-finder"],
+  relatedGuideSlugs: ["power-analysis", "confidence-intervals", "what-a-p-value-tells-you", "spss-from-data-preparation-to-reporting", "how-to-report-statistics-in-apa"],
 };

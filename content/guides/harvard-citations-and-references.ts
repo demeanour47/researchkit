@@ -280,4 +280,5 @@ export const harvardCitationsAndReferences: Guide = {
     { question: "Is Harvard the same as APA?", answer: "No. Both are author-date styles and can look alike, but they differ in punctuation, the use of “&”, how editions and pages are written, and when et al. is used." },
   ],
   relatedToolIds: ["harvard-citation-generator", "citation-style-finder"],
+  relatedGuideSlugs: ["how-to-cite-a-website", "reference-list-or-bibliography", "how-to-avoid-plagiarism", "reference-checker"],
 };
