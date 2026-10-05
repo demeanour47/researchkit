@@ -246,4 +246,5 @@ export const howToWriteResearchObjectives: Guide = {
     },
   ],
   relatedToolIds: ["research-objectives-generator", "research-question-builder", "research-title-builder", "hypothesis-builder"],
+  relatedGuideSlugs: ["how-to-write-a-research-question", "how-to-write-a-good-research-title", "qualitative-or-quantitative-research", "how-to-plan-a-dissertation"],
 };

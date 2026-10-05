@@ -238,4 +238,5 @@ export const powerAnalysisGuide: Guide = {
     { question: "Is my data sent anywhere?", answer: "No. Calculations run in your browser, and the values you enter aren't sent or stored." },
   ],
   relatedToolIds: ["power-analysis", "effect-size-calculator", "sample-size-calculator", "statistical-test-finder"],
+  relatedGuideSlugs: ["how-to-choose-a-statistical-test", "confidence-intervals", "what-a-p-value-tells-you"],
 };

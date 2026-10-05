@@ -6,7 +6,8 @@ import { Breadcrumbs } from "@/features/site";
 import { statsLabels } from "./copy";
 
 export interface CatalogueIndexSection extends CatalogueCategory {
-  items: readonly CatalogueItem[];
+  /** Each item, with any extra words it can be found by in search, such as related tools. */
+  items: readonly (CatalogueItem & { keywords?: string })[];
   icon: IconName;
 }
 
@@ -15,7 +16,7 @@ export interface CatalogueIndexPageProps {
   /** A few words above the title naming the area, such as “Tools”. */
   eyebrow: string;
   intro: string;
-  /** Explains what "Coming soon" means on this page. */
+  /** Explains what "Coming soon" means on this page; shown only while something is coming soon. */
   plannedNote: string;
   /** What the items are called, in the plural, such as “tools”. */
   plural: string;
@@ -51,7 +52,7 @@ export function CatalogueIndexPage({ title, eyebrow, intro, plannedNote, kind, s
           <MetricCard icon="layout-grid" value={sections.length} label={statsLabels.categories} />
         </ul>
         <div className="grid gap-1 text-small text-text-muted">
-          <p>{plannedNote}</p>
+          {counts["coming-soon"] > 0 && <p>{plannedNote}</p>}
           {crossLink && (
             <p>
               {crossLink.lead} <Link href={crossLink.href}>{crossLink.label}</Link>.
@@ -71,7 +72,7 @@ export function CatalogueIndexPage({ title, eyebrow, intro, plannedNote, kind, s
             icon: section.icon,
             items: section.items.map((item) => ({
               id: item.id,
-              text: `${item.name} ${item.description} ${section.title}`,
+              text: `${item.name} ${item.description} ${section.title} ${item.keywords ?? ""}`,
               status: item.status,
               card: <CatalogueCard item={item} kind={kind} />,
             })),

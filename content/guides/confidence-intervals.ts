@@ -259,4 +259,5 @@ export const confidenceIntervalsGuide: Guide = {
     { question: "Is my data sent anywhere?", answer: "No. Calculations run in your browser, and the values you enter aren't sent or stored." },
   ],
   relatedToolIds: ["confidence-interval-calculator", "effect-size-calculator", "power-analysis", "results-interpretation"],
+  relatedGuideSlugs: ["what-a-p-value-tells-you", "power-analysis", "how-to-report-statistics-in-apa"],
 };

@@ -6,7 +6,7 @@
 
 import { EVIDENCE_LABELS, FIT_LABELS, SUMMARY_LABELS, SUMMARY_TEXT } from "./labels";
 import type { OnionSummary } from "./recommendation";
-import { doiUrl, getReference, referenceMarkdown, referenceRuns, referenceText } from "./references";
+import { getReference, referenceLink, referenceMarkdown, referenceRuns, referenceText } from "./references";
 import { findOption } from "./research-onion";
 import type { Judgement, Reference } from "./types";
 import { LAYER_ORDER } from "./types";
@@ -150,8 +150,9 @@ function referenceHtml(reference: Reference): string {
   const body = referenceRuns(reference)
     .map((run) => (run.italic ? `<i>${escapeHtml(run.text)}</i>` : escapeHtml(run.text)))
     .join("");
-  if (!reference.doi) return body;
-  const url = escapeHtml(doiUrl(reference.doi));
+  const link = referenceLink(reference);
+  if (!link) return body;
+  const url = escapeHtml(link);
   return `${body} <a href="${url}">${url}</a>`;
 }
 

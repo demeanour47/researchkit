@@ -241,4 +241,5 @@ export const ieeeCitationsAndReferences: Guide = {
     { question: "Does the generator number my references?", answer: "No. It can't see your paper, so it uses the number you enter. Word processors and reference managers can number references automatically." },
   ],
   relatedToolIds: ["ieee-citation-generator", "citation-style-finder"],
+  relatedGuideSlugs: ["how-to-cite-a-website", "reference-list-or-bibliography", "reference-checker"],
 };

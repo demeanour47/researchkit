@@ -156,4 +156,5 @@ export const spssFromDataPreparationToReporting: Guide = {
     { question: "Does the Lab save or upload my data?", answer: "No. It does not accept SPSS data files or save procedure state. If you use the ResearchKit workspace, its existing browser-only storage behavior applies." },
   ],
   relatedToolIds: ["spss-research-lab", "effect-size-calculator", "statistical-test-finder", "statistical-assumption-checker", "results-interpretation", "data-analysis-recommender", "variables-builder", "table-builder"],
+  relatedGuideSlugs: ["how-to-choose-a-statistical-test", "how-to-report-statistics-in-apa", "what-a-p-value-tells-you"],
 };

@@ -1,4 +1,4 @@
-import type { Guide } from "@/domains/publishing/guide";
+import type { Guide } from "../../src/domains/publishing/guide";
 
 export const howToChooseACitationStyle: Guide = {
   slug: "how-to-choose-a-citation-style",
@@ -7,7 +7,7 @@ export const howToChooseACitationStyle: Guide = {
     "Who decides which citation style you use, how the main styles differ, and what to do when instructions are missing or conflict.",
   summary:
     "Use the style named in your instructions. If none is named, ask whoever will assess or publish your work. Only if you are genuinely free to choose should you pick the style most common in your subject, and then use it consistently.",
-  updated: "2026-09-24",
+  updated: "2026-10-04",
   reviewedBy: null,
   sections: [
     {
@@ -69,6 +69,27 @@ export const howToChooseACitationStyle: Guide = {
       ],
     },
     {
+      id: "one-source-six-styles",
+      heading: "One source in six styles",
+      blocks: [
+        { type: "paragraph", text: "The differences are easiest to see side by side. Here is the same book, Stella Cottrell's The Study Skills Handbook (5th edition, 2019), as ResearchKit's generator for each style formats it, with the title typed in the capitals each style uses. Italics are lost in this table." },
+        {
+          type: "table",
+          caption: "The same book in six styles",
+          columns: ["Style", "Reference entry", "Citation in the text or note"],
+          rows: [
+            ["APA 7", "Cottrell, S. (2019). The study skills handbook (5th ed.). Red Globe Press.", "(Cottrell, 2019)"],
+            ["MLA 9", "Cottrell, Stella. The Study Skills Handbook. 5th ed., Red Globe Press, 2019.", "(Cottrell)"],
+            ["Chicago author-date", "Cottrell, Stella. 2019. The Study Skills Handbook. 5th ed. Red Globe Press.", "(Cottrell 2019)"],
+            ["Chicago notes and bibliography", "Cottrell, Stella. The Study Skills Handbook. 5th ed. Red Globe Press, 2019.", "Stella Cottrell, The Study Skills Handbook, 5th ed. (Red Globe Press, 2019)."],
+            ["IEEE", "[1] S. Cottrell, The Study Skills Handbook, 5th ed. London, U.K.: Red Globe Press, 2019.", "[1]"],
+            ["Harvard", "Cottrell, S. (2019) The study skills handbook. 5th edn. Red Globe Press.", "(Cottrell, 2019)"],
+          ],
+        },
+        { type: "paragraph", text: "The details are the same; the order, punctuation, capitals and the form of the citation differ. When you cite a page, MLA gives it with the author, Chicago and Harvard after the year, and IEEE inside the brackets." },
+      ],
+    },
+    {
       id: "multiple-styles-acceptable",
       heading: "When multiple styles are acceptable",
       blocks: [
@@ -121,6 +142,36 @@ export const howToChooseACitationStyle: Guide = {
         },
       ],
     },
+    {
+      id: "learning-path",
+      heading: "Where to go next",
+      blocks: [
+        { type: "paragraph", text: "Once you know your style, its guide explains how to cite books, journal articles and web pages in it. Then learn how to cite web pages in any style, which list your style uses at the end, and how citing protects you from plagiarism, and check your finished list with the Reference Checker." },
+        {
+          type: "links",
+          items: [
+            { label: "APA 7 citations and references", href: "/learn/apa-7-citations-and-references" },
+            { label: "MLA 9 citation and Works Cited", href: "/learn/mla-9-citations-and-works-cited" },
+            { label: "Chicago author-date citations", href: "/learn/chicago-author-date-citations" },
+            { label: "Chicago notes and bibliography", href: "/learn/chicago-notes-bibliography" },
+            { label: "IEEE citations and references", href: "/learn/ieee-citations-and-references" },
+            { label: "Harvard citations and references", href: "/learn/harvard-citations-and-references" },
+            { label: "How to cite a website", href: "/learn/how-to-cite-a-website" },
+            { label: "Reference list or bibliography?", href: "/learn/reference-list-or-bibliography" },
+            { label: "How to avoid plagiarism", href: "/learn/how-to-avoid-plagiarism" },
+            { label: "Find your style with the Citation Style Finder", href: "/tools/citation-style-finder" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "references",
+      heading: "References",
+      blocks: [
+        { type: "paragraph", text: "Each style is defined by its own authority: the APA Publication Manual (American Psychological Association, 2020), the MLA Handbook (Modern Language Association of America, 2021), The Chicago Manual of Style (University of Chicago Press, 2024) and the IEEE Reference Guide (IEEE Publication Operations, 2025). Harvard has no single authority; ResearchKit follows Cite Them Right (Pears & Shields, 2025)." },
+        { type: "references", ids: ["apa-2020", "mla-2021", "chicago-2024", "ieee-2025", "cite-them-right-2025"] },
+      ],
+    },
   ],
   faq: [
     {
@@ -149,5 +200,6 @@ export const howToChooseACitationStyle: Guide = {
         "Footnotes are a way of citing that several styles use, including Chicago's notes and bibliography system and most legal styles. The style decides how each note is written.",
     },
   ],
-  relatedToolIds: ["citation-style-finder", "apa-citation-generator", "mla-citation-generator", "chicago-author-date-citation-generator", "chicago-notes-bibliography-citation-generator", "ieee-citation-generator", "harvard-citation-generator"],
+  relatedToolIds: ["citation-style-finder", "apa-citation-generator", "mla-citation-generator", "chicago-author-date-citation-generator", "chicago-notes-bibliography-citation-generator", "ieee-citation-generator", "harvard-citation-generator", "reference-checker"],
+  relatedGuideSlugs: ["apa-7-citations-and-references", "mla-9-citations-and-works-cited", "chicago-author-date-citations", "chicago-notes-bibliography", "ieee-citations-and-references", "harvard-citations-and-references", "reference-list-or-bibliography"],
 };

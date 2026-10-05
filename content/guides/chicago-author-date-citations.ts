@@ -237,4 +237,5 @@ export const chicagoAuthorDateCitations: Guide = {
     { question: "Does a DOI mean the reference is correct?", answer: "No. A DOI identifies the work, but the authors, title, dates and numbers you entered still need checking against the source." },
   ],
   relatedToolIds: ["chicago-author-date-citation-generator", "citation-style-finder"],
+  relatedGuideSlugs: ["chicago-notes-bibliography", "how-to-cite-a-website", "reference-list-or-bibliography", "reference-checker"],
 };

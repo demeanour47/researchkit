@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ALTERNATIVE_VIEWS, EVIDENCE, GENERAL_VIEW } from "./evidence";
-import { POWER_REFERENCES, REFERENCES, doiUrl, getReference, referenceMarkdown, referenceRuns, referenceText } from "./references";
+import { LEARN_REFERENCES, POWER_REFERENCES, REFERENCES, doiUrl, getReference, referenceLink, referenceMarkdown, referenceRuns, referenceText } from "./references";
 import { FINER_SOURCES } from "./finer";
 import { GENERAL_NOTE_SOURCES } from "./question-evaluator";
 import { QUESTION_TYPES } from "./question-types";
@@ -23,7 +23,7 @@ describe("REFERENCES", () => {
     assert.equal(new Set(dois).size, dois.length);
   });
 
-  for (const reference of [...REFERENCES, ...POWER_REFERENCES]) {
+  for (const reference of [...REFERENCES, ...POWER_REFERENCES, ...LEARN_REFERENCES]) {
     it(`formats ${reference.id} as a complete APA reference`, () => {
       assert.ok(reference.apa.includes(`(${reference.year}).`), "year in brackets after the authors");
       assert.ok(reference.apa.endsWith("."), "ends with a full stop");
@@ -41,7 +41,7 @@ describe("REFERENCES", () => {
   }
 
   it("stores every DOI in the valid bare format", () => {
-    for (const reference of REFERENCES) {
+    for (const reference of [...REFERENCES, ...LEARN_REFERENCES]) {
       if (reference.doi === undefined) continue;
       assert.match(reference.doi, DOI_PATTERN, reference.id);
     }
@@ -87,6 +87,16 @@ describe("reference formats", () => {
 
   it("builds DOI links", () => {
     assert.equal(doiUrl("10.3316/QRJ0902027"), "https://doi.org/10.3316/QRJ0902027");
+  });
+
+  it("links a web-only work by its URL, and a work with a DOI by its DOI", () => {
+    const roig = getReference("roig-2015");
+    assert.ok(roig.url && !roig.doi);
+    assert.equal(referenceLink(roig), roig.url);
+    assert.ok(referenceText(roig).endsWith(` ${roig.url}`));
+    assert.ok(referenceMarkdown(roig).endsWith(` ${roig.url}`));
+    assert.equal(referenceLink(bowen), "https://doi.org/10.3316/QRJ0902027");
+    assert.equal(referenceLink(saunders), null);
   });
 
   it("splits a journal article into runs with the journal and volume in italics", () => {

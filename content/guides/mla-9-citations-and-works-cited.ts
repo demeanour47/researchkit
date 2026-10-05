@@ -183,4 +183,5 @@ export const mla9CitationsAndWorksCited: Guide = {
     { question: "Does a DOI mean the entry is correct?", answer: "No. A DOI identifies the work, but the authors, title, dates and numbers you entered still need checking against the source." },
   ],
   relatedToolIds: ["mla-citation-generator", "citation-style-finder"],
+  relatedGuideSlugs: ["how-to-cite-a-website", "reference-list-or-bibliography", "how-to-avoid-plagiarism", "reference-checker"],
 };

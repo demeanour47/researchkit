@@ -21,9 +21,24 @@ import { spssFromDataPreparationToReporting } from "../../../content/guides/spss
 import { howToCountCharactersInAcademicWriting } from "../../../content/guides/how-to-count-characters-in-academic-writing";
 import { howToWriteAGoodResearchTitle } from "../../../content/guides/how-to-write-a-good-research-title";
 import { howToWriteResearchObjectives } from "../../../content/guides/how-to-write-research-objectives";
+import { howToCiteAWebsite } from "../../../content/guides/how-to-cite-a-website";
+import { referenceListOrBibliography } from "../../../content/guides/reference-list-or-bibliography";
+import { howToAvoidPlagiarism } from "../../../content/guides/how-to-avoid-plagiarism";
+import { howToParaphrase } from "../../../content/guides/how-to-paraphrase";
+import { howToWriteAResearchQuestion } from "../../../content/guides/how-to-write-a-research-question";
+import { qualitativeOrQuantitativeResearch } from "../../../content/guides/qualitative-or-quantitative-research";
+import { howToWriteALiteratureReview } from "../../../content/guides/how-to-write-a-literature-review";
+import { whatAPValueTellsYou } from "../../../content/guides/what-a-p-value-tells-you";
+import { howToReportStatisticsInApa } from "../../../content/guides/how-to-report-statistics-in-apa";
+import { howToWriteAnAbstract } from "../../../content/guides/how-to-write-an-abstract";
+import { howToMeetAWordLimit } from "../../../content/guides/how-to-meet-a-word-limit";
+import { howToStructureAnAcademicEssay } from "../../../content/guides/how-to-structure-an-academic-essay";
+import { howToReadAResearchPaper } from "../../../content/guides/how-to-read-a-research-paper";
+import { howToManageYourReferences } from "../../../content/guides/how-to-manage-your-references";
+import { howToPlanADissertation } from "../../../content/guides/how-to-plan-a-dissertation";
 import type { Guide } from "./guide";
 
-const GUIDES: readonly Guide[] = [howToChooseACitationStyle, apa7CitationsAndReferences, mla9CitationsAndWorksCited, chicagoAuthorDateCitations, chicagoNotesBibliography, ieeeCitationsAndReferences, harvardCitationsAndReferences, referenceCheckerGuide, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, paragraphStructureAndCounting, sentenceStructureAndCounting, readabilityInAcademicWriting, howToWriteResearchObjectives, howToChooseAStatisticalTest, spssFromDataPreparationToReporting, powerAnalysisGuide, confidenceIntervalsGuide];
+const GUIDES: readonly Guide[] = [howToChooseACitationStyle, apa7CitationsAndReferences, mla9CitationsAndWorksCited, chicagoAuthorDateCitations, chicagoNotesBibliography, ieeeCitationsAndReferences, harvardCitationsAndReferences, referenceCheckerGuide, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, paragraphStructureAndCounting, sentenceStructureAndCounting, readabilityInAcademicWriting, howToWriteResearchObjectives, howToChooseAStatisticalTest, spssFromDataPreparationToReporting, powerAnalysisGuide, confidenceIntervalsGuide, howToCiteAWebsite, referenceListOrBibliography, howToAvoidPlagiarism, howToParaphrase, howToWriteAResearchQuestion, qualitativeOrQuantitativeResearch, howToWriteALiteratureReview, whatAPValueTellsYou, howToReportStatisticsInApa, howToWriteAnAbstract, howToMeetAWordLimit, howToStructureAnAcademicEssay, howToReadAResearchPaper, howToManageYourReferences, howToPlanADissertation];
 
 /** A guide's address. Provisional until the URL strategy (ADR-0005) is accepted. */
 export const guidePath = (slug: string) => `/learn/${slug}`;
