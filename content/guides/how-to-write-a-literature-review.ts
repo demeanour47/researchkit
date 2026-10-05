@@ -178,5 +178,5 @@ export const howToWriteALiteratureReview: Guide = {
     { question: "Should the review be written before or after collecting data?", answer: "Draft it before, because it shapes your question and methods, and revise it after, so it frames the findings you actually have." },
   ],
   relatedToolIds: ["literature-matrix", "prisma-flow-builder", "reference-checker", "research-question-builder"],
-  relatedGuideSlugs: ["how-to-read-a-research-paper", "how-to-manage-your-references", "how-to-paraphrase", "how-to-avoid-plagiarism", "how-to-choose-a-citation-style"],
+  relatedGuideSlugs: ["how-to-search-academic-literature", "how-to-read-a-research-paper", "how-to-manage-your-references", "how-to-paraphrase", "how-to-avoid-plagiarism", "how-to-choose-a-citation-style"],
 };

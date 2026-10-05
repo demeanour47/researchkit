@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { howToAvoidPlagiarism } from "../../../content/guides/how-to-avoid-plagiarism";
+import { howToSearchAcademicLiterature } from "../../../content/guides/how-to-search-academic-literature";
 import { howToParaphrase } from "../../../content/guides/how-to-paraphrase";
 import { howToWriteALiteratureReview } from "../../../content/guides/how-to-write-a-literature-review";
 import { howToStructureAnAcademicEssay } from "../../../content/guides/how-to-structure-an-academic-essay";
@@ -118,5 +119,25 @@ describe("How to plan a dissertation", () => {
     const prose = proseOf(howToPlanADissertation);
     assert.match(prose, /When this guide and your regulations differ, your regulations apply/);
     assert.match(prose, /It is one way to divide the time, not a rule/);
+  });
+});
+
+describe("How to search academic literature", () => {
+  it("labels its worked example as invented", () => {
+    assert.match(proseOf(howToSearchAcademicLiterature), /Invented example/);
+    assert.match(proseOf(howToSearchAcademicLiterature), /invented example/);
+  });
+
+  it("states that Literature Explorer is not a systematic search and its data can be wrong", () => {
+    const prose = proseOf(howToSearchAcademicLiterature);
+    assert.match(prose, /not a systematic search/);
+    assert.match(prose, /incomplete or wrong/);
+  });
+
+  it("covers the core search skills", () => {
+    const prose = `${proseOf(howToSearchAcademicLiterature)} ${howToSearchAcademicLiterature.sections.map((section) => section.heading).join(" ")}`;
+    for (const term of ["synonyms", "AND, OR and NOT", "phrase", "DOI", "open access", "Duplicates", "Record your search", "preliminary set"]) {
+      assert.ok(prose.toLowerCase().includes(term.toLowerCase()), `missing ${term}`);
+    }
   });
 });

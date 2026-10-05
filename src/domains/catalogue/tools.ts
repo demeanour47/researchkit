@@ -55,9 +55,11 @@ import { page as questionnaireBuilder } from "@/tools/questionnaire-builder/copy
 import { page as resultsInterpretation } from "@/tools/results-interpretation/copy";
 import { page as chartBuilder } from "@/tools/chart-builder/copy";
 import { page as tableBuilder } from "@/tools/table-builder/copy";
+import { page as literatureExplorer } from "@/tools/literature-explorer/copy";
 import { page as literatureMatrix } from "@/tools/literature-matrix/copy";
 import { page as prismaFlowBuilder } from "@/tools/prisma-flow-builder/copy";
 import { TOOL_ID as PRISMA_FLOW_BUILDER_ID, TOOL_PATH as PRISMA_FLOW_BUILDER_PATH } from "@/tools/prisma-flow-builder/path";
+import { TOOL_ID as LITERATURE_EXPLORER_ID, TOOL_PATH as LITERATURE_EXPLORER_PATH } from "@/tools/literature-explorer/path";
 import { TOOL_ID as LITERATURE_MATRIX_ID, TOOL_PATH as LITERATURE_MATRIX_PATH } from "@/tools/literature-matrix/path";
 import { TOOL_ID as TABLE_BUILDER_ID, TOOL_PATH as TABLE_BUILDER_PATH } from "@/tools/table-builder/path";
 import { TOOL_ID as CHART_BUILDER_ID, TOOL_PATH as CHART_BUILDER_PATH } from "@/tools/chart-builder/path";
@@ -467,6 +469,15 @@ export const TOOLS: readonly ToolEntry[] = [
     family: "statistics",
     status: "available",
     href: TABLE_BUILDER_PATH,
+  },
+  {
+    id: LITERATURE_EXPLORER_ID,
+    name: literatureExplorer.title,
+    description: literatureExplorer.summary,
+    category: "research",
+    family: "research",
+    status: "available",
+    href: LITERATURE_EXPLORER_PATH,
   },
   {
     id: LITERATURE_MATRIX_ID,
