@@ -76,6 +76,7 @@ export const GUIDE_PLAN: readonly GuidePlacement[] = [
   { slug: "how-to-write-a-good-research-title", category: "research-methods", stage: "plan" },
   { slug: "qualitative-or-quantitative-research", category: "research-methods", stage: "design" },
   { slug: "how-to-write-a-literature-review", category: "research-methods", stage: "review" },
+  { slug: "how-to-search-academic-literature", category: "research-methods", stage: "review" },
 
   { slug: "how-to-structure-an-academic-essay", category: "writing", stage: "write" },
   { slug: "paragraph-structure-and-counting", category: "writing", stage: "write" },

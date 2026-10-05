@@ -27,6 +27,7 @@ import { howToAvoidPlagiarism } from "../../../content/guides/how-to-avoid-plagi
 import { howToParaphrase } from "../../../content/guides/how-to-paraphrase";
 import { howToWriteAResearchQuestion } from "../../../content/guides/how-to-write-a-research-question";
 import { qualitativeOrQuantitativeResearch } from "../../../content/guides/qualitative-or-quantitative-research";
+import { howToSearchAcademicLiterature } from "../../../content/guides/how-to-search-academic-literature";
 import { howToWriteALiteratureReview } from "../../../content/guides/how-to-write-a-literature-review";
 import { whatAPValueTellsYou } from "../../../content/guides/what-a-p-value-tells-you";
 import { howToReportStatisticsInApa } from "../../../content/guides/how-to-report-statistics-in-apa";
@@ -38,7 +39,7 @@ import { howToManageYourReferences } from "../../../content/guides/how-to-manage
 import { howToPlanADissertation } from "../../../content/guides/how-to-plan-a-dissertation";
 import type { Guide } from "./guide";
 
-const GUIDES: readonly Guide[] = [howToChooseACitationStyle, apa7CitationsAndReferences, mla9CitationsAndWorksCited, chicagoAuthorDateCitations, chicagoNotesBibliography, ieeeCitationsAndReferences, harvardCitationsAndReferences, referenceCheckerGuide, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, paragraphStructureAndCounting, sentenceStructureAndCounting, readabilityInAcademicWriting, howToWriteResearchObjectives, howToChooseAStatisticalTest, spssFromDataPreparationToReporting, powerAnalysisGuide, confidenceIntervalsGuide, howToCiteAWebsite, referenceListOrBibliography, howToAvoidPlagiarism, howToParaphrase, howToWriteAResearchQuestion, qualitativeOrQuantitativeResearch, howToWriteALiteratureReview, whatAPValueTellsYou, howToReportStatisticsInApa, howToWriteAnAbstract, howToMeetAWordLimit, howToStructureAnAcademicEssay, howToReadAResearchPaper, howToManageYourReferences, howToPlanADissertation];
+const GUIDES: readonly Guide[] = [howToChooseACitationStyle, apa7CitationsAndReferences, mla9CitationsAndWorksCited, chicagoAuthorDateCitations, chicagoNotesBibliography, ieeeCitationsAndReferences, harvardCitationsAndReferences, referenceCheckerGuide, howToWriteAGoodResearchTitle, howToCountCharactersInAcademicWriting, paragraphStructureAndCounting, sentenceStructureAndCounting, readabilityInAcademicWriting, howToWriteResearchObjectives, howToChooseAStatisticalTest, spssFromDataPreparationToReporting, powerAnalysisGuide, confidenceIntervalsGuide, howToCiteAWebsite, referenceListOrBibliography, howToAvoidPlagiarism, howToParaphrase, howToWriteAResearchQuestion, qualitativeOrQuantitativeResearch, howToWriteALiteratureReview, howToSearchAcademicLiterature, whatAPValueTellsYou, howToReportStatisticsInApa, howToWriteAnAbstract, howToMeetAWordLimit, howToStructureAnAcademicEssay, howToReadAResearchPaper, howToManageYourReferences, howToPlanADissertation];
 
 /** A guide's address. Provisional until the URL strategy (ADR-0005) is accepted. */
 export const guidePath = (slug: string) => `/learn/${slug}`;
